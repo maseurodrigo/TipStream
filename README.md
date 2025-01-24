@@ -19,8 +19,8 @@ This React-based overlay allows streamers to manage and display betting tips dir
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/betting-tips-overlay.git
-   cd betting-tips-overlay
+   git clone https://github.com/maseurodrigo/TipStream.git
+   cd TipStream
    ```
 2. Install dependencies:
    ```bash
@@ -28,7 +28,7 @@ This React-based overlay allows streamers to manage and display betting tips dir
    ```
 3. Start the app:
    ```bash
-   npm start
+   npm run start
    ```
 
 4. Use the overlay URL in your streaming software.
@@ -42,4 +42,4 @@ This React-based overlay allows streamers to manage and display betting tips dir
 
 - **Add a Bet**: Click the "+" button to add a tip, either as a single or multiple bet.
 - **Edit Bets**: Streamers can edit bets directly during the stream.
-- **Change Bet Status**: Update bet status (win/loss) by clicking on the respective status button.
+- **Change Bet Status**: Update bet status (green/red) by clicking on the respective status button.

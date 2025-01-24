@@ -5,6 +5,8 @@ interface SingleBet {
   id: string;
   tip: string;
   odds: string;
+  balance: string;
+  balanceType: 'units' | 'money';
   status: 'pending' | 'green' | 'red';
   timestamp: string;
   type: 'single';
@@ -16,6 +18,8 @@ interface MultipleBet {
     tip: string;
     odds: string;
   }[];
+  balance: string;
+  balanceType: 'units' | 'money';
   totalOdds: string;
   status: 'pending' | 'green' | 'red';
   timestamp: string;
@@ -29,12 +33,16 @@ function App() {
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [newTip, setNewTip] = useState('');
   const [newOdds, setNewOdds] = useState('');
+  const [newBalance, setNewBalance] = useState('');
+  const [newBalanceType, setNewBalanceType] = useState<'units' | 'money'>('units');
   const [bets, setBets] = useState<Bet[]>([]);
   const [baseColor, setBaseColor] = useState('#2D3748');
   const [opacity, setOpacity] = useState(0.9);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const [editOdds, setEditOdds] = useState('');
+  const [editBalance, setEditBalance] = useState('');
+  const [editBalanceType, setEditBalanceType] = useState<'units' | 'money'>('units');
   const [editingMultipleTips, setEditingMultipleTips] = useState<{ tip: string; odds: string }[]>([]);
   const [logoUrl, setLogoUrl] = useState('');
   const [headerTitle, setHeaderTitle] = useState('Live Tips');
@@ -42,7 +50,7 @@ function App() {
   const [multipleTips, setMultipleTips] = useState<{ tip: string; odds: string }[]>([{ tip: '', odds: '' }]);
   const [isStreamMode, setIsStreamMode] = useState(false);
 
-  const handleOddsChange = (value: string, setter: (value: string) => void) => {
+  const handleNumberChange = (value: string, setter: (value: string) => void) => {
     const regex = /^\d*\.?\d*$/;
     if (value === '' || regex.test(value)) {
       setter(value);
@@ -87,6 +95,15 @@ function App() {
     }
   };
 
+  const resetForm = () => {
+    setNewTip('');
+    setNewOdds('');
+    setNewBalance('');
+    setNewBalanceType('units');
+    setMultipleTips([{ tip: '', odds: '' }]);
+    setBetType('single');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -97,14 +114,14 @@ function App() {
         id: crypto.randomUUID(),
         tip: newTip.trim(),
         odds: newOdds.trim(),
+        balance: newBalance.trim(),
+        balanceType: newBalanceType,
         status: 'pending',
         timestamp: new Date().toLocaleTimeString(),
         type: 'single'
       };
 
       setBets((prev) => [...prev, bet]);
-      setNewTip('');
-      setNewOdds('');
     } else {
       const validTips = multipleTips.filter(tip => tip.tip.trim() && tip.odds.trim());
       if (validTips.length < 2) return;
@@ -112,6 +129,8 @@ function App() {
       const bet: MultipleBet = {
         id: crypto.randomUUID(),
         tips: validTips,
+        balance: newBalance.trim(),
+        balanceType: newBalanceType,
         totalOdds: calculateTotalOdds(validTips),
         status: 'pending',
         timestamp: new Date().toLocaleTimeString(),
@@ -119,9 +138,9 @@ function App() {
       };
 
       setBets((prev) => [...prev, bet]);
-      setMultipleTips([{ tip: '', odds: '' }]);
     }
 
+    resetForm();
     setIsFormOpen(false);
   };
 
@@ -148,8 +167,12 @@ function App() {
     if (bet.type === 'single') {
       setEditText(bet.tip);
       setEditOdds(bet.odds);
+      setEditBalance(bet.balance);
+      setEditBalanceType(bet.balanceType);
     } else {
       setEditingMultipleTips(bet.tips.map(tip => ({ ...tip })));
+      setEditBalance(bet.balance);
+      setEditBalanceType(bet.balanceType);
     }
   };
 
@@ -160,13 +183,21 @@ function App() {
       prev.map((bet) => {
         if (bet.id === editingId) {
           if (bet.type === 'single') {
-            return { ...bet, tip: editText.trim(), odds: editOdds.trim() };
+            return { 
+              ...bet, 
+              tip: editText.trim(), 
+              odds: editOdds.trim(),
+              balance: editBalance.trim(),
+              balanceType: editBalanceType
+            };
           } else {
             const validTips = editingMultipleTips.filter(tip => tip.tip.trim() && tip.odds.trim());
             if (validTips.length < 2) return bet;
             return {
               ...bet,
               tips: validTips,
+              balance: editBalance.trim(),
+              balanceType: editBalanceType,
               totalOdds: calculateTotalOdds(validTips)
             };
           }
@@ -181,6 +212,8 @@ function App() {
     setEditingId(null);
     setEditText('');
     setEditOdds('');
+    setEditBalance('');
+    setEditBalanceType('units');
     setEditingMultipleTips([]);
   };
 
@@ -209,7 +242,10 @@ function App() {
           <Settings size={24} className="transform hover:rotate-90 transition-transform duration-300" />
         </button>
         <button
-          onClick={() => setIsFormOpen(true)}
+          onClick={() => {
+            resetForm();
+            setIsFormOpen(true);
+          }}
           className="text-white rounded-2xl p-4 transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] transform hover:scale-105 backdrop-blur-lg border border-white/10"
           style={{ backgroundColor: baseColor }}
         >
@@ -235,9 +271,7 @@ function App() {
             </div>
             <div className="space-y-8">
               <div>
-                <label className="block text-sm font-medium text-gray-200 mb-3">
-                  Title
-                </label>
+                <label className="block text-sm font-medium text-gray-200 mb-3">Title</label>
                 <input
                   type="text"
                   value={headerTitle}
@@ -288,9 +322,7 @@ function App() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-3">
-                    Color Opacity ({Math.round(opacity * 100)}%)
-                  </label>
+                  <label className="block text-sm font-medium text-gray-200 mb-3">Header Color Opacity ({Math.round(opacity * 100)}%)</label>
                   <input
                     type="range"
                     min="0"
@@ -313,13 +345,16 @@ function App() {
       {isFormOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50">
           <div 
-            className="bg-gray-900/95 p-8 rounded-3xl w-full max-w-md shadow-[0_0_50px_rgba(0,0,0,0.3)] transform transition-all duration-300 border border-gray-700/30"
+            className="bg-gray-900/95 p-8 rounded-3xl w-full max-w-3xl shadow-[0_0_50px_rgba(0,0,0,0.3)] transform transition-all duration-300 border border-gray-700/30"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-3xl font-bold text-white tracking-tight">Add New Tip</h2>
               <button
-                onClick={() => setIsFormOpen(false)}
+                onClick={() => {
+                  resetForm();
+                  setIsFormOpen(false);
+                }}
                 className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-700/50 rounded-xl"
               >
                 <X size={24} />
@@ -362,15 +397,36 @@ function App() {
                       className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
                     />
                   </div>
-                  <div>
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      value={newOdds}
-                      onChange={(e) => handleOddsChange(e.target.value, setNewOdds)}
-                      placeholder="Enter odds (e.g., 1.75)..."
-                      className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
-                    />
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={newOdds}
+                        onChange={(e) => handleNumberChange(e.target.value, setNewOdds)}
+                        placeholder="Enter odds (e.g., 1.75)..."
+                        className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={newBalance}
+                          onChange={(e) => handleNumberChange(e.target.value, setNewBalance)}
+                          placeholder={newBalanceType === 'units' ? "Enter units..." : "Enter amount..."}
+                          className="flex-1 p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setNewBalanceType(prev => prev === 'units' ? 'money' : 'units')}
+                          className="px-3 rounded-xl bg-gray-800/50 text-blue-400 hover:text-blue-300 border border-blue-500/20 hover:bg-blue-500/10 hover:border-blue-500/30 transition-all duration-300"
+                        >
+                          {newBalanceType === 'units' ? 'Units' : 'Money'}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </>
               ) : (
@@ -415,8 +471,27 @@ function App() {
                     <Plus size={20} />
                   </button>
                   {multipleTips.length > 1 && (
-                    <div className="mt-4 p-4 rounded-xl bg-white/5 border border-white/10">
-                      <p className="text-gray-400">Total Odds: <span className="text-white font-medium">{calculateTotalOdds(multipleTips)}</span></p>
+                    <div className="mt-4 p-4 rounded-xl bg-white/5 border border-white/10 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <p className="text-gray-400">Total Odds: <span className="text-white font-medium">{calculateTotalOdds(multipleTips)}</span></p>
+                      </div>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={newBalance}
+                          onChange={(e) => handleNumberChange(e.target.value, setNewBalance)}
+                          placeholder={newBalanceType === 'units' ? "Enter units..." : "Enter amount..."}
+                          className="flex-1 p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setNewBalanceType(prev => prev === 'units' ? 'money' : 'units')}
+                          className="px-3 rounded-xl bg-gray-800/50 text-blue-400 hover:text-blue-300 border border-blue-500/20 hover:bg-blue-500/10 hover:border-blue-500/30 transition-all duration-300"
+                        >
+                          {newBalanceType === 'units' ? 'Units' : 'Money'}
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -424,7 +499,7 @@ function App() {
 
               <button
                 type="submit"
-                className="w-full py-4 px-6 rounded-xl transition-all duration-300 text-white font-medium shadow-lg hover:shadow-2xl text-lg hover:border hover:border-white/10"
+                className="w-full py-4 px-6 rounded-xl transition-all duration-300 text-white font-medium shadow-lg hover:shadow-2xl text-lg"
                 style={{ backgroundColor: baseColor }}
               >
                 Add {betType === 'single' ? 'Single Bet' : 'Multiple Bet'}
@@ -489,14 +564,35 @@ function App() {
                             className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                             autoFocus
                           />
-                          <input
-                            type="text"
-                            inputMode="decimal"
-                            value={editOdds}
-                            onChange={(e) => handleOddsChange(e.target.value, setEditOdds)}
-                            placeholder="Enter odds..."
-                            className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
-                          />
+                          <div className="flex gap-4">
+                            <input
+                              type="text"
+                              inputMode="decimal"
+                              value={editOdds}
+                              onChange={(e) => handleNumberChange(e.target.value, setEditOdds)}
+                              placeholder="Enter odds..."
+                              className="flex-1 p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+                            />
+                            <div className="flex-1">
+                              <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  inputMode="decimal"
+                                  value={editBalance}
+                                  onChange={(e) => handleNumberChange(e.target.value, setEditBalance)}
+                                  placeholder={editBalanceType === 'units' ? "Enter units..." : "Enter amount..."}
+                                  className="flex-1 p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => setEditBalanceType(prev => prev === 'units' ? 'money' : 'units')}
+                                  className="px-3 rounded-lg bg-gray-800/50 text-blue-400 hover:text-blue-300 border border-blue-500/20 hover:bg-blue-500/10 hover:border-blue-500/30 transition-all duration-300"
+                                >
+                                  {editBalanceType === 'units' ? 'Units' : 'Money'}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         </>
                       ) : (
                         <div className="space-y-4">
@@ -535,13 +631,31 @@ function App() {
                           <button
                             type="button"
                             onClick={() => addTip(true)}
-                            className="w-full py-3 rounded-xl text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 transition-all duration-300 border border-blue-500/20 hover:border-blue-500/30 flex items-center justify-center"
-                          >
+                            className="w-full py-3 rounded-xl text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 transition-all duration-300 border border-blue-500/20 hover:border-blue-500/30 flex items-center justify-center">
                             <Plus size={20} />
                           </button>
                           {editingMultipleTips.length > 1 && (
-                            <div className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10">
-                              <p className="text-gray-400">Total Odds: <span className="text-white font-medium">{calculateTotalOdds(editingMultipleTips)}</span></p>
+                            <div className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10 space-y-4">
+                              <div className="flex items-center justify-between">
+                                <p className="text-gray-400">Total Odds: <span className="text-white font-medium">{calculateTotalOdds(editingMultipleTips)}</span></p>
+                              </div>
+                              <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  inputMode="decimal"
+                                  value={editBalance}
+                                  onChange={(e) => handleNumberChange(e.target.value, setEditBalance)}
+                                  placeholder={editBalanceType === 'units' ? "Enter units..." : "Enter amount..."}
+                                  className="flex-1 p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => setEditBalanceType(prev => prev === 'units' ? 'money' : 'units')}
+                                  className="px-3 rounded-lg bg-gray-800/50 text-blue-400 hover:text-blue-300 border border-blue-500/20 hover:bg-blue-500/10 hover:border-blue-500/30 transition-all duration-300"
+                                >
+                                  {editBalanceType === 'units' ? 'Units' : 'Money'}
+                                </button>
+                              </div>
                             </div>
                           )}
                         </div>
@@ -556,6 +670,11 @@ function App() {
                             {bet.odds && (
                               <span className="text-sm font-medium px-2 py-1 rounded-lg bg-gray-800/50 text-gray-300">
                                 {bet.odds}
+                              </span>
+                            )}
+                            {bet.balance && (
+                              <span className="text-sm font-medium px-2 py-1 rounded-lg bg-gray-800/50 text-gray-300">
+                                {bet.balance} {bet.balanceType === 'units' ? 'units' : '$'}
                               </span>
                             )}
                             <span className="text-sm text-gray-400 tracking-wide">{bet.timestamp}</span>
@@ -582,9 +701,16 @@ function App() {
                               </div>
                             ))}
                             <div className="flex items-center gap-4 mt-3">
-                              <span className="text-sm font-medium px-2 py-1 rounded-lg bg-blue-900/20 text-blue-300 border border-blue-500/20">
-                                Total: {bet.totalOdds}
-                              </span>
+                              <div className="flex items-center gap-4">
+                                <span className="text-sm font-medium px-2 py-1 rounded-lg bg-blue-900/20 text-blue-300 border border-blue-500/20">
+                                  Total: {bet.totalOdds}
+                                </span>
+                                {bet.balance && (
+                                  <span className="text-sm font-medium px-2 py-1 rounded-lg bg-gray-800/50 text-gray-300">
+                                    {bet.balance} {bet.balanceType === 'units' ? 'units' : '$'}
+                                  </span>
+                                )}
+                              </div>
                               <span className="text-sm text-gray-400 tracking-wide">{bet.timestamp}</span>
                               {isStreamMode && bet.status !== 'pending' && (
                                 <span className={`text-sm font-medium px-3 py-1 rounded-lg ${
@@ -631,7 +757,7 @@ function App() {
                             </button>
                             <button
                               onClick={() => updateBetStatus(bet.id, 'red')}
-                              className="p-3 rounded-xl hover:bg-red-600/20 text-red-500 hover:text-red-400 transition-all duration-300 border border-red-500/20 hover:border-re d-500/30"
+                              className="p-3 rounded-xl hover:bg-red-600/20 text-red-500 hover:text-red-400 transition-all duration-300 border border-red-500/20 hover:border-red-500/30"
                             >
                               <X size={20} />
                             </button>
