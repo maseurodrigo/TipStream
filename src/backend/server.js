@@ -40,4 +40,4 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Start the Express server
-server.listen(8888, '0.0.0.0');
+server.listen(8888);
