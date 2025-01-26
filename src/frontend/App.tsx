@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PlusCircle, X, Check, Settings, Trash2, Pencil, Plus, Eye, EyeOff } from 'lucide-react';
+import { io, Socket } from 'socket.io-client';
+import { DefaultEventsMap } from '@socket.io/component-emitter';
 
 interface SingleBet {
   id: string;
@@ -37,7 +39,7 @@ function App() {
   const [newBalanceType, setNewBalanceType] = useState<'units' | 'money'>('units');
   const [bets, setBets] = useState<Bet[]>([]);
   const [baseColor, setBaseColor] = useState('#2D3748');
-  const [opacity, setOpacity] = useState(0.9);
+  const [opacity, setOpacity] = useState(0.8);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const [editOdds, setEditOdds] = useState('');
@@ -45,10 +47,39 @@ function App() {
   const [editBalanceType, setEditBalanceType] = useState<'units' | 'money'>('units');
   const [editingMultipleTips, setEditingMultipleTips] = useState<{ tip: string; odds: string }[]>([]);
   const [logoUrl, setLogoUrl] = useState('');
-  const [headerTitle, setHeaderTitle] = useState('Live Tips');
+  const [headerTitle, setHeaderTitle] = useState('Live Bets');
   const [betType, setBetType] = useState<'single' | 'multiple'>('single');
   const [multipleTips, setMultipleTips] = useState<{ tip: string; odds: string }[]>([{ tip: '', odds: '' }]);
   const [isStreamMode, setIsStreamMode] = useState(false);
+  const [sessionID, setSessionID] = useState(''); // State to store the unique session ID
+
+  // Create a ref to store the Socket.io client instance
+  const socketRef = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
+
+  useEffect(() => {
+
+    // Initialize Socket.io client using the server URL from environment variables
+    socketRef.current = io(import.meta.env.VITE_SOCKET_SERVER_URL);
+
+    // Generate a unique session ID using the built-in crypto API
+    const randSessionId = crypto.randomUUID();
+    setSessionID(randSessionId);
+
+    // Notify the backend that the dashboard has created or joined this session
+    socketRef.current.emit('join', randSessionId);
+
+    // Clean up the socket connection on unmount
+    return () => { socketRef.current?.disconnect(); };
+
+  }, []);
+
+  useEffect(() => {
+    // Send the updated text to the backend along with the session ID
+    socketRef.current?.emit('update', { 
+      sessionID, 
+      updates: { logoUrl, headerTitle, baseColor, opacity, bets } 
+    });
+  }, [logoUrl, headerTitle, baseColor, opacity, bets]);
 
   const handleNumberChange = (value: string, setter: (value: string) => void) => {
     const regex = /^\d*\.?\d*$/;
@@ -224,21 +255,38 @@ function App() {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
+  // Get the full URL dynamically and append {sessionID}
+  const fullViewerLink = `${window.location.origin}/stream/${sessionID}`;
+
+  // Copies fullViewerLink URL to clipboard
+  const copyURLToClipboard = () => { navigator.clipboard.writeText(fullViewerLink); }
+
   return (
     <div className="fixed inset-0 pointer-events-none" style={{ backgroundColor: getColorWithOpacity(baseColor, 0.5) }}>
       {/* Control Buttons */}
       <div className="fixed top-6 right-6 flex gap-4 pointer-events-auto z-50">
+        <div className="flex justify-center items-center w-full">
+          <div className="flex justify-center items-center max-w-screen-xl bg-[rgba(31,32,41,0.4)] text-white pl-8 pr-4 py-2 rounded-lg shadow-lg">
+            <span className="max-w-full overflow-hidden whitespace-nowrap text-ellipsis">
+              {fullViewerLink}
+            </span>
+            <button onClick={copyURLToClipboard}
+              className="bg-gray-900/90 hover:bg-gray-800 text-white ml-4 py-3 px-3 rounded-md transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] transform hover:scale-105 backdrop-blur-lg border border-gray-700/30">
+              <svg className="w-[18px] h-[18px] dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.6" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-6 5h6m-6 4h6M10 3v4h4V3h-4Z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
         <button
           onClick={() => setIsStreamMode(!isStreamMode)}
           className="bg-gray-900/90 hover:bg-gray-800 text-white rounded-2xl p-4 transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] transform hover:scale-105 backdrop-blur-lg border border-gray-700/30"
-          title={isStreamMode ? "Switch to Edit Mode" : "Switch to Stream Mode"}
-        >
+          title={isStreamMode ? "Switch to Edit Mode" : "Switch to Stream Mode"}>
           {isStreamMode ? <Eye size={24} /> : <EyeOff size={24} />}
         </button>
         <button
           onClick={() => setIsConfigOpen(true)}
-          className="bg-gray-900/90 hover:bg-gray-800 text-white rounded-2xl p-4 transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] transform hover:scale-105 backdrop-blur-lg border border-gray-700/30"
-        >
+          className="bg-gray-900/90 hover:bg-gray-800 text-white rounded-2xl p-4 transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] transform hover:scale-105 backdrop-blur-lg border border-gray-700/30">
           <Settings size={24} className="transform hover:rotate-90 transition-transform duration-300" />
         </button>
         <button
@@ -246,9 +294,8 @@ function App() {
             resetForm();
             setIsFormOpen(true);
           }}
-          className="text-white rounded-2xl p-4 transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] transform hover:scale-105 backdrop-blur-lg border border-white/10"
-          style={{ backgroundColor: baseColor }}
-        >
+          className="fixed bottom-8 right-8 text-white rounded-2xl p-4 transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] transform hover:scale-105 backdrop-blur-lg border border-white/10"
+          style={{ backgroundColor: baseColor }}>
           <PlusCircle size={24} className="transform hover:rotate-180 transition-transform duration-300" />
         </button>
       </div>
