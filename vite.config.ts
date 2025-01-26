@@ -8,5 +8,8 @@ export default defineConfig({
   build: { outDir: path.resolve(__dirname, 'dist') },
   plugins: [react()],
   optimizeDeps: { exclude: ['lucide-react'] },
-  server: { port: 8080 }
+  server: { 
+    port: Number(process.env.PORT) || 8080,
+    host: true
+  }
 });

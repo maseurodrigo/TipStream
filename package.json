@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start:server": "node ./src/backend/server.js",
-    "start:frontend": "vite --host --port 8080",
+    "start:frontend": "vite --host",
     "start": "npm run start:server && npm run start:frontend",
     "dev": "vite",
     "build": "vite build",

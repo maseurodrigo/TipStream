@@ -39,5 +39,5 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Serve static files from dist after building
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Start the Express server on port 8888
-server.listen(8888);
+// Start the Express server
+server.listen(process.env.PORT || 8888);
