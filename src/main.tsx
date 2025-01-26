@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import App from './frontend/App';
-import Viewer from './frontend/Stream';
+import Viewer from './frontend/stream';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
