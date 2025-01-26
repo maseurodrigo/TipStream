@@ -5,7 +5,7 @@
   "description": "Simple overlay for betting streamers to manage live tips",
   "type": "module",
   "scripts": {
-    "start:backend": "node ./backend/server.js",
+    "start:backend": "node ./src/backend/server.js",
     "start:frontend": "vite --host",
     "start": "npm run start:backend && npm run start:frontend",
     "dev": "vite",
