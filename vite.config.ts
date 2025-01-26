@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react()],
   optimizeDeps: { exclude: ['lucide-react'] },
   server: { 
-    port: Number(process.env.PORT) || 8080,
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    port: 8080
   }
 });
