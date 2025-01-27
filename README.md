@@ -3,6 +3,12 @@
 
 This React-based overlay allows streamers to manage and display betting tips directly on their streams. It includes both single and multiple bet options, with real-time status updates.
 
+---
+
+![TipStream Layout](./tipstream.png)
+
+---
+
 ## Features
 
 - **Add and manage bets**: Easily add single or multiple bets with custom odds and tips.
