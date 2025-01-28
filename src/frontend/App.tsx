@@ -425,7 +425,7 @@ function App() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-3xl font-bold text-white tracking-tight">Add New Tip</h2>
+              <h2 className="text-3xl font-bold text-white tracking-tight">Add New Bet</h2>
               <button
                 onClick={() => {
                   resetForm();
@@ -896,7 +896,7 @@ function App() {
             ))}
             {bets.length === 0 && (
               <div className="p-10 text-center text-gray-400">
-                <p className="text-lg">No betting tips yet</p>
+                <p className="text-lg">No open bets yet</p>
                 <p className="text-sm mt-2">Click the + button to add one!</p>
               </div>
             )}

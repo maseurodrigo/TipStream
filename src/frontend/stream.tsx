@@ -213,7 +213,7 @@ export default function Viewer() {
         ))}
         {bets.length === 0 && (
           <div className="p-10 text-center text-gray-400">
-            <p className="text-lg">No betting tips yet</p>
+            <p className="text-lg">No open bets yet</p>
             <p className="text-sm mt-2">Wait until some suggestions are added!</p>
           </div>
         )}
