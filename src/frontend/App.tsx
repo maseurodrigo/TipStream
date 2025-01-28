@@ -611,14 +611,14 @@ function App() {
                 <img
                   src={logoUrl}
                   alt="Logo"
-                  className="h-8 w-8 object-cover rounded-full"
+                  className="h-8 w-8 object-cover rounded-full shadow-lg"
                   onError={(e) => {
                     const img = e.target as HTMLImageElement;
                     img.style.display = 'none';
                   }}
                 />
               )}
-              <h1 className="text-3xl font-bold text-center text-white tracking-tight">{headerTitle}</h1>
+              <h1 className="text-3xl font-bold text-center text-white drop-shadow-lg tracking-tight">{headerTitle}</h1>
             </div>
           </div>
           <div className="divide-y divide-gray-700/30">
