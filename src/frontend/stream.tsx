@@ -35,6 +35,7 @@ export default function Viewer() {
   const { sessionId } = useParams(); // Retrieve the session ID from the URL  
   const [headerTitle, setHeaderTitle] = useState('Live Bets');
   const [logoUrl, setLogoUrl] = useState('');
+  const [logoSize, setLogoSize] = useState(2);
   const [baseColor, setBaseColor] = useState('#2D3748');
   const [opacity, setOpacity] = useState(0.8);
   const [maxBetsPCol, setMaxBetsPCol] = useState(8);
@@ -56,6 +57,7 @@ export default function Viewer() {
     socketRef.current?.on('receive-update', (updates) => {
       if (updates.headerTitle !== undefined) setHeaderTitle(updates.headerTitle);
       if (updates.logoUrl !== undefined) setLogoUrl(updates.logoUrl);
+      if (updates.logoSize !== undefined) setLogoSize(updates.logoSize);
       if (updates.baseColor !== undefined) setBaseColor(updates.baseColor);
       if (updates.opacity !== undefined) setOpacity(updates.opacity);
       if (updates.maxBetsPCol !== undefined) setMaxBetsPCol(updates.maxBetsPCol);
@@ -78,7 +80,7 @@ export default function Viewer() {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
-  // Function to chunk bets into groups of 8
+  // Function to chunk bets into groups of maxBetsPCol
   const chunkArray = (arr: any[], size: number) => {
     return arr.reduce((acc, _, i) => {
       if (i % size === 0) acc.push(arr.slice(i, i + size));
@@ -107,7 +109,8 @@ export default function Viewer() {
             <img
               src={logoUrl}
               alt="Logo"
-              className="h-8 w-8 object-cover rounded-full shadow-lg"
+              className="object-cover rounded-full shadow-lg"
+              style={{ width: `${logoSize}rem`, height: `${logoSize}rem` }}
               onError={(e) => {
                 const img = e.target as HTMLImageElement;
                 img.style.display = 'none';

@@ -47,6 +47,7 @@ function App() {
   const [editingMultipleTips, setEditingMultipleTips] = useState<{ tip: string; odds: string }[]>([]);
   const [headerTitle, setHeaderTitle] = useState('Live Bets');
   const [logoUrl, setLogoUrl] = useState('');
+  const [logoSize, setLogoSize] = useState(2);
   const [baseColor, setBaseColor] = useState('#2D3748');
   const [opacity, setOpacity] = useState(0.8);
   const [maxBetsPCol, setMaxBetsPCol] = useState(8);
@@ -96,9 +97,9 @@ function App() {
     // Send the updated text to the backend along with the session ID
     socketRef.current?.emit('update', { 
       sessionID, 
-      updates: { logoUrl, headerTitle, baseColor, opacity, maxBetsPCol, bets } 
+      updates: { logoUrl, logoSize, headerTitle, baseColor, opacity, maxBetsPCol, bets } 
     });
-  }, [logoUrl, headerTitle, baseColor, opacity, maxBetsPCol, bets]);
+  }, [logoUrl, logoSize, headerTitle, baseColor, opacity, maxBetsPCol, bets]);
 
   const handleNumberChange = (value: string, setter: (value: string) => void) => {
     const regex = /^\d*\.?\d*$/;
@@ -274,7 +275,7 @@ function App() {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
-  // Function to chunk bets into groups of 8
+  // Function to chunk bets into groups of maxBetsPCol
   const chunkArray = (arr: any[], size: number) => {
     return arr.reduce((acc, _, i) => {
       if (i % size === 0) acc.push(arr.slice(i, i + size));
@@ -368,34 +369,47 @@ function App() {
                   className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-200 mb-3">
-                  Logo URL
-                </label>
-                <input
-                  type="text"
-                  value={logoUrl}
-                  onChange={(e) => setLogoUrl(e.target.value)}
-                  placeholder="Enter logo URL..."
-                  className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
-                />
-                {logoUrl && (
-                  <div className="mt-2 p-2 bg-gray-800/50 rounded-xl">
-                    <img
-                      src={logoUrl}
-                      alt="Logo preview"
-                      className="h-8 w-8 object-cover rounded-full mx-auto"
-                      onError={(e) => {
-                        const img = e.target as HTMLImageElement;
-                        img.style.display = 'none';
-                      }}
-                      onLoad={(e) => {
-                        const img = e.target as HTMLImageElement;
-                        img.style.display = 'block';
-                      }}
-                    />
-                  </div>
-                )}
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-3">
+                    Logo URL
+                  </label>
+                  <input
+                    type="text"
+                    value={logoUrl}
+                    onChange={(e) => setLogoUrl(e.target.value)}
+                    placeholder="Enter logo URL..."
+                    className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+                  />
+                  {logoUrl && (
+                    <div className="mt-2 p-2 bg-gray-800/50 rounded-xl">
+                      <img
+                        src={logoUrl}
+                        alt="Logo preview"
+                        className={`h-8 w-8 object-cover rounded-full mx-auto shadow-lg`}
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          img.style.display = 'none';
+                        }}
+                        onLoad={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          img.style.display = 'block';
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-3">Logo Size</label>
+                  <input
+                    type="range"
+                    min="2"
+                    max="6"
+                    step="1"
+                    value={logoSize}
+                    onChange={(e) => setLogoSize(parseInt(e.target.value, 10))}
+                    className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"/>
+                </div>
               </div>
               <div className="space-y-6">
                 <div>
@@ -628,7 +642,8 @@ function App() {
                 <img
                   src={logoUrl}
                   alt="Logo"
-                  className="h-8 w-8 object-cover rounded-full shadow-lg"
+                  className="object-cover rounded-full shadow-lg"
+                  style={{ width: `${logoSize}rem`, height: `${logoSize}rem` }}
                   onError={(e) => {
                     const img = e.target as HTMLImageElement;
                     img.style.display = 'none';
