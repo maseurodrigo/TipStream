@@ -54,7 +54,7 @@ function App() {
   const [baseColor, setBaseColor] = useState('#2D3748');
   const [opacity, setOpacity] = useState(0.8);
   const [maxBetsPCol, setMaxBetsPCol] = useState(8);
-  const [maxCarouselWidth, setMaxCarouselWidth] = useState(100);
+  const [maxCarouselWidth, setMaxCarouselWidth] = useState(95);
   const [carouselTimer, setCarouselTimer] = useState(8);
   const [betType, setBetType] = useState<'single' | 'multiple'>('single');
   const [multipleTips, setMultipleTips] = useState<{ tip: string; odds: string }[]>([{ tip: '', odds: '' }]);
@@ -483,7 +483,7 @@ function App() {
                   <input
                     type="number"
                     min="25" 
-                    max="100"
+                    max="95"
                     step="5"
                     value={maxCarouselWidth}
                     onChange={(e) => setMaxCarouselWidth(parseInt(e.target.value))}
