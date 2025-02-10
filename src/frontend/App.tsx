@@ -54,7 +54,7 @@ function App() {
   const [baseColor, setBaseColor] = useState('#2D3748');
   const [opacity, setOpacity] = useState(0.8);
   const [maxBetsPCol, setMaxBetsPCol] = useState(8);
-  const [maxCarouselWidth, setMaxCarouselWidth] = useState(60);
+  const [maxCarouselWidth, setMaxCarouselWidth] = useState(80);
   const [carouselTimer, setCarouselTimer] = useState(8);
   const [betType, setBetType] = useState<'single' | 'multiple'>('single');
   const [multipleTips, setMultipleTips] = useState<{ tip: string; odds: string }[]>([{ tip: '', odds: '' }]);
@@ -482,7 +482,7 @@ function App() {
                   <label className="block text-sm font-medium text-gray-200 mb-3">Bet Carousel Size</label>
                   <input
                     type="number"
-                    min="35" 
+                    min="25" 
                     max="95"
                     step="5"
                     value={maxCarouselWidth}
