@@ -99,8 +99,8 @@ export default function Viewer() {
 
   // Chunk the bets into columns
   const betColumns = chunkArray(bets, maxBetsPCol);
-
-  return <div className={`pointer-events-auto inline-block fixed top-6 left-6 min-w-80 max-w-7xl z-10`} style={{ fontFamily: "SpaceGrotesk" }}>
+  
+  return <div className="pointer-events-auto inline-block fixed top-6 left-6 min-w-80 w-fit z-10" style={{ fontFamily: "SpaceGrotesk" }}>
     <div 
       className="p-2 rounded-lg backdrop-blur-lg shadow-[0_0_35px_rgba(0,0,0,0.2)] hover:shadow-[0_0_50px_rgba(0,0,0,0.3)] transition-shadow duration-300" 
       style={{ 
