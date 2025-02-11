@@ -298,7 +298,7 @@ function App() {
   const copyURLToClipboard = () => { navigator.clipboard.writeText(fullViewerLink); }
 
   return (
-    <div className="fixed inset-0 pointer-events-none" style={{ fontFamily: "SpaceGrotesk", backgroundColor: getColorWithOpacity(baseColor, 0.5) }}>
+    <div className="fixed inset-0 pointer-events-none" style={{ backgroundColor: getColorWithOpacity(baseColor, 0.5) }}>
       {/* Control Buttons */}
       <div className="fixed top-6 right-6 flex gap-4 pointer-events-auto z-20">
         <div className="flex justify-center items-center w-full">
@@ -368,7 +368,7 @@ function App() {
                 <Checkbox 
                   defaultChecked={showHeader}
                   ripple={true}
-                  label={<Typography className="text-sm font-medium text-gray-200">Show Header</Typography>}
+                  label={<Typography className="font-space font-medium text-sm text-gray-200">Show Header</Typography>}
                   color="blue"                   
                   className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl" 
                   onChange={(e) => setShowHeader(e.target.checked)} 
@@ -376,7 +376,7 @@ function App() {
                 <Switch
                   defaultChecked={carouselMode}
                   ripple={true}
-                  label={<Typography className="text-sm font-medium text-gray-200">Carousel Mode</Typography>}
+                  label={<Typography className="font-space font-medium text-sm text-gray-200">Carousel Mode</Typography>}
                   className="h-full w-full checked:bg-blue-500"
                   containerProps={{ className: "w-11 h-6" }}
                   circleProps={{ className: "before:hidden left-0.5 border-none" }} 

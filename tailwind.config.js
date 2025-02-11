@@ -5,6 +5,9 @@ export default withMT({
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        space: ["SpaceGrotesk", "sans-serif"],
+      },
       colors: {
         gray: {
           50: "#f9fafb",
