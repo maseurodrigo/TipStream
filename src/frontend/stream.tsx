@@ -53,7 +53,7 @@ export default function Viewer() {
     if (!sessionId) return; // Wait until the session ID is available
 
     // Initialize Socket.io client using the server URL from environment variables
-    socketRef.current = io(import.meta.env.VITE_SOCKET_SERVER_URL);
+    socketRef.current = io(import.meta.env.VITE_SOCKET_SERVER_URL, { transports: ['websocket'] });
 
     // Join the session room
     socketRef.current?.emit('joinRoom', sessionId);

@@ -12,11 +12,7 @@ const app = express();
 const server = http.createServer(app);
 
 // Create the Socket.IO instance and attach it to the server
-const io = new Server(server, { 
-    cors: { methods: ["GET", "POST"] }, 
-    pingInterval: 10000, 
-    pingTimeout: 30000 
-});
+const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
 // Set up event listeners for Socket.io
 io.on('connection', (socket) => {

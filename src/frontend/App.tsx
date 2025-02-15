@@ -68,7 +68,7 @@ function App() {
   useEffect(() => {
 
     // Initialize Socket.io client using the server URL from environment variables
-    socketRef.current = io(import.meta.env.VITE_SOCKET_SERVER_URL);
+    socketRef.current = io(import.meta.env.VITE_SOCKET_SERVER_URL, { transports: ['websocket'] });
 
     // Generate a unique session ID using the built-in crypto API
     const randSessionId = crypto.randomUUID();
