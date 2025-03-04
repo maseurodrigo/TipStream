@@ -869,8 +869,8 @@ function App() {
                                   {isStreamMode && bet.status !== 'pending' && (
                                     <span className={`text-sm font-medium px-3 py-1 rounded-lg ${
                                       bet.status === 'green'
-                                        ? 'animate-pulse bg-green-900/20 text-green-400 border border-green-500/20'
-                                        : 'animate-pulse bg-red-900/20 text-red-400 border border-red-500/20'
+                                        ? 'bg-green-900/20 text-green-400 border border-green-500/20'
+                                        : 'bg-red-900/20 text-red-400 border border-red-500/20'
                                     }`}>
                                       {bet.status.toUpperCase()}
                                     </span>
@@ -915,8 +915,8 @@ function App() {
                                     {isStreamMode && bet.status !== 'pending' && (
                                       <span className={`text-sm font-medium px-3 py-1 rounded-lg ${
                                         bet.status === 'green'
-                                          ? 'animate-pulse bg-green-900/20 text-green-400 border border-green-500/20'
-                                          : 'animate-pulse bg-red-900/20 text-red-400 border border-red-500/20'
+                                          ? 'bg-green-900/20 text-green-400 border border-green-500/20'
+                                          : 'bg-red-900/20 text-red-400 border border-red-500/20'
                                       }`}>
                                         {bet.status.toUpperCase()}
                                       </span>
@@ -1153,8 +1153,8 @@ function App() {
                                     {isStreamMode && bet.status !== 'pending' && (
                                       <span className={`text-sm font-medium px-3 py-1 rounded-lg ${
                                         bet.status === 'green'
-                                          ? 'animate-pulse bg-green-900/20 text-green-400 border border-green-500/20'
-                                          : 'animate-pulse bg-red-900/20 text-red-400 border border-red-500/20'
+                                          ? 'bg-green-900/20 text-green-400 border border-green-500/20'
+                                          : 'bg-red-900/20 text-red-400 border border-red-500/20'
                                       }`}>
                                         {bet.status.toUpperCase()}
                                       </span>
@@ -1199,8 +1199,8 @@ function App() {
                                       {isStreamMode && bet.status !== 'pending' && (
                                         <span className={`text-sm font-medium px-3 py-1 rounded-lg ${
                                           bet.status === 'green'
-                                            ? 'animate-pulse bg-green-900/20 text-green-400 border border-green-500/20'
-                                            : 'animate-pulse bg-red-900/20 text-red-400 border border-red-500/20'
+                                            ? 'bg-green-900/20 text-green-400 border border-green-500/20'
+                                            : 'bg-red-900/20 text-red-400 border border-red-500/20'
                                         }`}>
                                           {bet.status.toUpperCase()}
                                         </span>
