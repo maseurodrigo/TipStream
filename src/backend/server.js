@@ -24,13 +24,13 @@ io.on('connection', (socket) => {
     socket.on('joinRoom', (roomName) => { 
         socket.join(roomName);
 
-        // Notify clients when a socket joins or leaves the room
+        // Notify other clients when a socket joins or leaves the room
         socket.broadcast.to(roomName).emit('roomUpdate', { room: roomName });
         
-        // Send last known data to the new client
+        // Send last known data directly to the new client
         if (roomsData[roomName]) { socket.emit("lastDataState", roomsData[roomName]); }
     });
-
+    
     // Handle leave event when a viewer leaves a session
     socket.on('leaveRoom', (roomName) => {
         socket.leave(roomName);
@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
         roomsData[sessionID] = updates;
 
         // Broadcast the updates to all other clients in the same session room
-        socket.broadcast.to(sessionID).emit('receive-update', updates);
+        socket.broadcast.to(sessionID).emit('receiveUpdate', updates);
     });
     
     // Custom event to fetch sockets in a room

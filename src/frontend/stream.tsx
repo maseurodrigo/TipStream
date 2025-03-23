@@ -74,7 +74,7 @@ export default function Viewer() {
     });
 
     // Listen for updates sent to the session
-    socketRef.current?.on('receive-update', (updates) => {
+    socketRef.current?.on('receiveUpdate', (updates) => {
       if (updates.showHeader !== undefined) setShowHeader(updates.showHeader);
       if (updates.carouselMode !== undefined) setCarouselMode(updates.carouselMode);
       if (updates.headerTitle !== undefined) setHeaderTitle(updates.headerTitle);
@@ -87,11 +87,11 @@ export default function Viewer() {
       if (updates.carouselTimer !== undefined) setCarouselTimer(updates.carouselTimer);
       if (updates.bets !== undefined) setBets(updates.bets);
     });
-    
+
     // Cleanup listeners when the component unmounts or session ID changes
     return () => { 
       socketRef.current?.off('lastDataState');
-      socketRef.current?.off('receive-update');
+      socketRef.current?.off('receiveUpdate');
       socketRef.current?.emit('leaveRoom', sessionId);
       socketRef.current?.disconnect();
     };
