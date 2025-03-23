@@ -26,9 +26,9 @@ io.on('connection', (socket) => {
 
         // Notify clients when a socket joins or leaves the room
         socket.broadcast.to(roomName).emit('roomUpdate', { room: roomName });
-
+        
         // Send last known data to the new client
-        if (roomsData[roomName]) { socket.broadcast.to(roomName).emit("lastDataState", roomsData[room]); }
+        if (roomsData[roomName]) { socket.emit("lastDataState", roomsData[roomName]); }
     });
 
     // Handle leave event when a viewer leaves a session
