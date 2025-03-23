@@ -58,6 +58,21 @@ export default function Viewer() {
     // Join the session room
     socketRef.current?.emit('joinRoom', sessionId);
 
+    // Receive last known data state when joining
+    socketRef.current?.on('lastDataState', (updates) => {
+      if (updates.showHeader !== undefined) setShowHeader(updates.showHeader);
+      if (updates.carouselMode !== undefined) setCarouselMode(updates.carouselMode);
+      if (updates.headerTitle !== undefined) setHeaderTitle(updates.headerTitle);
+      if (updates.logoUrl !== undefined) setLogoUrl(updates.logoUrl);
+      if (updates.logoSize !== undefined) setLogoSize(updates.logoSize);
+      if (updates.baseColor !== undefined) setBaseColor(updates.baseColor);
+      if (updates.opacity !== undefined) setOpacity(updates.opacity);
+      if (updates.maxBetsPCol !== undefined) setMaxBetsPCol(updates.maxBetsPCol);
+      if (updates.maxCarouselWidth !== undefined) setMaxCarouselWidth(updates.maxCarouselWidth);
+      if (updates.carouselTimer !== undefined) setCarouselTimer(updates.carouselTimer);
+      if (updates.bets !== undefined) setBets(updates.bets);
+    });
+
     // Listen for updates sent to the session
     socketRef.current?.on('receive-update', (updates) => {
       if (updates.showHeader !== undefined) setShowHeader(updates.showHeader);
@@ -72,9 +87,10 @@ export default function Viewer() {
       if (updates.carouselTimer !== undefined) setCarouselTimer(updates.carouselTimer);
       if (updates.bets !== undefined) setBets(updates.bets);
     });
-
+    
     // Cleanup listeners when the component unmounts or session ID changes
     return () => { 
+      socketRef.current?.off('lastDataState');
       socketRef.current?.off('receive-update');
       socketRef.current?.emit('leaveRoom', sessionId);
       socketRef.current?.disconnect();

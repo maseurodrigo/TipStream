@@ -5,6 +5,9 @@ import { Server } from 'socket.io';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Store the last known state of each room
+const roomsData = {};
+
 // Initialize Express app
 const app = express();
 
@@ -18,10 +21,14 @@ const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } 
 io.on('connection', (socket) => {
 
     // Handle join event when a viewer joins a session
-    // + Notify clients when a socket joins or leaves the room
     socket.on('joinRoom', (roomName) => { 
         socket.join(roomName);
+
+        // Notify clients when a socket joins or leaves the room
         socket.broadcast.to(roomName).emit('roomUpdate', { room: roomName });
+
+        // Send last known data to the new client
+        if (roomsData[roomName]) { socket.broadcast.to(roomName).emit("lastDataState", roomsData[room]); }
     });
 
     // Handle leave event when a viewer leaves a session
@@ -38,6 +45,9 @@ io.on('connection', (socket) => {
     // Handle update event from the dashboard
     socket.on('update', (data) => {
         const { sessionID, updates } = data;
+        
+        // Store the last state of the room
+        roomsData[sessionID] = updates;
 
         // Broadcast the updates to all other clients in the same session room
         socket.broadcast.to(sessionID).emit('receive-update', updates);
