@@ -8,23 +8,6 @@ import { fileURLToPath } from 'url';
 // Store the last known state of each room
 const roomsData = {};
 
-// Function to reset roomsData
-const resetRoomsData = () => { Object.keys(roomsData).forEach(key => delete roomsData[key]); };
-
-// Function to calculate time until next midnight
-const getMillisecondsUntilMidnight = () => {
-    const now = new Date();
-    const midnight = new Date(now);
-    midnight.setHours(24, 0, 0, 0);
-    return midnight.getTime() - now.getTime();
-};
-
-// Schedule the first reset
-setTimeout(() => {
-    resetRoomsData();
-    setInterval(resetRoomsData, 24 * 60 * 60 * 1000); // Repeat every 24 hours
-}, getMillisecondsUntilMidnight());
-
 // Initialize Express app
 const app = express();
 
