@@ -482,7 +482,7 @@ function App() {
                   <label className="block text-sm font-medium text-gray-200 mb-3">Bet Carousel Size</label>
                   <input
                     type="number"
-                    min="25" 
+                    min="15" 
                     max="95"
                     step="5"
                     value={maxCarouselWidth}
