@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 interface SingleBet {
   id: string;
   tip: string;
+  teams: string;
   odds: string;
   balance: string;
   balanceType: 'units' | 'money';
@@ -20,6 +21,7 @@ interface MultipleBet {
   id: string;
   tips: {
     tip: string;
+    teams: string;
     odds: string;
   }[];
   balance: string;
@@ -36,16 +38,18 @@ function App() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [newTip, setNewTip] = useState('');
+  const [newTeams, setNewTeams] = useState('');
   const [newOdds, setNewOdds] = useState('');
   const [newBalance, setNewBalance] = useState('');
   const [newBalanceType, setNewBalanceType] = useState<'units' | 'money'>('units');
   const [bets, setBets] = useState<Bet[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+  const [editTeams, setEditTeams] = useState('');
   const [editOdds, setEditOdds] = useState('');
   const [editBalance, setEditBalance] = useState('');
   const [editBalanceType, setEditBalanceType] = useState<'units' | 'money'>('units');
-  const [editingMultipleTips, setEditingMultipleTips] = useState<{ tip: string; odds: string }[]>([]);
+  const [editingMultipleTips, setEditingMultipleTips] = useState<{ tip: string; odds: string; teams: string }[]>([]);
   const [showHeader, setShowHeader] = useState(true);
   const [carouselMode, setCarouselMode] = useState(false);
   const [headerTitle, setHeaderTitle] = useState('Live Bets');
@@ -57,11 +61,11 @@ function App() {
   const [maxCarouselWidth, setMaxCarouselWidth] = useState(95);
   const [carouselTimer, setCarouselTimer] = useState(8);
   const [betType, setBetType] = useState<'single' | 'multiple'>('single');
-  const [multipleTips, setMultipleTips] = useState<{ tip: string; odds: string }[]>([{ tip: '', odds: '' }]);
+  const [multipleTips, setMultipleTips] = useState<{ tip: string; odds: string; teams: string }[]>([{ tip: '', odds: '', teams: '' }]);
   const [isStreamMode, setIsStreamMode] = useState(false);
   const [sessionID, setSessionID] = useState(''); // State to store the unique session ID
   const [wsSockets, setWSSockets] = useState<string[]>([]); // To store fetched socket IDs
-
+  
   // Create a ref to store the Socket.io client instance
   const socketRef = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
 
@@ -112,8 +116,8 @@ function App() {
       setter(value);
     }
   };
-
-  const calculateTotalOdds = (tips: { tip: string; odds: string }[]): string => {
+  
+  const calculateTotalOdds = (tips: { tip: string; odds: string; teams?: string }[]): string => {
     const total = tips.reduce((acc, curr) => {
       const odds = parseFloat(curr.odds) || 0;
       return acc * (odds || 1);
@@ -123,9 +127,9 @@ function App() {
 
   const addTip = (isEditing: boolean = false) => {
     if (isEditing) {
-      setEditingMultipleTips([...editingMultipleTips, { tip: '', odds: '' }]);
+      setEditingMultipleTips([...editingMultipleTips, { tip: '', odds: '', teams: '' }]);
     } else {
-      setMultipleTips([...multipleTips, { tip: '', odds: '' }]);
+      setMultipleTips([...multipleTips, { tip: '', odds: '', teams: '' }]);
     }
   };
 
@@ -137,7 +141,7 @@ function App() {
     }
   };
 
-  const updateMultipleTip = (index: number, field: 'tip' | 'odds', value: string, isEditing: boolean = false) => {
+  const updateMultipleTip = (index: number, field: 'tip' | 'odds' | 'teams', value: string, isEditing: boolean = false) => {
     const newTips = isEditing ? [...editingMultipleTips] : [...multipleTips];
     if (field === 'odds') {
       const regex = /^\d*\.?\d*$/;
@@ -153,13 +157,14 @@ function App() {
 
   const resetForm = () => {
     setNewTip('');
+    setNewTeams('');
     setNewOdds('');
     setNewBalance('');
     setNewBalanceType('units');
-    setMultipleTips([{ tip: '', odds: '' }]);
+    setMultipleTips([{ tip: '', odds: '', teams: '' }]);
     setBetType('single');
   };
-
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -169,6 +174,7 @@ function App() {
       const bet: SingleBet = {
         id: crypto.randomUUID(),
         tip: newTip.trim(),
+        teams: newTeams.trim(),
         odds: newOdds.trim(),
         balance: newBalance.trim(),
         balanceType: newBalanceType,
@@ -179,7 +185,7 @@ function App() {
 
       setBets((prev) => [...prev, bet]);
     } else {
-      const validTips = multipleTips.filter(tip => tip.tip.trim() && tip.odds.trim());
+      const validTips = multipleTips.filter(tip => tip.tip.trim() && tip.odds.trim() && tip.teams.trim());
       if (validTips.length < 2) return;
 
       const bet: MultipleBet = {
@@ -222,6 +228,7 @@ function App() {
     setEditingId(bet.id);
     if (bet.type === 'single') {
       setEditText(bet.tip);
+      setEditTeams(bet.teams);
       setEditOdds(bet.odds);
       setEditBalance(bet.balance);
       setEditBalanceType(bet.balanceType);
@@ -242,6 +249,7 @@ function App() {
             return { 
               ...bet, 
               tip: editText.trim(), 
+              teams: editTeams.trim(),
               odds: editOdds.trim(),
               balance: editBalance.trim(),
               balanceType: editBalanceType
@@ -368,20 +376,20 @@ function App() {
                 <Checkbox 
                   defaultChecked={showHeader}
                   ripple={true}
-                  label={<Typography className="font-space font-medium text-sm text-gray-200">Show Header</Typography>}
-                  color="blue"                   
-                  className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl" 
-                  onChange={(e) => setShowHeader(e.target.checked)} 
-                  crossOrigin={undefined} />
+                  label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Show Header</Typography>}
+                  color="blue"
+                  className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
+                  onChange={(e) => setShowHeader(e.target.checked)}
+                  crossOrigin={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
                 <Switch
                   defaultChecked={carouselMode}
                   ripple={true}
-                  label={<Typography className="font-space font-medium text-sm text-gray-200">Carousel Mode</Typography>}
+                  label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Carousel Mode</Typography>}
                   className="h-full w-full checked:bg-blue-500"
                   containerProps={{ className: "w-11 h-6" }}
-                  circleProps={{ className: "before:hidden left-0.5 border-none" }} 
-                  onChange={(e) => setCarouselMode(e.target.checked)}                  
-                  crossOrigin={undefined} />
+                  circleProps={{ className: "before:hidden left-0.5 border-none" }}
+                  onChange={(e) => setCarouselMode(e.target.checked)}
+                  crossOrigin={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
               </div>
               <div className={showHeader ? 'block' : 'hidden'}>
                 <label className="block text-sm font-medium text-gray-200 mb-3">Title</label>
@@ -566,6 +574,15 @@ function App() {
                       className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
                     />
                   </div>
+                  <div>
+                    <input
+                      type="text"
+                      value={newTeams}
+                      onChange={(e) => setNewTeams(e.target.value)}
+                      placeholder="Enter teams (e.g., Team A vs Team B)..."
+                      className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
+                    />
+                  </div>
                   <div className="flex gap-4">
                     <div className="flex-1">
                       <input
@@ -608,6 +625,13 @@ function App() {
                           value={tip.tip}
                           onChange={(e) => updateMultipleTip(index, 'tip', e.target.value)}
                           placeholder={`Tip ${index + 1}`}
+                          className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 mb-2"
+                        />
+                        <input
+                          type="text"
+                          value={tip.teams}
+                          onChange={(e) => updateMultipleTip(index, 'teams', e.target.value)}
+                          placeholder={`Teams (e.g., Team A vs Team B)`}
                           className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                         />
                       </div>
@@ -720,7 +744,7 @@ function App() {
                 className="flex overflow-hidden rounded-lg"
                 prevArrow={({ handlePrev }) => <span className="hidden" onClick={handlePrev} />}
                 nextArrow={({ handleNext }) => <span className="hidden" onClick={handleNext} />}
-                navigation={() => <div className="hidden" />}>
+                navigation={() => <div className="hidden" />} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 {bets.map((bet) => (
                     <motion.div
                       initial={{ opacity: 0, y: -20 }}
@@ -739,6 +763,13 @@ function App() {
                                   onChange={(e) => setEditText(e.target.value)}
                                   className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                                   autoFocus
+                                />
+                                <input
+                                  type="text"
+                                  value={editTeams}
+                                  onChange={(e) => setEditTeams(e.target.value)}
+                                  placeholder="Enter teams (e.g., Team A vs Team B)..."
+                                  className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                                 />
                                 <div className="flex gap-4">
                                   <input
@@ -780,6 +811,13 @@ function App() {
                                         value={tip.tip}
                                         onChange={(e) => updateMultipleTip(index, 'tip', e.target.value, true)}
                                         placeholder={`Tip ${index + 1}`}
+                                        className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 mb-2"
+                                      />
+                                      <input
+                                        type="text"
+                                        value={tip.teams}
+                                        onChange={(e) => updateMultipleTip(index, 'teams', e.target.value, true)}
+                                        placeholder={`Teams (e.g., Team A vs Team B)`}
                                         className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                                       />
                                     </div>
@@ -841,6 +879,7 @@ function App() {
                           <>
                             {bet.type === 'single' ? (
                               <>
+                                <p className="font-semibold text-blue-300 text-base mb-1 truncate">{bet.teams}</p>
                                 <p className="font-medium text-white text-lg tracking-tight truncate">{bet.tip}</p>
                                 <div className="flex items-center gap-4 mt-2">
                                   {bet.odds && (
@@ -881,11 +920,14 @@ function App() {
                               <>
                                 <div className="space-y-2">
                                   {bet.tips.map((tip, index) => (
-                                    <div key={index} className="flex items-center gap-4">
-                                      <p className="font-medium text-white text-lg tracking-tight truncate">{tip.tip}</p>
-                                      <span className="text-sm font-medium px-2 py-1 rounded-lg shadow-md bg-gray-800/80 text-gray-300">
-                                        {tip.odds}
-                                      </span>
+                                    <div key={index} className="flex flex-col gap-1">
+                                      <span className="text-blue-300 text-sm font-semibold">{tip.teams}</span>
+                                      <div className="flex items-center gap-4">
+                                        <p className="font-medium text-white text-lg tracking-tight truncate">{tip.tip}</p>
+                                        <span className="text-sm font-medium px-2 py-1 rounded-lg shadow-md bg-gray-800/80 text-gray-300">
+                                          {tip.odds}
+                                        </span>
+                                      </div>
                                     </div>
                                   ))}
                                   <div className="flex items-center gap-4 mt-3">
@@ -1024,6 +1066,13 @@ function App() {
                                     className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                                     autoFocus
                                   />
+                                  <input
+                                    type="text"
+                                    value={editTeams}
+                                    onChange={(e) => setEditTeams(e.target.value)}
+                                    placeholder="Enter teams (e.g., Team A vs Team B)..."
+                                    className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+                                  />
                                   <div className="flex gap-4">
                                     <input
                                       type="text"
@@ -1064,6 +1113,13 @@ function App() {
                                           value={tip.tip}
                                           onChange={(e) => updateMultipleTip(index, 'tip', e.target.value, true)}
                                           placeholder={`Tip ${index + 1}`}
+                                          className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 mb-2"
+                                        />
+                                        <input
+                                          type="text"
+                                          value={tip.teams}
+                                          onChange={(e) => updateMultipleTip(index, 'teams', e.target.value, true)}
+                                          placeholder={`Teams (e.g., Team A vs Team B)`}
                                           className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                                         />
                                       </div>
@@ -1125,6 +1181,7 @@ function App() {
                             <>
                               {bet.type === 'single' ? (
                                 <>
+                                  <p className="font-semibold text-blue-300 text-base mb-1 truncate">{bet.teams}</p>
                                   <p className="font-medium text-white text-lg tracking-tight truncate">{bet.tip}</p>
                                   <div className="flex items-center gap-4 mt-2">
                                     {bet.odds && (
@@ -1165,11 +1222,14 @@ function App() {
                                 <>
                                   <div className="space-y-2">
                                     {bet.tips.map((tip, index) => (
-                                      <div key={index} className="flex items-center gap-4">
-                                        <p className="font-medium text-white text-lg tracking-tight truncate">{tip.tip}</p>
-                                        <span className="text-sm font-medium px-2 py-1 rounded-lg shadow-md bg-gray-800/80 text-gray-300">
-                                          {tip.odds}
-                                        </span>
+                                      <div key={index} className="flex flex-col gap-1">
+                                        <span className="text-blue-300 text-sm font-semibold">{tip.teams}</span>
+                                        <div className="flex items-center gap-4">
+                                          <p className="font-medium text-white text-lg tracking-tight truncate">{tip.tip}</p>
+                                          <span className="text-sm font-medium px-2 py-1 rounded-lg shadow-md bg-gray-800/80 text-gray-300">
+                                            {tip.odds}
+                                          </span>
+                                        </div>
                                       </div>
                                     ))}
                                     <div className="flex items-center gap-4 mt-3">

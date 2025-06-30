@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 interface SingleBet {
   id: string;
   tip: string;
+  teams: string;
   odds: string;
   balance: string;
   balanceType: 'units' | 'money';
@@ -20,6 +21,7 @@ interface MultipleBet {
   id: string;
   tips: {
     tip: string;
+    teams: string;
     odds: string;
   }[];
   balance: string;
@@ -155,7 +157,7 @@ export default function Viewer() {
             className="flex overflow-hidden rounded-lg"
             prevArrow={({ handlePrev }) => <span className="hidden" onClick={handlePrev} />}
             nextArrow={({ handleNext }) => <span className="hidden" onClick={handleNext} />}
-            navigation={() => <div className="hidden" />}>
+            navigation={() => <div className="hidden" />} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
             {bets.map((bet) => (
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
@@ -166,6 +168,7 @@ export default function Viewer() {
                 <div className="flex-1 min-w-0">
                   {bet.type === 'single' ? (
                     <>
+                      <p className="font-semibold text-blue-300 text-base mb-1 truncate">{bet.teams}</p>
                       <p className="font-medium text-white text-lg tracking-tight truncate">{bet.tip}</p>
                       <div className="flex items-center gap-4 mt-2">
                         {bet.odds && (
@@ -207,7 +210,12 @@ export default function Viewer() {
                       <div className="space-y-2">
                         {bet.tips.map((tip, index) => (
                           <div key={index} className="flex items-center gap-4">
-                            <p className="font-medium text-white text-lg tracking-tight truncate">{tip.tip}</p>
+                            <div className="flex flex-col">
+                              <span className="font-semibold text-blue-300 text-base mb-1 truncate">
+                                {tip.teams}
+                              </span>
+                              <p className="font-medium text-white text-lg tracking-tight truncate">{tip.tip}</p>
+                            </div>
                             <span className="text-sm font-medium px-2 py-1 rounded-lg shadow-md bg-gray-800/80 text-gray-300">
                               {tip.odds}
                             </span>
@@ -275,6 +283,7 @@ export default function Viewer() {
                   <div className="flex-1 min-w-0">
                     {bet.type === 'single' ? (
                       <>
+                        <p className="font-semibold text-blue-300 text-base mb-1 truncate">{bet.teams}</p>
                         <p className="font-medium text-white text-lg tracking-tight truncate">{bet.tip}</p>
                         <div className="flex items-center gap-4 mt-2">
                           {bet.odds && (
@@ -316,7 +325,12 @@ export default function Viewer() {
                         <div className="space-y-2">
                           {bet.tips.map((tip, index) => (
                             <div key={index} className="flex items-center gap-4">
-                              <p className="font-medium text-white text-lg tracking-tight truncate">{tip.tip}</p>
+                              <div className="flex flex-col">
+                                <span className="font-semibold text-blue-300 text-base mb-1 truncate">
+                                  {tip.teams}
+                                </span>
+                                <p className="font-medium text-white text-lg tracking-tight truncate">{tip.tip}</p>
+                              </div>
                               <span className="text-sm font-medium px-2 py-1 rounded-lg shadow-md bg-gray-800/80 text-gray-300">
                                 {tip.odds}
                               </span>
