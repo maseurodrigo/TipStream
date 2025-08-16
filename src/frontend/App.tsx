@@ -644,7 +644,7 @@ function App() {
                     <select
                       value={newSite}
                       onChange={e => setNewSite(e.target.value)}
-                      className="w-full p-4 rounded-xl bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                      className="w-full p-4 rounded-xl bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 appearance-none transition-all duration-300"
                     >
                       {bettingSites.map(site => (
                         <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
@@ -726,7 +726,7 @@ function App() {
                         <select
                           value={newSite}
                           onChange={e => setNewSite(e.target.value)}
-                          className="w-full p-3 rounded-xl bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                          className="w-full p-3 rounded-xl bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 appearance-none transition-all duration-300"
                         >
                           {bettingSites.map(site => (
                             <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
@@ -852,7 +852,7 @@ function App() {
                                   <select
                                     value={editSite}
                                     onChange={e => setEditSite(e.target.value)}
-                                    className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                                    className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 appearance-none transition-all duration-300"
                                   >
                                     {bettingSites.map(site => (
                                       <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
@@ -933,7 +933,7 @@ function App() {
                                       <select
                                         value={editSite}
                                         onChange={e => setEditSite(e.target.value)}
-                                        className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                                        className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 appearance-none transition-all duration-300"
                                       >
                                         {bettingSites.map(site => (
                                           <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
@@ -1182,7 +1182,7 @@ function App() {
                                     <select
                                       value={editSite}
                                       onChange={e => setEditSite(e.target.value)}
-                                      className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                                      className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 appearance-none transition-all duration-300"
                                     >
                                       {bettingSites.map(site => (
                                         <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
@@ -1263,7 +1263,7 @@ function App() {
                                         <select
                                           value={editSite}
                                           onChange={e => setEditSite(e.target.value)}
-                                          className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                                          className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 appearance-none transition-all duration-300"
                                         >
                                           {bettingSites.map(site => (
                                             <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
