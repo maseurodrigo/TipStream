@@ -37,13 +37,6 @@ interface MultipleBet {
 type Bet = SingleBet | MultipleBet;
 
 export default function Viewer() {
-  const bettingSites = [
-    { value: 'betano', label: 'Betano', logo: '/src/assets/logos/betano.png' },
-    { value: 'esc', label: 'ESC', logo: '/src/assets/logos/esc.png' },
-    { value: 'lebull', label: 'Lebull', logo: '/src/assets/logos/lebull.png' },
-    { value: 'solverde', label: 'Solverde', logo: '/src/assets/logos/solverde.png' },
-  ];
-
   const { sessionId } = useParams(); // Retrieve the session ID from the URL  
   const [showHeader, setShowHeader] = useState(true);
   const [carouselMode, setCarouselMode] = useState(false);
@@ -55,6 +48,7 @@ export default function Viewer() {
   const [maxBetsPCol, setMaxBetsPCol] = useState(8);
   const [maxCarouselWidth, setMaxCarouselWidth] = useState(95);
   const [carouselTimer, setCarouselTimer] = useState(8);
+  const [bettingSites, setBettingSites] = useState<{ value: string; label: string; logo: string }[]>([]);
   const [bets, setBets] = useState<Bet[]>([]);
 
   // Create a ref to store the Socket.io client instance
@@ -62,6 +56,12 @@ export default function Viewer() {
 
   useEffect(() => {
     if (!sessionId) return; // Wait until the session ID is available
+
+    // Load betting sites from external JSON file
+    fetch('/src/data/bettingSites.json')
+      .then(res => res.json())
+      .then(data => setBettingSites(data))
+      .catch(() => setBettingSites([]));
 
     // Initialize Socket.io client using the server URL from environment variables
     socketRef.current = io(import.meta.env.VITE_SOCKET_SERVER_URL, { transports: ['websocket'] });

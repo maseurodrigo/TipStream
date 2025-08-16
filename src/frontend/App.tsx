@@ -37,19 +37,13 @@ interface MultipleBet {
 type Bet = SingleBet | MultipleBet;
 
 function App() {
-  const bettingSites = [
-    { value: 'betano', label: 'Betano', logo: '/src/assets/logos/betano.png' },
-    { value: 'esc', label: 'ESC', logo: '/src/assets/logos/esc.png' },
-    { value: 'lebull', label: 'Lebull', logo: '/src/assets/logos/lebull.png' },
-    { value: 'solverde', label: 'Solverde', logo: '/src/assets/logos/solverde.png' },
-  ];
-  
+  const [bettingSites, setBettingSites] = useState<{ value: string; label: string; logo: string }[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [newTip, setNewTip] = useState('');
   const [newTeams, setNewTeams] = useState('');
   const [newOdds, setNewOdds] = useState('');
-  const [newSite, setNewSite] = useState(bettingSites[0].value);
+  const [newSite, setNewSite] = useState('');
   const [newBalance, setNewBalance] = useState('');
   const [newBalanceType, setNewBalanceType] = useState<'units' | 'money'>('units');
   const [bets, setBets] = useState<Bet[]>([]);
@@ -57,7 +51,7 @@ function App() {
   const [editText, setEditText] = useState('');
   const [editTeams, setEditTeams] = useState('');
   const [editOdds, setEditOdds] = useState('');
-  const [editSite, setEditSite] = useState(bettingSites[0].value);
+  const [editSite, setEditSite] = useState('');
   const [editBalance, setEditBalance] = useState('');
   const [editBalanceType, setEditBalanceType] = useState<'units' | 'money'>('units');
   const [editingMultipleTips, setEditingMultipleTips] = useState<{ tip: string; odds: string; teams: string }[]>([]);
@@ -82,6 +76,12 @@ function App() {
 
   useEffect(() => {
 
+    // Load betting sites from external JSON file on mount
+    fetch('/src/data/bettingSites.json')
+      .then(res => res.json())
+      .then(data => setBettingSites(data))
+      .catch(() => setBettingSites([]));
+      
     // Initialize Socket.io client using the server URL from environment variables
     socketRef.current = io(import.meta.env.VITE_SOCKET_SERVER_URL, { transports: ['websocket'] });
 
@@ -113,6 +113,14 @@ function App() {
 
   }, []);
 
+  // Set default selected site when bettingSites are loaded
+  useEffect(() => {
+    if (bettingSites.length > 0) {
+      setNewSite(bettingSites[0].value);
+      setEditSite(bettingSites[0].value);
+    }
+  }, [bettingSites]);
+  
   useEffect(() => {
     // Send the updated text to the backend along with the session ID
     socketRef.current?.emit('update', { 
@@ -718,7 +726,7 @@ function App() {
                         <select
                           value={newSite}
                           onChange={e => setNewSite(e.target.value)}
-                          className="w-full p-4 rounded-xl bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                          className="w-full p-3 rounded-xl bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
                         >
                           {bettingSites.map(site => (
                             <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
