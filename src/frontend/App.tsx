@@ -1127,16 +1127,16 @@ function App() {
               )}
             </div>
           ) : (  
-            <div className="grid gap-2 justify-center max-w-[90vw] max-h-[90vh] grid-flow-col auto-cols-max">
+            <div className="flex gap-2 max-w-[90vw] max-h-[90vh] w-full">
               {betColumns.map((column: Bet[], columnIndex: number) => (
-                <div key={columnIndex} className="flex flex-col space-y-2 min-w-80">
+                <div key={columnIndex} className="flex flex-col space-y-2 w-full">
                   {column.map((bet) => (
                       <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
                         key={bet.id}
-                        className={`bg-gray-900/80 p-6 rounded-lg shadow-lg flex items-center gap-4`}
+                        className={`bg-gray-900/80 p-6 rounded-lg shadow-lg flex items-center gap-4 w-full`}
                       >
                         <div className="flex-1 min-w-0 mr-6">
                           {editingId === bet.id ? (
@@ -1459,34 +1459,36 @@ function App() {
             </div>
           )}
           {/* Drag handle for resizing */}
-          <div
-            className="absolute top-0 right-0 h-full w-3 cursor-ew-resize z-50"
-            style={{ background: 'transparent' }}
-            onMouseDown={e => {
-              e.preventDefault();
-              const startX = e.clientX;
-              const startWidth = tipsBoxWidth;
+          {!carouselMode && (
+            <div
+              className="absolute top-0 right-0 h-full w-3 cursor-ew-resize z-50"
+              style={{ background: 'transparent' }}
+              onMouseDown={e => {
+                e.preventDefault();
+                const startX = e.clientX;
+                const startWidth = tipsBoxWidth;
 
-              const onMouseMove = (moveEvent: MouseEvent) => {
-                const delta = moveEvent.clientX - startX;
-                let newWidth = startWidth + delta;
-                newWidth = Math.max(300, Math.min(1200, newWidth));
-                setTipsBoxWidth(newWidth);
-              };
+                const onMouseMove = (moveEvent: MouseEvent) => {
+                  const delta = moveEvent.clientX - startX;
+                  let newWidth = startWidth + delta;
+                  newWidth = Math.max(300, Math.min(1200, newWidth));
+                  setTipsBoxWidth(newWidth);
+                };
 
-              const onMouseUp = () => {
-                localStorage.setItem('tipsBoxWidth', tipsBoxWidth.toString());
-                window.removeEventListener('mousemove', onMouseMove);
-                window.removeEventListener('mouseup', onMouseUp);
-              };
+                const onMouseUp = () => {
+                  localStorage.setItem('tipsBoxWidth', tipsBoxWidth.toString());
+                  window.removeEventListener('mousemove', onMouseMove);
+                  window.removeEventListener('mouseup', onMouseUp);
+                };
 
-              window.addEventListener('mousemove', onMouseMove);
-              window.addEventListener('mouseup', onMouseUp);
-            }}
-          >
-            {/* Add a visual indicator */}
-            <div className="h-full w-1 bg-gray-500/40 rounded-full mx-auto"></div>
-          </div>
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+              }}
+            >
+              {/* Add a visual indicator */}
+              <div className="h-full w-1 bg-gray-500/40 rounded-full mx-auto"></div>
+            </div>
+          )}
         </div>
       </div>
     </div>
