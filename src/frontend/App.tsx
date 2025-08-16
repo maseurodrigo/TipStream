@@ -1444,7 +1444,7 @@ function App() {
           )}
           {/* Drag handle for resizing */}
           <div
-            className="absolute top-0 right-0 h-full w-3 cursor-ew-resize z-50"
+            className="absolute top-0 right-0 h-full w-3 py-8 cursor-ew-resize z-50"
             style={{ background: 'transparent' }}
             onMouseDown={e => {
               e.preventDefault();
@@ -1469,7 +1469,7 @@ function App() {
             }}
           >
             {/* Add a visual indicator */}
-            <div className="h-full w-1 py-8 bg-gray-500/40 rounded-full mx-auto"></div>
+            <div className="h-full w-1 bg-gray-500/40 rounded-full mx-auto"></div>
           </div>
         </div>
       </div>
