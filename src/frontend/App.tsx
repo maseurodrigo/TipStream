@@ -38,6 +38,7 @@ type Bet = SingleBet | MultipleBet;
 
 function App() {
   const [bettingSites, setBettingSites] = useState<{ value: string; label: string; logo: string }[]>([]);
+  const [tipsBoxWidth, setTipsBoxWidth] = useState(400);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [newTip, setNewTip] = useState('');
@@ -81,7 +82,11 @@ function App() {
       .then(res => res.json())
       .then(data => setBettingSites(data))
       .catch(() => setBettingSites([]));
-      
+
+    // Load stored tips box width from localStorage on mount
+    const storedWidth = localStorage.getItem('tipsBoxWidth');
+    if (storedWidth) setTipsBoxWidth(Number(storedWidth));
+
     // Initialize Socket.io client using the server URL from environment variables
     socketRef.current = io(import.meta.env.VITE_SOCKET_SERVER_URL, { transports: ['websocket'] });
 
@@ -125,9 +130,9 @@ function App() {
     // Send the updated text to the backend along with the session ID
     socketRef.current?.emit('update', { 
       sessionID, 
-      updates: { showHeader, carouselMode, logoUrl, logoSize, headerTitle, baseColor, opacity, maxBetsPCol, maxCarouselWidth, carouselTimer, bets } 
+      updates: { tipsBoxWidth, showHeader, carouselMode, logoUrl, logoSize, headerTitle, baseColor, opacity, maxBetsPCol, maxCarouselWidth, carouselTimer, bets } 
     });
-  }, [showHeader, carouselMode, logoUrl, logoSize, headerTitle, baseColor, opacity, maxBetsPCol, maxCarouselWidth, carouselTimer, bets]);
+  }, [tipsBoxWidth, showHeader, carouselMode, logoUrl, logoSize, headerTitle, baseColor, opacity, maxBetsPCol, maxCarouselWidth, carouselTimer, bets]);
   
   const handleNumberChange = (value: string, setter: (value: string) => void) => {
     const regex = /^\d*\.?\d*$/;
@@ -755,7 +760,10 @@ function App() {
         <div 
           className="p-2 rounded-lg backdrop-blur-lg shadow-[0_0_35px_rgba(0,0,0,0.2)] hover:shadow-[0_0_50px_rgba(0,0,0,0.3)] transition-shadow duration-300" 
           style={{ 
-            backgroundColor: getColorWithOpacity(baseColor, 0.4)
+            backgroundColor: getColorWithOpacity(baseColor, 0.4),
+            width: tipsBoxWidth,
+            minWidth: 300,
+            maxWidth: 1200
           }}
         >
           {showHeader && (
@@ -1450,6 +1458,35 @@ function App() {
               )}
             </div>
           )}
+          {/* Drag handle for resizing */}
+          <div
+            className="absolute top-0 right-0 h-full w-3 cursor-ew-resize z-50"
+            style={{ background: 'transparent' }}
+            onMouseDown={e => {
+              e.preventDefault();
+              const startX = e.clientX;
+              const startWidth = tipsBoxWidth;
+
+              const onMouseMove = (moveEvent: MouseEvent) => {
+                const delta = moveEvent.clientX - startX;
+                let newWidth = startWidth + delta;
+                newWidth = Math.max(300, Math.min(1200, newWidth));
+                setTipsBoxWidth(newWidth);
+              };
+
+              const onMouseUp = () => {
+                localStorage.setItem('tipsBoxWidth', tipsBoxWidth.toString());
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('mouseup', onMouseUp);
+              };
+
+              window.addEventListener('mousemove', onMouseMove);
+              window.addEventListener('mouseup', onMouseUp);
+            }}
+          >
+            {/* Add a visual indicator */}
+            <div className="h-full w-1 bg-gray-500/40 rounded-full mx-auto"></div>
+          </div>
         </div>
       </div>
     </div>

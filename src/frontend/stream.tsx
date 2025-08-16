@@ -37,7 +37,8 @@ interface MultipleBet {
 type Bet = SingleBet | MultipleBet;
 
 export default function Viewer() {
-  const { sessionId } = useParams(); // Retrieve the session ID from the URL  
+  const { sessionId } = useParams(); // Retrieve the session ID from the URL
+  const [tipsBoxWidth, setTipsBoxWidth] = useState(400);
   const [showHeader, setShowHeader] = useState(true);
   const [carouselMode, setCarouselMode] = useState(false);
   const [headerTitle, setHeaderTitle] = useState('Live Bets');
@@ -71,6 +72,7 @@ export default function Viewer() {
 
     // Receive last known data state when joining
     socketRef.current?.on('lastDataState', (updates) => {
+      if (updates.tipsBoxWidth !== undefined) setTipsBoxWidth(updates.tipsBoxWidth);
       if (updates.showHeader !== undefined) setShowHeader(updates.showHeader);
       if (updates.carouselMode !== undefined) setCarouselMode(updates.carouselMode);
       if (updates.headerTitle !== undefined) setHeaderTitle(updates.headerTitle);
@@ -86,6 +88,7 @@ export default function Viewer() {
 
     // Listen for updates sent to the session
     socketRef.current?.on('receiveUpdate', (updates) => {
+      if (updates.tipsBoxWidth !== undefined) setTipsBoxWidth(updates.tipsBoxWidth);
       if (updates.showHeader !== undefined) setShowHeader(updates.showHeader);
       if (updates.carouselMode !== undefined) setCarouselMode(updates.carouselMode);
       if (updates.headerTitle !== undefined) setHeaderTitle(updates.headerTitle);
@@ -131,7 +134,8 @@ export default function Viewer() {
     <div 
       className="p-2 rounded-lg backdrop-blur-lg shadow-[0_0_35px_rgba(0,0,0,0.2)] hover:shadow-[0_0_50px_rgba(0,0,0,0.3)] transition-shadow duration-300" 
       style={{ 
-        backgroundColor: getColorWithOpacity(baseColor, 0.4)
+        backgroundColor: getColorWithOpacity(baseColor, 0.4),
+        width: tipsBoxWidth
       }}>
       {showHeader && (
         <div 
