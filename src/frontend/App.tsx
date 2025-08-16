@@ -64,7 +64,6 @@ function App() {
   const [baseColor, setBaseColor] = useState('#2D3748');
   const [opacity, setOpacity] = useState(0.8);
   const [maxBetsPCol, setMaxBetsPCol] = useState(8);
-  const [maxCarouselWidth, setMaxCarouselWidth] = useState(95);
   const [carouselTimer, setCarouselTimer] = useState(8);
   const [betType, setBetType] = useState<'single' | 'multiple'>('single');
   const [multipleTips, setMultipleTips] = useState<{ tip: string; odds: string; teams: string }[]>([{ tip: '', odds: '', teams: '' }]);
@@ -130,9 +129,9 @@ function App() {
     // Send the updated text to the backend along with the session ID
     socketRef.current?.emit('update', { 
       sessionID, 
-      updates: { tipsBoxWidth, showHeader, carouselMode, logoUrl, logoSize, headerTitle, baseColor, opacity, maxBetsPCol, maxCarouselWidth, carouselTimer, bets } 
+      updates: { tipsBoxWidth, showHeader, carouselMode, logoUrl, logoSize, headerTitle, baseColor, opacity, maxBetsPCol, carouselTimer, bets } 
     });
-  }, [tipsBoxWidth, showHeader, carouselMode, logoUrl, logoSize, headerTitle, baseColor, opacity, maxBetsPCol, maxCarouselWidth, carouselTimer, bets]);
+  }, [tipsBoxWidth, showHeader, carouselMode, logoUrl, logoSize, headerTitle, baseColor, opacity, maxBetsPCol, carouselTimer, bets]);
   
   const handleNumberChange = (value: string, setter: (value: string) => void) => {
     const regex = /^\d*\.?\d*$/;
@@ -517,20 +516,7 @@ function App() {
                 />
               </div>
               <div className={`${carouselMode ? 'flex items-center justify-center gap-6' : 'hidden'}`}>
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-gray-200 mb-3">Bet Carousel Size</label>
-                  <input
-                    type="number"
-                    min="15" 
-                    max="95"
-                    step="5"
-                    value={maxCarouselWidth}
-                    onChange={(e) => setMaxCarouselWidth(parseInt(e.target.value))}
-                    placeholder="Enter a number..."
-                    className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
-                  />
-                </div>
-                <div className="flex-1">
+                <div className="flex-auto">
                   <label className="block text-sm font-medium text-gray-200 mb-3">Bet Carousel Time (secs)</label>
                   <input
                     type="number"
@@ -791,7 +777,7 @@ function App() {
             </div>
           )}
           {carouselMode ? (
-            <div className="max-h-[90vh]" style={{ maxWidth: `${maxCarouselWidth}vw` }}>
+            <div className="max-h-[90vh] max-w-[100vw]">
               <Carousel
                 autoplay={true}
                 autoplayDelay={carouselTimer * 1000}

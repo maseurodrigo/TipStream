@@ -47,7 +47,6 @@ export default function Viewer() {
   const [baseColor, setBaseColor] = useState('#2D3748');
   const [opacity, setOpacity] = useState(0.8);
   const [maxBetsPCol, setMaxBetsPCol] = useState(8);
-  const [maxCarouselWidth, setMaxCarouselWidth] = useState(95);
   const [carouselTimer, setCarouselTimer] = useState(8);
   const [bettingSites, setBettingSites] = useState<{ value: string; label: string; logo: string }[]>([]);
   const [bets, setBets] = useState<Bet[]>([]);
@@ -81,7 +80,6 @@ export default function Viewer() {
       if (updates.baseColor !== undefined) setBaseColor(updates.baseColor);
       if (updates.opacity !== undefined) setOpacity(updates.opacity);
       if (updates.maxBetsPCol !== undefined) setMaxBetsPCol(updates.maxBetsPCol);
-      if (updates.maxCarouselWidth !== undefined) setMaxCarouselWidth(updates.maxCarouselWidth);
       if (updates.carouselTimer !== undefined) setCarouselTimer(updates.carouselTimer);
       if (updates.bets !== undefined) setBets(updates.bets);
     });
@@ -97,7 +95,6 @@ export default function Viewer() {
       if (updates.baseColor !== undefined) setBaseColor(updates.baseColor);
       if (updates.opacity !== undefined) setOpacity(updates.opacity);
       if (updates.maxBetsPCol !== undefined) setMaxBetsPCol(updates.maxBetsPCol);
-      if (updates.maxCarouselWidth !== undefined) setMaxCarouselWidth(updates.maxCarouselWidth);
       if (updates.carouselTimer !== undefined) setCarouselTimer(updates.carouselTimer);
       if (updates.bets !== undefined) setBets(updates.bets);
     });
@@ -161,7 +158,7 @@ export default function Viewer() {
         </div>
       )}
       {carouselMode ? (
-        <div className="max-h-[90vh]" style={{ maxWidth: `${maxCarouselWidth}vw` }}>
+        <div className="max-h-[90vh] max-w-[100vw]">
           <Carousel
             autoplay={true}
             autoplayDelay={carouselTimer * 1000}
