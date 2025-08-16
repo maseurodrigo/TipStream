@@ -289,7 +289,7 @@ export default function Viewer() {
           )}
         </div>
       ): (
-        <div className="flex gap-2 max-w-[90vw] max-h-[90vh] w-full">
+        <div className="flex justify-center gap-2 max-w-[90vw] max-h-[90vh] w-full">
           {betColumns.map((column: Bet[], columnIndex: number) => (
             <div key={columnIndex} className="flex flex-col space-y-2 w-full">
               {column.map((bet) => (
