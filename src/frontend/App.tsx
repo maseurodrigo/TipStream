@@ -1445,36 +1445,34 @@ function App() {
             </div>
           )}
           {/* Drag handle for resizing */}
-          {!carouselMode && (
-            <div
-              className="absolute top-0 right-0 h-full w-3 cursor-ew-resize z-50"
-              style={{ background: 'transparent' }}
-              onMouseDown={e => {
-                e.preventDefault();
-                const startX = e.clientX;
-                const startWidth = tipsBoxWidth;
+          <div
+            className="absolute top-0 right-0 h-full w-3 cursor-ew-resize z-50"
+            style={{ background: 'transparent' }}
+            onMouseDown={e => {
+              e.preventDefault();
+              const startX = e.clientX;
+              const startWidth = tipsBoxWidth;
 
-                const onMouseMove = (moveEvent: MouseEvent) => {
-                  const delta = moveEvent.clientX - startX;
-                  let newWidth = startWidth + delta;
-                  newWidth = Math.max(300, Math.min(1200, newWidth));
-                  setTipsBoxWidth(newWidth);
-                };
+              const onMouseMove = (moveEvent: MouseEvent) => {
+                const delta = moveEvent.clientX - startX;
+                let newWidth = startWidth + delta;
+                newWidth = Math.max(300, Math.min(1200, newWidth));
+                setTipsBoxWidth(newWidth);
+              };
 
-                const onMouseUp = () => {
-                  localStorage.setItem('tipsBoxWidth', tipsBoxWidth.toString());
-                  window.removeEventListener('mousemove', onMouseMove);
-                  window.removeEventListener('mouseup', onMouseUp);
-                };
+              const onMouseUp = () => {
+                localStorage.setItem('tipsBoxWidth', tipsBoxWidth.toString());
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('mouseup', onMouseUp);
+              };
 
-                window.addEventListener('mousemove', onMouseMove);
-                window.addEventListener('mouseup', onMouseUp);
-              }}
-            >
-              {/* Add a visual indicator */}
-              <div className="h-full w-1 bg-gray-500/40 rounded-full mx-auto"></div>
-            </div>
-          )}
+              window.addEventListener('mousemove', onMouseMove);
+              window.addEventListener('mouseup', onMouseUp);
+            }}
+          >
+            {/* Add a visual indicator */}
+            <div className="h-full w-1 py-8 bg-gray-500/40 rounded-full mx-auto"></div>
+          </div>
         </div>
       </div>
     </div>
