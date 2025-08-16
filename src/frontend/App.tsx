@@ -515,20 +515,18 @@ function App() {
                   className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                 />
               </div>
-              <div className={`${carouselMode ? 'flex items-center justify-center gap-6' : 'hidden'}`}>
-                <div className="flex-auto">
-                  <label className="block text-sm font-medium text-gray-200 mb-3">Bet Carousel Time (secs)</label>
-                  <input
-                    type="number"
-                    min="3" 
-                    max="30"
-                    step="1"
-                    value={carouselTimer}
-                    onChange={(e) => setCarouselTimer(parseInt(e.target.value))}
-                    placeholder="Enter a number..."
-                    className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
-                  />
-                </div>
+              <div className={carouselMode ? 'block' : 'hidden'}>
+                <label className="block text-sm font-medium text-gray-200 mb-3">Bet Carousel Time (secs)</label>
+                <input
+                  type="number"
+                  min="3" 
+                  max="30"
+                  step="1"
+                  value={carouselTimer}
+                  onChange={(e) => setCarouselTimer(parseInt(e.target.value))}
+                  placeholder="Enter a number..."
+                  className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+                />
               </div>
             </div>
           </div>
