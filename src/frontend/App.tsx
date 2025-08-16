@@ -10,6 +10,7 @@ interface SingleBet {
   tip: string;
   teams: string;
   odds: string;
+  site: string;
   balance: string;
   balanceType: 'units' | 'money';
   status: 'pending' | 'green' | 'red';
@@ -27,6 +28,7 @@ interface MultipleBet {
   balance: string;
   balanceType: 'units' | 'money';
   totalOdds: string;
+  site: string;
   status: 'pending' | 'green' | 'red';
   timestamp: string;
   type: 'multiple';
@@ -35,11 +37,19 @@ interface MultipleBet {
 type Bet = SingleBet | MultipleBet;
 
 function App() {
+  const bettingSites = [
+    { value: 'betano', label: 'Betano', logo: '/src/assets/logos/betano.png' },
+    { value: 'esc', label: 'ESC', logo: '/src/assets/logos/esc.png' },
+    { value: 'lebull', label: 'Lebull', logo: '/src/assets/logos/lebull.png' },
+    { value: 'solverde', label: 'Solverde', logo: '/src/assets/logos/solverde.png' },
+  ];
+  
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [newTip, setNewTip] = useState('');
   const [newTeams, setNewTeams] = useState('');
   const [newOdds, setNewOdds] = useState('');
+  const [newSite, setNewSite] = useState(bettingSites[0].value);
   const [newBalance, setNewBalance] = useState('');
   const [newBalanceType, setNewBalanceType] = useState<'units' | 'money'>('units');
   const [bets, setBets] = useState<Bet[]>([]);
@@ -47,6 +57,7 @@ function App() {
   const [editText, setEditText] = useState('');
   const [editTeams, setEditTeams] = useState('');
   const [editOdds, setEditOdds] = useState('');
+  const [editSite, setEditSite] = useState(bettingSites[0].value);
   const [editBalance, setEditBalance] = useState('');
   const [editBalanceType, setEditBalanceType] = useState<'units' | 'money'>('units');
   const [editingMultipleTips, setEditingMultipleTips] = useState<{ tip: string; odds: string; teams: string }[]>([]);
@@ -159,6 +170,7 @@ function App() {
     setNewTip('');
     setNewTeams('');
     setNewOdds('');
+    setNewSite(bettingSites[0].value);
     setNewBalance('');
     setNewBalanceType('units');
     setMultipleTips([{ tip: '', odds: '', teams: '' }]);
@@ -176,6 +188,7 @@ function App() {
         tip: newTip.trim(),
         teams: newTeams.trim(),
         odds: newOdds.trim(),
+        site: newSite,
         balance: newBalance.trim(),
         balanceType: newBalanceType,
         status: 'pending',
@@ -194,6 +207,7 @@ function App() {
         balance: newBalance.trim(),
         balanceType: newBalanceType,
         totalOdds: calculateTotalOdds(validTips),
+        site: newSite,
         status: 'pending',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         type: 'multiple'
@@ -230,10 +244,12 @@ function App() {
       setEditText(bet.tip);
       setEditTeams(bet.teams);
       setEditOdds(bet.odds);
+      setEditSite(bet.site);
       setEditBalance(bet.balance);
       setEditBalanceType(bet.balanceType);
     } else {
       setEditingMultipleTips(bet.tips.map(tip => ({ ...tip })));
+      setEditSite(bet.site);
       setEditBalance(bet.balance);
       setEditBalanceType(bet.balanceType);
     }
@@ -251,6 +267,7 @@ function App() {
               tip: editText.trim(), 
               teams: editTeams.trim(),
               odds: editOdds.trim(),
+              site: editSite,
               balance: editBalance.trim(),
               balanceType: editBalanceType
             };
@@ -260,6 +277,7 @@ function App() {
             return {
               ...bet,
               tips: validTips,
+              site: editSite,
               balance: editBalance.trim(),
               balanceType: editBalanceType,
               totalOdds: calculateTotalOdds(validTips)
@@ -614,6 +632,17 @@ function App() {
                       </div>
                     </div>
                   </div>
+                  <div>
+                    <select
+                      value={newSite}
+                      onChange={e => setNewSite(e.target.value)}
+                      className="w-full p-4 rounded-xl bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                    >
+                      {bettingSites.map(site => (
+                        <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
+                      ))}
+                    </select>
+                  </div>
                 </>
               ) : (
                 <div className="space-y-4">
@@ -684,6 +713,17 @@ function App() {
                         >
                           {newBalanceType === 'units' ? 'Units' : 'Money'}
                         </button>
+                      </div>
+                      <div>
+                        <select
+                          value={newSite}
+                          onChange={e => setNewSite(e.target.value)}
+                          className="w-full p-4 rounded-xl bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                        >
+                          {bettingSites.map(site => (
+                            <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
+                          ))}
+                        </select>
                       </div>
                     </div>
                   )}
@@ -800,6 +840,17 @@ function App() {
                                     </div>
                                   </div>
                                 </div>
+                                <div>
+                                  <select
+                                    value={editSite}
+                                    onChange={e => setEditSite(e.target.value)}
+                                    className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                                  >
+                                    {bettingSites.map(site => (
+                                      <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
+                                    ))}
+                                  </select>
+                                </div>
                               </>
                             ) : (
                               <div className="space-y-4">
@@ -870,6 +921,17 @@ function App() {
                                         {editBalanceType === 'units' ? 'Units' : 'Money'}
                                       </button>
                                     </div>
+                                    <div>
+                                      <select
+                                        value={editSite}
+                                        onChange={e => setEditSite(e.target.value)}
+                                        className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                                      >
+                                        {bettingSites.map(site => (
+                                          <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
+                                        ))}
+                                      </select>
+                                    </div>
                                   </div>
                                 )}
                               </div>
@@ -884,9 +946,12 @@ function App() {
                                 <div className="flex items-center gap-4 mt-2">
                                   {bet.odds && (
                                     <span className="flex text-sm font-medium px-2 py-1 rounded-lg shadow-lg bg-gray-800/80 text-gray-300">
-                                      <svg className="w-[18px] h-[18px] mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                        <path fillRule="evenodd" d="M9 15a6 6 0 1 1 12 0 6 6 0 0 1-12 0Zm3.845-1.855a2.4 2.4 0 0 1 1.2-1.226 1 1 0 0 1 1.992-.026c.426.15.809.408 1.111.749a1 1 0 1 1-1.496 1.327.682.682 0 0 0-.36-.213.997.997 0 0 1-.113-.032.4.4 0 0 0-.394.074.93.93 0 0 0 .455.254 2.914 2.914 0 0 1 1.504.9c.373.433.669 1.092.464 1.823a.996.996 0 0 1-.046.129c-.226.519-.627.94-1.132 1.192a1 1 0 0 1-1.956.093 2.68 2.68 0 0 1-1.227-.798 1 1 0 1 1 1.506-1.315.682.682 0 0 0 .363.216c.038.009.075.02.111.032a.4.4 0 0 0 .395-.074.93.93 0 0 0-.455-.254 2.91 2.91 0 0 1-1.503-.9c-.375-.433-.666-1.089-.466-1.817a.994.994 0 0 1 .047-.134Zm1.884.573.003.008c-.003-.005-.003-.008-.003-.008Zm.55 2.613s-.002-.002-.003-.007a.032.032 0 0 1 .003.007ZM4 14a1 1 0 0 1 1 1v4a1 1 0 1 1-2 0v-4a1 1 0 0 1 1-1Zm3-2a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1Zm6.5-8a1 1 0 0 1 1-1H18a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-.796l-2.341 2.049a1 1 0 0 1-1.24.06l-2.894-2.066L6.614 9.29a1 1 0 1 1-1.228-1.578l4.5-3.5a1 1 0 0 1 1.195-.025l2.856 2.04L15.34 5h-.84a1 1 0 0 1-1-1Z" clipRule="evenodd"/>
-                                      </svg>
+                                      <img
+                                        src={bettingSites.find(site => site.value === bet.site)?.logo}
+                                        alt={bet.site}
+                                        className="w-[20px] h-[20px] mr-2 rounded shadow-md"
+                                        style={{ objectFit: 'cover', background: 'transparent' }}
+                                      />
                                       {bet.odds}
                                     </span>
                                   )}
@@ -933,9 +998,12 @@ function App() {
                                   <div className="flex items-center gap-4 mt-3">
                                     <div className="flex items-center gap-4">
                                       <span className="flex text-sm font-medium px-2 py-1 rounded-lg shadow-lg bg-blue-900/20 text-blue-300 border border-blue-500/20">
-                                        <svg className="w-[18px] h-[18px] mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                          <path fillRule="evenodd" d="M9 15a6 6 0 1 1 12 0 6 6 0 0 1-12 0Zm3.845-1.855a2.4 2.4 0 0 1 1.2-1.226 1 1 0 0 1 1.992-.026c.426.15.809.408 1.111.749a1 1 0 1 1-1.496 1.327.682.682 0 0 0-.36-.213.997.997 0 0 1-.113-.032.4.4 0 0 0-.394.074.93.93 0 0 0 .455.254 2.914 2.914 0 0 1 1.504.9c.373.433.669 1.092.464 1.823a.996.996 0 0 1-.046.129c-.226.519-.627.94-1.132 1.192a1 1 0 0 1-1.956.093 2.68 2.68 0 0 1-1.227-.798 1 1 0 1 1 1.506-1.315.682.682 0 0 0 .363.216c.038.009.075.02.111.032a.4.4 0 0 0 .395-.074.93.93 0 0 0-.455-.254 2.91 2.91 0 0 1-1.503-.9c-.375-.433-.666-1.089-.466-1.817a.994.994 0 0 1 .047-.134Zm1.884.573.003.008c-.003-.005-.003-.008-.003-.008Zm.55 2.613s-.002-.002-.003-.007a.032.032 0 0 1 .003.007ZM4 14a1 1 0 0 1 1 1v4a1 1 0 1 1-2 0v-4a1 1 0 0 1 1-1Zm3-2a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1Zm6.5-8a1 1 0 0 1 1-1H18a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-.796l-2.341 2.049a1 1 0 0 1-1.24.06l-2.894-2.066L6.614 9.29a1 1 0 1 1-1.228-1.578l4.5-3.5a1 1 0 0 1 1.195-.025l2.856 2.04L15.34 5h-.84a1 1 0 0 1-1-1Z" clipRule="evenodd"/>
-                                        </svg>
+                                        <img
+                                          src={bettingSites.find(site => site.value === bet.site)?.logo}
+                                          alt={bet.site}
+                                          className="w-[20px] h-[20px] mr-2 rounded shadow-md"
+                                          style={{ objectFit: 'cover', background: 'transparent' }}
+                                        />
                                         Total: {bet.totalOdds}
                                       </span>
                                       {bet.balance && (
@@ -1102,6 +1170,17 @@ function App() {
                                       </div>
                                     </div>
                                   </div>
+                                  <div>
+                                    <select
+                                      value={editSite}
+                                      onChange={e => setEditSite(e.target.value)}
+                                      className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                                    >
+                                      {bettingSites.map(site => (
+                                        <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
+                                      ))}
+                                    </select>
+                                  </div>
                                 </>
                               ) : (
                                 <div className="space-y-4">
@@ -1172,6 +1251,17 @@ function App() {
                                           {editBalanceType === 'units' ? 'Units' : 'Money'}
                                         </button>
                                       </div>
+                                      <div>
+                                        <select
+                                          value={editSite}
+                                          onChange={e => setEditSite(e.target.value)}
+                                          className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 transition-all duration-300"
+                                        >
+                                          {bettingSites.map(site => (
+                                            <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
+                                          ))}
+                                        </select>
+                                      </div>
                                     </div>
                                   )}
                                 </div>
@@ -1186,9 +1276,12 @@ function App() {
                                   <div className="flex items-center gap-4 mt-2">
                                     {bet.odds && (
                                       <span className="flex text-sm font-medium px-2 py-1 rounded-lg shadow-lg bg-gray-800/80 text-gray-300">
-                                        <svg className="w-[18px] h-[18px] mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                          <path fillRule="evenodd" d="M9 15a6 6 0 1 1 12 0 6 6 0 0 1-12 0Zm3.845-1.855a2.4 2.4 0 0 1 1.2-1.226 1 1 0 0 1 1.992-.026c.426.15.809.408 1.111.749a1 1 0 1 1-1.496 1.327.682.682 0 0 0-.36-.213.997.997 0 0 1-.113-.032.4.4 0 0 0-.394.074.93.93 0 0 0 .455.254 2.914 2.914 0 0 1 1.504.9c.373.433.669 1.092.464 1.823a.996.996 0 0 1-.046.129c-.226.519-.627.94-1.132 1.192a1 1 0 0 1-1.956.093 2.68 2.68 0 0 1-1.227-.798 1 1 0 1 1 1.506-1.315.682.682 0 0 0 .363.216c.038.009.075.02.111.032a.4.4 0 0 0 .395-.074.93.93 0 0 0-.455-.254 2.91 2.91 0 0 1-1.503-.9c-.375-.433-.666-1.089-.466-1.817a.994.994 0 0 1 .047-.134Zm1.884.573.003.008c-.003-.005-.003-.008-.003-.008Zm.55 2.613s-.002-.002-.003-.007a.032.032 0 0 1 .003.007ZM4 14a1 1 0 0 1 1 1v4a1 1 0 1 1-2 0v-4a1 1 0 0 1 1-1Zm3-2a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1Zm6.5-8a1 1 0 0 1 1-1H18a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-.796l-2.341 2.049a1 1 0 0 1-1.24.06l-2.894-2.066L6.614 9.29a1 1 0 1 1-1.228-1.578l4.5-3.5a1 1 0 0 1 1.195-.025l2.856 2.04L15.34 5h-.84a1 1 0 0 1-1-1Z" clipRule="evenodd"/>
-                                        </svg>
+                                        <img
+                                          src={bettingSites.find(site => site.value === bet.site)?.logo}
+                                          alt={bet.site}
+                                          className="w-[20px] h-[20px] mr-2 rounded shadow-md"
+                                          style={{ objectFit: 'cover', background: 'transparent' }}
+                                        />
                                         {bet.odds}
                                       </span>
                                     )}
@@ -1235,9 +1328,12 @@ function App() {
                                     <div className="flex items-center gap-4 mt-3">
                                       <div className="flex items-center gap-4">
                                         <span className="flex text-sm font-medium px-2 py-1 rounded-lg shadow-lg bg-blue-900/20 text-blue-300 border border-blue-500/20">
-                                          <svg className="w-[18px] h-[18px] mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                            <path fillRule="evenodd" d="M9 15a6 6 0 1 1 12 0 6 6 0 0 1-12 0Zm3.845-1.855a2.4 2.4 0 0 1 1.2-1.226 1 1 0 0 1 1.992-.026c.426.15.809.408 1.111.749a1 1 0 1 1-1.496 1.327.682.682 0 0 0-.36-.213.997.997 0 0 1-.113-.032.4.4 0 0 0-.394.074.93.93 0 0 0 .455.254 2.914 2.914 0 0 1 1.504.9c.373.433.669 1.092.464 1.823a.996.996 0 0 1-.046.129c-.226.519-.627.94-1.132 1.192a1 1 0 0 1-1.956.093 2.68 2.68 0 0 1-1.227-.798 1 1 0 1 1 1.506-1.315.682.682 0 0 0 .363.216c.038.009.075.02.111.032a.4.4 0 0 0 .395-.074.93.93 0 0 0-.455-.254 2.91 2.91 0 0 1-1.503-.9c-.375-.433-.666-1.089-.466-1.817a.994.994 0 0 1 .047-.134Zm1.884.573.003.008c-.003-.005-.003-.008-.003-.008Zm.55 2.613s-.002-.002-.003-.007a.032.032 0 0 1 .003.007ZM4 14a1 1 0 0 1 1 1v4a1 1 0 1 1-2 0v-4a1 1 0 0 1 1-1Zm3-2a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1Zm6.5-8a1 1 0 0 1 1-1H18a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-.796l-2.341 2.049a1 1 0 0 1-1.24.06l-2.894-2.066L6.614 9.29a1 1 0 1 1-1.228-1.578l4.5-3.5a1 1 0 0 1 1.195-.025l2.856 2.04L15.34 5h-.84a1 1 0 0 1-1-1Z" clipRule="evenodd"/>
-                                          </svg>
+                                          <img
+                                            src={bettingSites.find(site => site.value === bet.site)?.logo}
+                                            alt={bet.site}
+                                            className="w-[20px] h-[20px] mr-2 rounded shadow-md"
+                                            style={{ objectFit: 'cover', background: 'transparent' }}
+                                          />
                                           Total: {bet.totalOdds}
                                         </span>
                                         {bet.balance && (
