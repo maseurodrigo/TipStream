@@ -39,7 +39,7 @@ type Bet = SingleBet | MultipleBet;
 export default function Viewer() {
   const { sessionId } = useParams(); // Retrieve the session ID from the URL
   const [tipsBoxWidth, setTipsBoxWidth] = useState(400);
-  const [showHeader, setShowHeader] = useState(true);
+  const [showHeader, setShowHeader] = useState(false);
   const [carouselMode, setCarouselMode] = useState(false);
   const [headerTitle, setHeaderTitle] = useState('Live Bets');
   const [logoUrl, setLogoUrl] = useState('');
@@ -136,7 +136,7 @@ export default function Viewer() {
       }}>
       {showHeader && (
         <div 
-          className="p-6 mb-2 rounded-lg shadow-lg" 
+          className="px-6 py-3 mb-2 rounded-lg shadow-lg" 
           style={{ 
             backgroundColor: getColorWithOpacity(baseColor, opacity)
           }}>

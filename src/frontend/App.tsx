@@ -56,7 +56,7 @@ function App() {
   const [editBalance, setEditBalance] = useState('');
   const [editBalanceType, setEditBalanceType] = useState<'units' | 'money'>('units');
   const [editingMultipleTips, setEditingMultipleTips] = useState<{ tip: string; odds: string; teams: string }[]>([]);
-  const [showHeader, setShowHeader] = useState(true);
+  const [showHeader, setShowHeader] = useState(false);
   const [carouselMode, setCarouselMode] = useState(false);
   const [headerTitle, setHeaderTitle] = useState('Live Bets');
   const [logoUrl, setLogoUrl] = useState('');
@@ -752,7 +752,7 @@ function App() {
         >
           {showHeader && (
             <div 
-              className="p-6 mb-2 rounded-lg shadow-lg" 
+              className="px-6 py-3 mb-2 rounded-lg shadow-lg" 
               style={{ 
                 backgroundColor: getColorWithOpacity(baseColor, opacity)
               }}
