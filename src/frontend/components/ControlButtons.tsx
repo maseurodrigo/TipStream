@@ -1,4 +1,5 @@
-import { Eye, EyeOff, Settings, PlusCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Eye, EyeOff, Settings, PlusCircle, Download } from 'lucide-react';
 
 interface ControlButtonsProps {
   sessionID: string;
@@ -7,6 +8,7 @@ interface ControlButtonsProps {
   onToggleStream: () => void;
   onOpenConfig: () => void;
   onOpenForm: () => void;
+  onExportBets: () => void;
   baseColor: string;
 }
 
@@ -17,8 +19,10 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
   onToggleStream,
   onOpenConfig,
   onOpenForm,
+  onExportBets,
   baseColor,
 }) => {
+  const [showExportTooltip, setShowExportTooltip] = useState(false);
   const fullViewerLink = `${window.location.origin}/stream/${sessionID}`;
 
   const copyURLToClipboard = () => {
@@ -80,6 +84,31 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
       >
         <Settings size={24} className="transform hover:rotate-90 transition-transform duration-300" />
       </button>
+      {/* Export to Excel Button */}
+      <div className="fixed bottom-28 right-8">
+        <div className="relative">
+          <button
+            onClick={onExportBets}
+            onMouseEnter={() => setShowExportTooltip(true)}
+            onMouseLeave={() => setShowExportTooltip(false)}
+            className="text-white rounded-xl p-3 transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] transform hover:scale-105 backdrop-blur-lg border border-white/10"
+            style={{ backgroundColor: baseColor }}
+            title="Export bets to Excel"
+          >
+            <Download size={20} className="transition-transform duration-300" />
+          </button>
+          {showExportTooltip && (
+            <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap bg-gray-900/95 text-white text-sm px-3 py-2 rounded-lg shadow-lg border border-gray-700/30 backdrop-blur-lg">
+              Export to Excel
+              <div className="absolute left-full top-1/2 -translate-y-1/2 -ml-1">
+                <div className="w-0 h-0 border-t-4 border-t-transparent border-b-4 border-b-transparent border-l-4 border-l-gray-900/95"></div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Add Bet Button */}
       <button
         onClick={onOpenForm}
         className="fixed bottom-8 right-8 text-white rounded-2xl p-4 transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.2)] hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] transform hover:scale-105 backdrop-blur-lg border border-white/10"

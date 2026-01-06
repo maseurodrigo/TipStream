@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Bet } from './utils/types';
 import { getColorWithOpacity } from './utils/helpers';
+import { exportBetsToExcel } from './utils/exportToExcel';
 import { useSocketConnection } from './hooks/useSocketConnection';
 import { useBetForm } from './hooks/useBetForm';
 import { useBetEdit } from './hooks/useBetEdit';
@@ -90,6 +91,7 @@ function App() {
           betForm.resetForm(bettingSites[0]?.value || '');
           setIsFormOpen(true);
         }}
+        onExportBets={() => exportBetsToExcel(bets)}
         baseColor={displaySettings.baseColor}
       />
 
