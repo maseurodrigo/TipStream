@@ -3,6 +3,7 @@ import { Bet, BettingSite } from '../utils/types';
 import { chunkArray, getColorWithOpacity } from '../utils/helpers';
 import { Header } from './Header';
 import { BetCard } from './BetCard';
+import { PnLTracker } from './PnLTracker';
 
 interface BetsListProps {
   bets: Bet[];
@@ -61,6 +62,8 @@ export const BetsList: React.FC<BetsListProps> = ({
         baseColor={baseColor}
         opacity={opacity}
       />
+
+      <PnLTracker bets={bets} baseColor={baseColor} />
 
         {carouselMode ? (
           <div className="max-h-[90vh] max-w-[100vw]">

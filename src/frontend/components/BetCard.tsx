@@ -52,9 +52,9 @@ export const BetCard: React.FC<BetCardProps> = ({
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="bg-gray-900/80 p-6 rounded-lg shadow-lg flex items-center gap-4"
+      className="bg-gray-900/80 p-4 rounded-lg shadow-lg flex items-center gap-3"
     >
-      <div className="flex-1 min-w-0 mr-6">
+      <div className="flex-1 min-w-0 mr-4">
         {isEditing && editState ? (
           <div className="space-y-3">
             {bet.type === 'single' ? (
@@ -204,9 +204,9 @@ export const BetCard: React.FC<BetCardProps> = ({
           <>
             {bet.type === 'single' ? (
               <>
-                <p className="font-semibold text-blue-300 text-base mb-1 truncate">{bet.teams}</p>
-                <p className="font-medium text-white text-lg tracking-tight truncate">{bet.tip}</p>
-                <div className="flex items-center gap-4 mt-2">
+                <p className="font-semibold text-blue-300 text-sm mb-0.5 truncate">{bet.teams}</p>
+                <p className="font-medium text-white text-base tracking-tight truncate">{bet.tip}</p>
+                <div className="flex items-center gap-3 mt-1.5">
                   {bet.odds && (
                     <span className="flex text-sm font-medium px-2 py-1 rounded-lg shadow-lg bg-gray-800/80 text-gray-300">
                       <img
@@ -246,20 +246,20 @@ export const BetCard: React.FC<BetCardProps> = ({
               </>
             ) : (
               <>
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {bet.tips.map((tip, index) => (
-                    <div key={index} className="flex flex-col gap-1">
-                      <span className="text-blue-300 text-sm font-semibold">{tip.teams}</span>
-                      <div className="flex items-center gap-4">
-                        <p className="font-medium text-white text-lg tracking-tight truncate">{tip.tip}</p>
+                    <div key={index} className="flex flex-col gap-0.5">
+                      <span className="text-blue-300 text-xs font-semibold">{tip.teams}</span>
+                      <div className="flex items-center gap-3">
+                        <p className="font-medium text-white text-base tracking-tight truncate">{tip.tip}</p>
                         <span className="text-sm font-medium px-2 py-1 rounded-lg shadow-md bg-gray-800/80 text-gray-300">
                           {tip.odds}
                         </span>
                       </div>
                     </div>
                   ))}
-                  <div className="flex items-center gap-4 mt-3">
-                    <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 mt-2">
+                    <div className="flex items-center gap-3">
                       <span className="flex text-sm font-medium px-2 py-1 rounded-lg shadow-lg bg-blue-900/20 text-blue-300 border border-blue-500/20">
                         <img
                           src={bettingSites.find(site => site.value === bet.site)?.logo}
@@ -302,20 +302,20 @@ export const BetCard: React.FC<BetCardProps> = ({
         )}
       </div>
       {!isStreamMode && (
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           {isEditing ? (
             <>
               <button
                 onClick={onSaveEdit}
-                className="p-3 rounded-xl hover:bg-green-600/20 text-green-500 hover:text-green-400 transition-all duration-300 border border-green-500/20 hover:border-green-500/30"
+                className="p-2.5 rounded-xl hover:bg-green-600/20 text-green-500 hover:text-green-400 transition-all duration-300 border border-green-500/20 hover:border-green-500/30"
               >
-                <Check size={20} />
+                <Check size={18} />
               </button>
               <button
                 onClick={onCancelEdit}
-                className="p-3 rounded-xl hover:bg-red-600/20 text-red-500 hover:text-red-400 transition-all duration-300 border border-red-500/20 hover:border-red-500/30"
+                className="p-2.5 rounded-xl hover:bg-red-600/20 text-red-500 hover:text-red-400 transition-all duration-300 border border-red-500/20 hover:border-red-500/30"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </>
           ) : (
@@ -324,21 +324,21 @@ export const BetCard: React.FC<BetCardProps> = ({
                 <>
                   <button
                     onClick={() => onStatusChange?.(bet.id, 'green')}
-                    className="p-3 rounded-xl hover:bg-green-600/20 text-green-500 hover:text-green-400 transition-all duration-300 border border-green-500/20 hover:border-green-500/30"
+                    className="p-2.5 rounded-xl hover:bg-green-600/20 text-green-500 hover:text-green-400 transition-all duration-300 border border-green-500/20 hover:border-green-500/30"
                   >
-                    <Check size={20} />
+                    <Check size={18} />
                   </button>
                   <button
                     onClick={() => onStatusChange?.(bet.id, 'red')}
-                    className="p-3 rounded-xl hover:bg-red-600/20 text-red-500 hover:text-red-400 transition-all duration-300 border border-red-500/20 hover:border-red-500/30"
+                    className="p-2.5 rounded-xl hover:bg-red-600/20 text-red-500 hover:text-red-400 transition-all duration-300 border border-red-500/20 hover:border-red-500/30"
                   >
-                    <X size={20} />
+                    <X size={18} />
                   </button>
                 </>
               ) : (
                 <button
                   onClick={() => onStatusChange?.(bet.id, bet.status === 'green' ? 'green' : 'red')}
-                  className={`h-[44px] flex items-center text-sm font-semibold px-4 rounded-xl shadow-md mr-3 cursor-pointer transition-all duration-300 ${
+                  className={`h-[38px] flex items-center text-xs font-semibold px-3 rounded-xl shadow-md mr-2 cursor-pointer transition-all duration-300 ${
                     bet.status === 'green'
                       ? 'text-green-400 bg-green-900/20 border border-green-500/20 hover:bg-green-900/30'
                       : 'text-red-400 bg-red-900/20 border border-red-500/20 hover:bg-red-900/30'
@@ -349,15 +349,15 @@ export const BetCard: React.FC<BetCardProps> = ({
               )}
               <button
                 onClick={() => onEdit?.(bet)}
-                className="p-3 rounded-xl hover:bg-blue-600/20 text-blue-500 hover:text-blue-400 transition-all duration-300 border border-blue-500/20 hover:border-blue-500/30"
+                className="p-2.5 rounded-xl hover:bg-blue-600/20 text-blue-500 hover:text-blue-400 transition-all duration-300 border border-blue-500/20 hover:border-blue-500/30"
               >
-                <Pencil size={20} />
+                <Pencil size={18} />
               </button>
               <button
                 onClick={() => onDelete?.(bet.id)}
-                className="p-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 hover:text-red-400 transition-all duration-300 border border-red-500/20 hover:border-red-500/30"
+                className="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 hover:text-red-400 transition-all duration-300 border border-red-500/20 hover:border-red-500/30"
               >
-                <Trash2 size={20} />
+                <Trash2 size={18} />
               </button>
             </>
           )}
