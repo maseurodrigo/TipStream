@@ -140,7 +140,6 @@ function App() {
             logoSize={displaySettings.logoSize}
             baseColor={displaySettings.baseColor}
             opacity={displaySettings.opacity}
-            tipsBoxWidth={displaySettings.tipsBoxWidth}
             editingId={betEdit.editingId}
             editState={betEdit}
             onEdit={startEdit}

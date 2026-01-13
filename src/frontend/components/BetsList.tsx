@@ -1,6 +1,6 @@
 import { Carousel } from "@material-tailwind/react";
 import { Bet, BettingSite } from '../utils/types';
-import { chunkArray, getColorWithOpacity } from '../utils/helpers';
+import { chunkArray } from '../utils/helpers';
 import { Header } from './Header';
 import { BetCard } from './BetCard';
 import { PnLTracker } from './PnLTracker';
@@ -18,7 +18,6 @@ interface BetsListProps {
   logoSize: number;
   baseColor: string;
   opacity: number;
-  tipsBoxWidth: number;
   editingId: string | null;
   editState?: any;
   onEdit?: (bet: Bet) => void;
@@ -41,7 +40,6 @@ export const BetsList: React.FC<BetsListProps> = ({
   logoSize,
   baseColor,
   opacity,
-  tipsBoxWidth,
   editingId,
   editState,
   onEdit,

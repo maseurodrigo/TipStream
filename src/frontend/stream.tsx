@@ -29,7 +29,6 @@ export default function Viewer() {
           logoSize={displaySettings.logoSize}
           baseColor={displaySettings.baseColor}
           opacity={displaySettings.opacity}
-          tipsBoxWidth={displaySettings.tipsBoxWidth}
           editingId={null}
         />
       </div>
