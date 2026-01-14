@@ -24,6 +24,7 @@ export default function Viewer() {
           bettingSites={bettingSites}
           isStreamMode={true}
           showHeader={displaySettings.showHeader}
+          showPnLTracker={displaySettings.showPnLTracker}
           headerTitle={displaySettings.headerTitle}
           logoUrl={displaySettings.logoUrl}
           logoSize={displaySettings.logoSize}

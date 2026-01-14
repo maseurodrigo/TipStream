@@ -32,6 +32,7 @@ export const useSocketConnection = ({
   const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({
     tipsBoxWidth: 400,
     showHeader: false,
+    showPnLTracker: true,
     carouselMode: false,
     headerTitle: 'Live Bets',
     logoUrl: '',
@@ -92,6 +93,9 @@ export const useSocketConnection = ({
         if (updates.showHeader !== undefined) {
           setDisplaySettings(prev => ({ ...prev, showHeader: updates.showHeader }));
         }
+        if (updates.showPnLTracker !== undefined) {
+          setDisplaySettings(prev => ({ ...prev, showPnLTracker: updates.showPnLTracker }));
+        }
         if (updates.carouselMode !== undefined) {
           setDisplaySettings(prev => ({ ...prev, carouselMode: updates.carouselMode }));
         }
@@ -128,6 +132,9 @@ export const useSocketConnection = ({
         }
         if (updates.showHeader !== undefined) {
           setDisplaySettings(prev => ({ ...prev, showHeader: updates.showHeader }));
+        }
+        if (updates.showPnLTracker !== undefined) {
+          setDisplaySettings(prev => ({ ...prev, showPnLTracker: updates.showPnLTracker }));
         }
         if (updates.carouselMode !== undefined) {
           setDisplaySettings(prev => ({ ...prev, carouselMode: updates.carouselMode }));

@@ -83,31 +83,35 @@ export const PnLTracker: React.FC<PnLTrackerProps> = ({ bets, baseColor }) => {
 
   return (
     <div
-      className="mt-2 mb-2 p-2 rounded-lg backdrop-blur-sm"
+      className="mb-2 px-3 py-2 rounded-lg backdrop-blur-md shadow-md border-2 transition-all duration-300"
       style={{
-        backgroundColor: `${pnlColor}20`,
-        border: `1.5px solid ${pnlColor}`,
+        backgroundColor: `${pnlColor}15`,
+        borderColor: pnlColor,
       }}
     >
       <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-gray-300 font-medium uppercase tracking-wide">
+        <div className="flex flex-col">
+          <span className="text-[9px] text-gray-400 font-semibold uppercase tracking-wider leading-tight">
             Session PnL
           </span>
           <span
-            className="text-xl font-bold flex items-center"
+            className="text-lg font-bold flex items-center transition-all duration-300 leading-tight mt-0.5"
             style={{ color: pnlColor }}
           >
             {pnlSign}{pnlData.pnl.toFixed(2)}
             {CurrencyIcon}
           </span>
         </div>
-        <div className="flex flex-col items-end text-[11px] text-gray-400 gap-0.5">
-          <div>
-            <span className="font-medium">Staked:</span> {pnlData.totalStaked.toFixed(2)}
+        <div className="flex flex-col items-end text-[11px] text-gray-300 gap-0.5 bg-gray-800/40 px-2 py-1.5 rounded-md">
+          <div className="flex items-center gap-1.5">
+            <span className="font-semibold text-gray-400">Staked:</span>
+            <span className="font-bold">{pnlData.totalStaked.toFixed(2)}</span>
           </div>
-          <div>
-            <span className="font-medium">Returns:</span> {pnlData.totalReturns.toFixed(2)}
+          <div className="flex items-center gap-1.5">
+            <span className="font-semibold text-gray-400">Returns:</span>
+            <span className="font-bold" style={{ color: pnlData.isProfit ? '#10b981' : '#f59e0b' }}>
+              {pnlData.totalReturns.toFixed(2)}
+            </span>
           </div>
         </div>
       </div>

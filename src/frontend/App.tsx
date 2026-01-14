@@ -135,6 +135,7 @@ function App() {
             bettingSites={bettingSites}
             isStreamMode={isStreamMode}
             showHeader={displaySettings.showHeader}
+            showPnLTracker={displaySettings.showPnLTracker}
             headerTitle={displaySettings.headerTitle}
             logoUrl={displaySettings.logoUrl}
             logoSize={displaySettings.logoSize}

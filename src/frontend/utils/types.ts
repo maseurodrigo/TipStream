@@ -38,6 +38,7 @@ export interface BettingSite {
 export interface DisplaySettings {
   tipsBoxWidth: number;
   showHeader: boolean;
+  showPnLTracker: boolean;
   carouselMode: boolean;
   headerTitle: string;
   logoUrl: string;

@@ -13,6 +13,7 @@ interface BetsListProps {
   bettingSites: BettingSite[];
   isStreamMode: boolean;
   showHeader: boolean;
+  showPnLTracker: boolean;
   headerTitle: string;
   logoUrl: string;
   logoSize: number;
@@ -35,6 +36,7 @@ export const BetsList: React.FC<BetsListProps> = ({
   bettingSites,
   isStreamMode,
   showHeader,
+  showPnLTracker,
   headerTitle,
   logoUrl,
   logoSize,
@@ -61,7 +63,7 @@ export const BetsList: React.FC<BetsListProps> = ({
         opacity={opacity}
       />
 
-      <PnLTracker bets={bets} baseColor={baseColor} />
+      {showPnLTracker && <PnLTracker bets={bets} baseColor={baseColor} />}
 
         {carouselMode ? (
           <div className="max-h-[90vh] max-w-[100vw]">

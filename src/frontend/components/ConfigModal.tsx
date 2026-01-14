@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { Checkbox, Typography, Switch } from "@material-tailwind/react";
+import { Checkbox, Typography } from "@material-tailwind/react";
 import { DisplaySettings } from '../utils/types';
 import { getColorWithOpacity } from '../utils/helpers';
 
@@ -46,13 +46,23 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
               onPointerEnterCapture={undefined}
               onPointerLeaveCapture={undefined}
             />
-            <Switch
+            <Checkbox
+              defaultChecked={config.showPnLTracker}
+              ripple={true}
+              label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Show PnL Tracker</Typography>}
+              color="blue"
+              className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
+              onChange={(e) => onConfigChange({ showPnLTracker: e.target.checked })}
+              crossOrigin={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            />
+            <Checkbox
               defaultChecked={config.carouselMode}
               ripple={true}
               label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Carousel Mode</Typography>}
-              className="h-full w-full checked:bg-blue-500"
-              containerProps={{ className: "w-11 h-6" }}
-              circleProps={{ className: "before:hidden left-0.5 border-none" }}
+              color="blue"
+              className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
               onChange={(e) => onConfigChange({ carouselMode: e.target.checked })}
               crossOrigin={undefined}
               onPointerEnterCapture={undefined}
