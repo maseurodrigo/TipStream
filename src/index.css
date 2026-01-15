@@ -27,15 +27,29 @@ html, body {
   }
 }
 
-.auto-scroll-container {
-  position: relative;
-  overflow: hidden;
-}
-
 .auto-scroll-content {
   animation: autoScroll 30s linear infinite;
 }
 
 .auto-scroll-content:hover {
   animation-play-state: paused;
+}
+
+/* Custom scrollbar for manual scroll mode */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: rgba(55, 65, 81, 0.3);
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgba(107, 114, 128, 0.6);
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.8);
 }

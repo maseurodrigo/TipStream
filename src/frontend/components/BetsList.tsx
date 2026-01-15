@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Carousel } from "@material-tailwind/react";
 import { Bet, BettingSite } from '../utils/types';
 import { chunkArray } from '../utils/helpers';
@@ -53,13 +54,33 @@ export const BetsList: React.FC<BetsListProps> = ({
   onStatusChange,
 }) => {
   const betColumns = chunkArray(bets, maxBetsPCol);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(false);
+
+  // Check if content exceeds container height
+  useEffect(() => {
+    if (maxHeightMode && isStreamMode && containerRef.current && contentRef.current) {
+      const containerHeight = containerRef.current.clientHeight;
+      const contentHeight = contentRef.current.scrollHeight;
+      setShouldAutoScroll(contentHeight > containerHeight);
+    } else {
+      setShouldAutoScroll(false);
+    }
+  }, [bets, maxHeightMode, isStreamMode]);
 
   // For maxHeightMode with auto-scrolling in stream mode
-  const renderAutoScrollContent = () => {
-    if (maxHeightMode && isStreamMode && bets.length > 0) {
+  const renderMaxHeightContent = () => {
+    if (maxHeightMode && bets.length > 0) {
       return (
-        <div className="auto-scroll-container overflow-hidden h-full">
-          <div className="auto-scroll-content">
+        <div
+          ref={containerRef}
+          className={`overflow-hidden h-full ${isStreamMode ? '' : 'overflow-y-auto'}`}
+        >
+          <div
+            ref={contentRef}
+            className={shouldAutoScroll && isStreamMode ? 'auto-scroll-content' : ''}
+          >
             {bets.map((bet) => (
               <div key={bet.id} className="mb-2">
                 <BetCard
@@ -76,8 +97,8 @@ export const BetsList: React.FC<BetsListProps> = ({
                 />
               </div>
             ))}
-            {/* Duplicate content for seamless loop */}
-            {bets.map((bet) => (
+            {/* Duplicate content for seamless loop - only when auto-scrolling */}
+            {shouldAutoScroll && isStreamMode && bets.map((bet) => (
               <div key={`${bet.id}-duplicate`} className="mb-2">
                 <BetCard
                   bet={bet}
@@ -101,7 +122,7 @@ export const BetsList: React.FC<BetsListProps> = ({
   };
 
   return (
-    <>
+    <div className={maxHeightMode ? 'h-full flex flex-col' : ''}>
       <Header
         showHeader={showHeader}
         headerTitle={headerTitle}
@@ -113,8 +134,9 @@ export const BetsList: React.FC<BetsListProps> = ({
 
       {showPnLTracker && <PnLTracker bets={bets} baseColor={baseColor} />}
 
-        {maxHeightMode && isStreamMode ? (
-          renderAutoScrollContent()
+      <div className={maxHeightMode ? 'flex-1 min-h-0' : ''}>
+        {maxHeightMode ? (
+          renderMaxHeightContent()
         ) : carouselMode ? (
           <div className="max-h-[90vh] max-w-[100vw]">
             <Carousel
@@ -182,6 +204,7 @@ export const BetsList: React.FC<BetsListProps> = ({
             )}
           </div>
         )}
-    </>
+      </div>
+    </div>
   );
 };
