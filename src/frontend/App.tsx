@@ -124,7 +124,12 @@ function App() {
             backgroundColor: getColorWithOpacity(displaySettings.baseColor, 0.4),
             width: displaySettings.tipsBoxWidth,
             minWidth: 300,
-            maxWidth: 1200
+            maxWidth: 1200,
+            ...(displaySettings.maxHeightMode && {
+              height: displaySettings.tipsBoxHeight,
+              minHeight: 300,
+              maxHeight: 1200
+            })
           }}
         >
           <BetsList
@@ -132,6 +137,7 @@ function App() {
             carouselMode={displaySettings.carouselMode}
             carouselTimer={displaySettings.carouselTimer}
             maxBetsPCol={displaySettings.maxBetsPCol}
+            maxHeightMode={displaySettings.maxHeightMode}
             bettingSites={bettingSites}
             isStreamMode={isStreamMode}
             showHeader={displaySettings.showHeader}
@@ -150,7 +156,7 @@ function App() {
             onStatusChange={updateBetStatus}
           />
 
-          {/* Drag handle for resizing */}
+          {/* Drag handle for width resizing */}
           <div
             className="absolute top-0 right-0 h-full w-3 py-8 cursor-ew-resize z-50"
             style={{ background: 'transparent' }}
@@ -179,6 +185,38 @@ function App() {
             {/* Add a visual indicator */}
             <div className="h-full w-1 bg-gray-500/40 rounded-full mx-auto"></div>
           </div>
+
+          {/* Drag handle for height resizing - only visible when maxHeightMode is enabled */}
+          {displaySettings.maxHeightMode && (
+            <div
+              className="absolute bottom-0 left-0 w-full h-3 px-8 cursor-ns-resize z-50"
+              style={{ background: 'transparent' }}
+              onMouseDown={e => {
+                e.preventDefault();
+                const startY = e.clientY;
+                const startHeight = displaySettings.tipsBoxHeight;
+
+                const onMouseMove = (moveEvent: MouseEvent) => {
+                  const delta = moveEvent.clientY - startY;
+                  let newHeight = startHeight + delta;
+                  newHeight = Math.max(300, Math.min(1200, newHeight));
+                  setDisplaySettings(prev => ({ ...prev, tipsBoxHeight: newHeight }));
+                };
+
+                const onMouseUp = () => {
+                  localStorage.setItem('tipsBoxHeight', displaySettings.tipsBoxHeight.toString());
+                  window.removeEventListener('mousemove', onMouseMove);
+                  window.removeEventListener('mouseup', onMouseUp);
+                };
+
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+              }}
+            >
+              {/* Add a visual indicator */}
+              <div className="w-full h-1 bg-gray-500/40 rounded-full my-auto"></div>
+            </div>
+          )}
         </div>
       </div>
     </div>

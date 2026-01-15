@@ -16,3 +16,26 @@ html, body {
   padding: 0;
   background: transparent;
 }
+
+/* Auto-scroll animation for max height mode */
+@keyframes autoScroll {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.auto-scroll-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.auto-scroll-content {
+  animation: autoScroll 30s linear infinite;
+}
+
+.auto-scroll-content:hover {
+  animation-play-state: paused;
+}

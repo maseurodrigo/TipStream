@@ -94,7 +94,7 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                   type="text"
                   value={newTip}
                   onChange={(e) => setNewTip(e.target.value)}
-                  placeholder="Enter betting tip..."
+                  placeholder="Betting tip..."
                   className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
                 />
               </div>
@@ -103,7 +103,7 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                   type="text"
                   value={newTeams}
                   onChange={(e) => setNewTeams(e.target.value)}
-                  placeholder="Enter teams (e.g., Team A vs Team B)..."
+                  placeholder="Teams (e.g., Team A vs Team B)..."
                   className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
                 />
               </div>
@@ -114,7 +114,7 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                     inputMode="decimal"
                     value={newOdds}
                     onChange={(e) => handleOddsChange(e.target.value)}
-                    placeholder="Enter odds (e.g., 1.75)..."
+                    placeholder="Odds (e.g., 1.75)..."
                     className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
                   />
                 </div>
@@ -125,7 +125,7 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                       inputMode="decimal"
                       value={newBalance}
                       onChange={(e) => handleBalanceChange(e.target.value)}
-                      placeholder={newBalanceType === 'units' ? "Enter units..." : "Enter amount..."}
+                      placeholder={newBalanceType === 'units' ? "Units..." : "Amount..."}
                       className="flex-1 p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
                     />
                     <button
@@ -209,7 +209,7 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                       inputMode="decimal"
                       value={newBalance}
                       onChange={(e) => handleBalanceChange(e.target.value)}
-                      placeholder={newBalanceType === 'units' ? "Enter units..." : "Enter amount..."}
+                      placeholder={newBalanceType === 'units' ? "Units..." : "Amount..."}
                       className="flex-1 p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                     />
                     <button

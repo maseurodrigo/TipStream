@@ -59,11 +59,24 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
             />
             <Checkbox
               defaultChecked={config.carouselMode}
+              disabled={config.maxHeightMode}
               ripple={true}
               label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Carousel Mode</Typography>}
               color="blue"
               className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
               onChange={(e) => onConfigChange({ carouselMode: e.target.checked })}
+              crossOrigin={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            />
+            <Checkbox
+              defaultChecked={config.maxHeightMode}
+              disabled={config.carouselMode}
+              ripple={true}
+              label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Max Height</Typography>}
+              color="blue"
+              className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
+              onChange={(e) => onConfigChange({ maxHeightMode: e.target.checked })}
               crossOrigin={undefined}
               onPointerEnterCapture={undefined}
               onPointerLeaveCapture={undefined}
@@ -76,7 +89,7 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
               type="text"
               value={config.headerTitle}
               onChange={(e) => onConfigChange({ headerTitle: e.target.value })}
-              placeholder="Enter a title..."
+              placeholder="Box title..."
               className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
             />
           </div>
@@ -88,7 +101,7 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
                 type="text"
                 value={config.logoUrl}
                 onChange={(e) => onConfigChange({ logoUrl: e.target.value })}
-                placeholder="Enter logo URL..."
+                placeholder="Box logo URL..."
                 className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
               />
               {config.logoUrl && (
@@ -148,7 +161,7 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
               />
             </div>
           </div>
-          <div className={config.carouselMode ? 'hidden' : 'block'}>
+          <div className={config.carouselMode || config.maxHeightMode ? 'hidden' : 'block'}>
             <label className="block text-sm font-medium text-gray-200 mb-3">Max Bets/Column</label>
             <input
               type="number"
@@ -156,7 +169,7 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
               max="10"
               value={config.maxBetsPCol}
               onChange={(e) => onConfigChange({ maxBetsPCol: parseInt(e.target.value) })}
-              placeholder="Enter a number..."
+              placeholder="Bets number..."
               className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
             />
           </div>
@@ -169,7 +182,7 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
               step="1"
               value={config.carouselTimer}
               onChange={(e) => onConfigChange({ carouselTimer: parseInt(e.target.value) })}
-              placeholder="Enter a number..."
+              placeholder="Seconds..."
               className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
             />
           </div>

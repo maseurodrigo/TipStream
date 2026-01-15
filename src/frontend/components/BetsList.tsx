@@ -10,6 +10,7 @@ interface BetsListProps {
   carouselMode: boolean;
   carouselTimer: number;
   maxBetsPCol: number;
+  maxHeightMode: boolean;
   bettingSites: BettingSite[];
   isStreamMode: boolean;
   showHeader: boolean;
@@ -33,6 +34,7 @@ export const BetsList: React.FC<BetsListProps> = ({
   carouselMode,
   carouselTimer,
   maxBetsPCol,
+  maxHeightMode,
   bettingSites,
   isStreamMode,
   showHeader,
@@ -52,6 +54,52 @@ export const BetsList: React.FC<BetsListProps> = ({
 }) => {
   const betColumns = chunkArray(bets, maxBetsPCol);
 
+  // For maxHeightMode with auto-scrolling in stream mode
+  const renderAutoScrollContent = () => {
+    if (maxHeightMode && isStreamMode && bets.length > 0) {
+      return (
+        <div className="auto-scroll-container overflow-hidden h-full">
+          <div className="auto-scroll-content">
+            {bets.map((bet) => (
+              <div key={bet.id} className="mb-2">
+                <BetCard
+                  bet={bet}
+                  bettingSites={bettingSites}
+                  isEditing={editingId === bet.id}
+                  isStreamMode={isStreamMode}
+                  editState={editState}
+                  onEdit={onEdit}
+                  onSaveEdit={onSaveEdit}
+                  onCancelEdit={onCancelEdit}
+                  onDelete={onDelete}
+                  onStatusChange={onStatusChange}
+                />
+              </div>
+            ))}
+            {/* Duplicate content for seamless loop */}
+            {bets.map((bet) => (
+              <div key={`${bet.id}-duplicate`} className="mb-2">
+                <BetCard
+                  bet={bet}
+                  bettingSites={bettingSites}
+                  isEditing={false}
+                  isStreamMode={isStreamMode}
+                  editState={editState}
+                  onEdit={onEdit}
+                  onSaveEdit={onSaveEdit}
+                  onCancelEdit={onCancelEdit}
+                  onDelete={onDelete}
+                  onStatusChange={onStatusChange}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <>
       <Header
@@ -65,7 +113,9 @@ export const BetsList: React.FC<BetsListProps> = ({
 
       {showPnLTracker && <PnLTracker bets={bets} baseColor={baseColor} />}
 
-        {carouselMode ? (
+        {maxHeightMode && isStreamMode ? (
+          renderAutoScrollContent()
+        ) : carouselMode ? (
           <div className="max-h-[90vh] max-w-[100vw]">
             <Carousel
               autoplay={true}
@@ -99,7 +149,7 @@ export const BetsList: React.FC<BetsListProps> = ({
             {bets.length === 0 && (
               <div className="p-10 text-center text-gray-400">
                 <p className="text-lg">No open bets yet</p>
-                <p className="text-sm mt-2">{isStreamMode ? 'Wait until some suggestions are added!' : 'Click the + button to add one!'}</p>
+                <p className="text-sm mt-2">{isStreamMode ? 'Wait for some suggestions to be added!' : 'Click the + button to add one!'}</p>
               </div>
             )}
           </div>
@@ -127,7 +177,7 @@ export const BetsList: React.FC<BetsListProps> = ({
             {bets.length === 0 && (
               <div className="p-10 text-center text-gray-400">
                 <p className="text-lg">No open bets yet</p>
-                <p className="text-sm mt-2">{isStreamMode ? 'Wait until some suggestions are added!' : 'Click the + button to add one!'}</p>
+                <p className="text-sm mt-2">{isStreamMode ? 'Wait for some suggestions to be added!' : 'Click the + button to add one!'}</p>
               </div>
             )}
           </div>

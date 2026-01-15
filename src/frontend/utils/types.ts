@@ -37,6 +37,8 @@ export interface BettingSite {
 
 export interface DisplaySettings {
   tipsBoxWidth: number;
+  tipsBoxHeight: number;
+  maxHeightMode: boolean;
   showHeader: boolean;
   showPnLTracker: boolean;
   carouselMode: boolean;

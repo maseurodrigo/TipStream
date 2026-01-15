@@ -31,6 +31,8 @@ export const useSocketConnection = ({
 
   const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({
     tipsBoxWidth: 400,
+    tipsBoxHeight: 600,
+    maxHeightMode: false,
     showHeader: false,
     showPnLTracker: true,
     carouselMode: false,
@@ -52,11 +54,15 @@ export const useSocketConnection = ({
       .then(data => setBettingSites(data))
       .catch(() => setBettingSites([]));
 
-    // Load stored tips box width from localStorage (only for editor)
+    // Load stored tips box width and height from localStorage (only for editor)
     if (isEditor) {
       const storedWidth = localStorage.getItem('tipsBoxWidth');
       if (storedWidth) {
         setDisplaySettings(prev => ({ ...prev, tipsBoxWidth: Number(storedWidth) }));
+      }
+      const storedHeight = localStorage.getItem('tipsBoxHeight');
+      if (storedHeight) {
+        setDisplaySettings(prev => ({ ...prev, tipsBoxHeight: Number(storedHeight) }));
       }
     }
 
@@ -89,6 +95,12 @@ export const useSocketConnection = ({
       socketRef.current?.on('lastDataState', (updates) => {
         if (updates.tipsBoxWidth !== undefined) {
           setDisplaySettings(prev => ({ ...prev, tipsBoxWidth: updates.tipsBoxWidth }));
+        }
+        if (updates.tipsBoxHeight !== undefined) {
+          setDisplaySettings(prev => ({ ...prev, tipsBoxHeight: updates.tipsBoxHeight }));
+        }
+        if (updates.maxHeightMode !== undefined) {
+          setDisplaySettings(prev => ({ ...prev, maxHeightMode: updates.maxHeightMode }));
         }
         if (updates.showHeader !== undefined) {
           setDisplaySettings(prev => ({ ...prev, showHeader: updates.showHeader }));
@@ -129,6 +141,12 @@ export const useSocketConnection = ({
       socketRef.current?.on('receiveUpdate', (updates) => {
         if (updates.tipsBoxWidth !== undefined) {
           setDisplaySettings(prev => ({ ...prev, tipsBoxWidth: updates.tipsBoxWidth }));
+        }
+        if (updates.tipsBoxHeight !== undefined) {
+          setDisplaySettings(prev => ({ ...prev, tipsBoxHeight: updates.tipsBoxHeight }));
+        }
+        if (updates.maxHeightMode !== undefined) {
+          setDisplaySettings(prev => ({ ...prev, maxHeightMode: updates.maxHeightMode }));
         }
         if (updates.showHeader !== undefined) {
           setDisplaySettings(prev => ({ ...prev, showHeader: updates.showHeader }));

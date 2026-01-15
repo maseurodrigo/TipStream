@@ -13,7 +13,12 @@ export default function Viewer() {
         className="p-2 rounded-lg backdrop-blur-lg shadow-[0_0_35px_rgba(0,0,0,0.2)] hover:shadow-[0_0_50px_rgba(0,0,0,0.3)] transition-shadow duration-300"
         style={{
           backgroundColor: getColorWithOpacity(displaySettings.baseColor, 0.4),
-          width: displaySettings.tipsBoxWidth
+          width: displaySettings.tipsBoxWidth,
+          ...(displaySettings.maxHeightMode && {
+            height: displaySettings.tipsBoxHeight,
+            minHeight: 300,
+            maxHeight: 1200
+          })
         }}
       >
         <BetsList
@@ -21,6 +26,7 @@ export default function Viewer() {
           carouselMode={displaySettings.carouselMode}
           carouselTimer={displaySettings.carouselTimer}
           maxBetsPCol={displaySettings.maxBetsPCol}
+          maxHeightMode={displaySettings.maxHeightMode}
           bettingSites={bettingSites}
           isStreamMode={true}
           showHeader={displaySettings.showHeader}

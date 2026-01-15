@@ -70,7 +70,7 @@ export const BetCard: React.FC<BetCardProps> = ({
                   type="text"
                   value={editState.editTeams}
                   onChange={(e) => editState.setEditTeams(e.target.value)}
-                  placeholder="Enter teams (e.g., Team A vs Team B)..."
+                  placeholder="Teams (e.g., Team A vs Team B)..."
                   className="w-full p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                 />
                 <div className="flex gap-4">
@@ -79,7 +79,7 @@ export const BetCard: React.FC<BetCardProps> = ({
                     inputMode="decimal"
                     value={editState.editOdds}
                     onChange={(e) => editState.handleEditOddsChange(e.target.value)}
-                    placeholder="Enter odds..."
+                    placeholder="Odds..."
                     className="flex-1 p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                   />
                   <div className="flex-1">
@@ -89,7 +89,7 @@ export const BetCard: React.FC<BetCardProps> = ({
                         inputMode="decimal"
                         value={editState.editBalance}
                         onChange={(e) => editState.handleEditBalanceChange(e.target.value)}
-                        placeholder={editState.editBalanceType === 'units' ? "Enter units..." : "Enter amount..."}
+                        placeholder={editState.editBalanceType === 'units' ? "Units..." : "Amount..."}
                         className="flex-1 p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                       />
                       <button
@@ -173,7 +173,7 @@ export const BetCard: React.FC<BetCardProps> = ({
                         inputMode="decimal"
                         value={editState.editBalance}
                         onChange={(e) => editState.handleEditBalanceChange(e.target.value)}
-                        placeholder={editState.editBalanceType === 'units' ? "Enter units..." : "Enter amount..."}
+                        placeholder={editState.editBalanceType === 'units' ? "Units..." : "Amount..."}
                         className="flex-1 p-2 rounded-lg bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                       />
                       <button
