@@ -77,26 +77,25 @@ export const BetsList: React.FC<BetsListProps> = ({
           ref={containerRef}
           className={`overflow-hidden h-full ${isStreamMode ? '' : 'overflow-y-auto'}`}
         >
-          <div
-            ref={contentRef}
-            className={shouldAutoScroll && isStreamMode ? 'auto-scroll-content' : ''}
-          >
-            {bets.map((bet) => (
-              <div key={bet.id} className="mb-2">
-                <BetCard
-                  bet={bet}
-                  bettingSites={bettingSites}
-                  isEditing={editingId === bet.id}
-                  isStreamMode={isStreamMode}
-                  editState={editState}
-                  onEdit={onEdit}
-                  onSaveEdit={onSaveEdit}
-                  onCancelEdit={onCancelEdit}
-                  onDelete={onDelete}
-                  onStatusChange={onStatusChange}
-                />
-              </div>
-            ))}
+          <div className={shouldAutoScroll && isStreamMode ? 'auto-scroll-content' : ''}>
+            <div ref={contentRef}>
+              {bets.map((bet) => (
+                <div key={bet.id} className="mb-2">
+                  <BetCard
+                    bet={bet}
+                    bettingSites={bettingSites}
+                    isEditing={editingId === bet.id}
+                    isStreamMode={isStreamMode}
+                    editState={editState}
+                    onEdit={onEdit}
+                    onSaveEdit={onSaveEdit}
+                    onCancelEdit={onCancelEdit}
+                    onDelete={onDelete}
+                    onStatusChange={onStatusChange}
+                  />
+                </div>
+              ))}
+            </div>
             {/* Duplicate content for seamless loop - only when auto-scrolling */}
             {shouldAutoScroll && isStreamMode && bets.map((bet) => (
               <div key={`${bet.id}-duplicate`} className="mb-2">
