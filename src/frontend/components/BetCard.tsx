@@ -62,7 +62,7 @@ export const BetCard: React.FC<BetCardProps> = ({
       // Reset glow after animation completes
       const timer = setTimeout(() => {
         setShowGlow(false);
-      }, 1500); // Match animation duration
+      }, 1200); // Match animation duration
 
       return () => clearTimeout(timer);
     }
@@ -76,20 +76,34 @@ export const BetCard: React.FC<BetCardProps> = ({
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="bg-gray-900/80 p-4 rounded-lg shadow-lg flex items-center gap-3 relative overflow-hidden"
     >
-      {/* Glow effect overlay */}
+      {/* Diagonal glow effect overlay */}
       {showGlow && glowColor && (
         <motion.div
           className="absolute inset-0 pointer-events-none z-0"
-          initial={{ x: '-100%' }}
-          animate={{ x: '100%' }}
-          transition={{ duration: 1.5, ease: 'easeInOut' }}
+          initial={{ x: '-150%', y: '-150%' }}
+          animate={{ x: '150%', y: '150%' }}
+          transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
           style={{
             background: glowColor === 'green'
-              ? 'linear-gradient(90deg, transparent 0%, rgba(34, 197, 94, 0.4) 50%, transparent 100%)'
-              : 'linear-gradient(90deg, transparent 0%, rgba(239, 68, 68, 0.4) 50%, transparent 100%)',
+              ? 'linear-gradient(135deg, transparent 0%, transparent 30%, rgba(34, 197, 94, 0.6) 50%, rgba(74, 222, 128, 0.4) 60%, transparent 80%, transparent 100%)'
+              : 'linear-gradient(135deg, transparent 0%, transparent 30%, rgba(239, 68, 68, 0.6) 50%, rgba(248, 113, 113, 0.4) 60%, transparent 80%, transparent 100%)',
+            width: '150%',
+            height: '150%',
+            filter: 'blur(8px)',
+          }}
+        />
+      )}
+      {/* Secondary glow for enhanced effect */}
+      {showGlow && glowColor && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none z-0 rounded-lg"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 1, 1, 0] }}
+          transition={{ duration: 1.2, times: [0, 0.2, 0.8, 1] }}
+          style={{
             boxShadow: glowColor === 'green'
-              ? '0 0 30px rgba(34, 197, 94, 0.5)'
-              : '0 0 30px rgba(239, 68, 68, 0.5)',
+              ? '0 0 40px rgba(34, 197, 94, 0.6), inset 0 0 20px rgba(34, 197, 94, 0.2)'
+              : '0 0 40px rgba(239, 68, 68, 0.6), inset 0 0 20px rgba(239, 68, 68, 0.2)',
           }}
         />
       )}
