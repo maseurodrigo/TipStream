@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Check, X, Pencil, Trash2, Plus } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { Bet, BettingSite } from '../utils/types';
 import { calculateTotalOdds } from '../utils/helpers';
 
@@ -47,14 +48,52 @@ export const BetCard: React.FC<BetCardProps> = ({
   onDelete,
   onStatusChange,
 }) => {
+  const [showGlow, setShowGlow] = useState(false);
+  const [glowColor, setGlowColor] = useState<'green' | 'red' | null>(null);
+  const prevStatusRef = useRef(bet.status);
+
+  // Detect status changes and trigger glow effect
+  useEffect(() => {
+    if (isStreamMode && prevStatusRef.current !== bet.status && bet.status !== 'pending') {
+      // Status changed to green or red
+      setGlowColor(bet.status);
+      setShowGlow(true);
+
+      // Reset glow after animation completes
+      const timer = setTimeout(() => {
+        setShowGlow(false);
+      }, 1500); // Match animation duration
+
+      return () => clearTimeout(timer);
+    }
+    prevStatusRef.current = bet.status;
+  }, [bet.status, isStreamMode]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="bg-gray-900/80 p-4 rounded-lg shadow-lg flex items-center gap-3"
+      className="bg-gray-900/80 p-4 rounded-lg shadow-lg flex items-center gap-3 relative overflow-hidden"
     >
-      <div className="flex-1 min-w-0 mr-4">
+      {/* Glow effect overlay */}
+      {showGlow && glowColor && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none z-0"
+          initial={{ x: '-100%' }}
+          animate={{ x: '100%' }}
+          transition={{ duration: 1.5, ease: 'easeInOut' }}
+          style={{
+            background: glowColor === 'green'
+              ? 'linear-gradient(90deg, transparent 0%, rgba(34, 197, 94, 0.4) 50%, transparent 100%)'
+              : 'linear-gradient(90deg, transparent 0%, rgba(239, 68, 68, 0.4) 50%, transparent 100%)',
+            boxShadow: glowColor === 'green'
+              ? '0 0 30px rgba(34, 197, 94, 0.5)'
+              : '0 0 30px rgba(239, 68, 68, 0.5)',
+          }}
+        />
+      )}
+      <div className="flex-1 min-w-0 mr-4 relative z-10">
         {isEditing && editState ? (
           <div className="space-y-3">
             {bet.type === 'single' ? (
@@ -302,7 +341,7 @@ export const BetCard: React.FC<BetCardProps> = ({
         )}
       </div>
       {!isStreamMode && (
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 relative z-10">
           {isEditing ? (
             <>
               <button
