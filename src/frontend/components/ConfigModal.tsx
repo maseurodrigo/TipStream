@@ -21,7 +21,7 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50">
       <div
-        className="bg-gray-900/95 p-8 rounded-3xl w-full max-w-2xl shadow-[0_0_50px_rgba(0,0,0,0.3)] transform transition-all duration-300 border border-gray-700/30"
+        className="bg-gray-900/95 p-8 rounded-3xl w-full max-w-2xl shadow-[0_0_50px_rgba(0,0,0,0.3)] transform transition-all duration-300"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-8">

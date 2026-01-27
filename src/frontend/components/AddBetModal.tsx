@@ -47,12 +47,12 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
   } = formState;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50 p-4">
       <div
-        className="bg-gray-900/95 p-8 rounded-3xl w-full max-w-3xl shadow-[0_0_50px_rgba(0,0,0,0.3)] transform transition-all duration-300 border border-gray-700/30"
+        className="bg-gray-900/95 rounded-3xl w-full max-w-3xl shadow-[0_0_50px_rgba(0,0,0,0.3)] transform transition-all duration-300 flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center p-8 pb-6 flex-shrink-0">
           <h2 className="text-3xl font-bold text-white tracking-tight">Add New Bet</h2>
           <button
             onClick={onClose}
@@ -61,96 +61,112 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
             <X size={24} />
           </button>
         </div>
-        <form onSubmit={onSubmit} className="space-y-6">
-          <div className="flex gap-4 mb-6">
-            <button
-              type="button"
-              onClick={() => setBetType('single')}
-              className={`flex-1 py-2 px-4 rounded-xl transition-all duration-300 ${
-                betType === 'single'
-                  ? 'bg-white/10 text-white'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              Single Bet
-            </button>
-            <button
-              type="button"
-              onClick={() => setBetType('multiple')}
-              className={`flex-1 py-2 px-4 rounded-xl transition-all duration-300 ${
-                betType === 'multiple'
-                  ? 'bg-white/10 text-white'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              Multiple Bet
-            </button>
+
+        <form onSubmit={onSubmit} className="flex flex-col flex-1 min-h-0">
+          <div className="px-8 flex-shrink-0">
+            <div className="flex border-b border-gray-700/50">
+              <button
+                type="button"
+                onClick={() => setBetType('single')}
+                className={`flex-1 py-3 px-6 font-medium transition-all duration-300 relative ${
+                  betType === 'single'
+                    ? 'text-white'
+                    : 'text-gray-400 hover:text-gray-300'
+                }`}
+              >
+                Single Bet
+                {betType === 'single' && (
+                  <div
+                    className="absolute bottom-0 left-0 right-0 h-0.5 rounded-t-full"
+                    style={{ backgroundColor: baseColor }}
+                  />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => setBetType('multiple')}
+                className={`flex-1 py-3 px-6 font-medium transition-all duration-300 relative ${
+                  betType === 'multiple'
+                    ? 'text-white'
+                    : 'text-gray-400 hover:text-gray-300'
+                }`}
+              >
+                Multiple Bet
+                {betType === 'multiple' && (
+                  <div
+                    className="absolute bottom-0 left-0 right-0 h-0.5 rounded-t-full"
+                    style={{ backgroundColor: baseColor }}
+                  />
+                )}
+              </button>
+            </div>
           </div>
 
-          {betType === 'single' ? (
-            <>
-              <div>
-                <input
-                  type="text"
-                  value={newTip}
-                  onChange={(e) => setNewTip(e.target.value)}
-                  placeholder="Betting tip..."
-                  className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
-                />
-              </div>
-              <div>
-                <input
-                  type="text"
-                  value={newTeams}
-                  onChange={(e) => setNewTeams(e.target.value)}
-                  placeholder="Teams (e.g., Team A vs Team B)..."
-                  className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
-                />
-              </div>
-              <div className="flex gap-4">
-                <div className="flex-1">
+          <div className="overflow-y-auto px-8 py-6 flex-1">
+            {betType === 'single' ? (
+              <div className="space-y-6">
+                <div>
                   <input
                     type="text"
-                    inputMode="decimal"
-                    value={newOdds}
-                    onChange={(e) => handleOddsChange(e.target.value)}
-                    placeholder="Odds (e.g., 1.75)..."
+                    value={newTip}
+                    onChange={(e) => setNewTip(e.target.value)}
+                    placeholder="Betting tip..."
                     className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
                   />
                 </div>
-                <div className="flex-1">
-                  <div className="flex gap-2">
+                <div>
+                  <input
+                    type="text"
+                    value={newTeams}
+                    onChange={(e) => setNewTeams(e.target.value)}
+                    placeholder="Teams (e.g., Team A vs Team B)..."
+                    className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
+                  />
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-1">
                     <input
                       type="text"
                       inputMode="decimal"
-                      value={newBalance}
-                      onChange={(e) => handleBalanceChange(e.target.value)}
-                      placeholder={newBalanceType === 'units' ? "Units..." : "Amount..."}
-                      className="flex-1 p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
+                      value={newOdds}
+                      onChange={(e) => handleOddsChange(e.target.value)}
+                      placeholder="Odds (e.g., 1.75)..."
+                      className="w-full p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
                     />
-                    <button
-                      type="button"
-                      onClick={() => setNewBalanceType(prev => prev === 'units' ? 'money' : 'units')}
-                      className="px-3 rounded-xl bg-gray-800/50 text-blue-400 hover:text-blue-300 border border-blue-500/20 hover:bg-blue-500/10 hover:border-blue-500/30 transition-all duration-300"
-                    >
-                      {newBalanceType === 'units' ? 'Units' : 'Money'}
-                    </button>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={newBalance}
+                        onChange={(e) => handleBalanceChange(e.target.value)}
+                        placeholder={newBalanceType === 'units' ? "Units..." : "Amount..."}
+                        className="flex-1 p-4 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300 text-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setNewBalanceType(prev => prev === 'units' ? 'money' : 'units')}
+                        className="px-3 rounded-xl bg-gray-800/50 text-blue-400 hover:text-blue-300 border border-blue-500/20 hover:bg-blue-500/10 hover:border-blue-500/30 transition-all duration-300"
+                      >
+                        {newBalanceType === 'units' ? 'Units' : 'Money'}
+                      </button>
+                    </div>
                   </div>
                 </div>
+                <div>
+                  <select
+                    value={newSite}
+                    onChange={e => setNewSite(e.target.value)}
+                    className="w-full p-4 rounded-xl bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 appearance-none transition-all duration-300"
+                  >
+                    {bettingSites.map(site => (
+                      <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div>
-                <select
-                  value={newSite}
-                  onChange={e => setNewSite(e.target.value)}
-                  className="w-full p-4 rounded-xl bg-gray-800/50 text-white border border-gray-600/50 focus:border-gray-500 appearance-none transition-all duration-300"
-                >
-                  {bettingSites.map(site => (
-                    <option key={site.value} value={site.value} style={{ backgroundColor: "rgba(31, 41, 55, 0.8)", color: "#fff" }}>{site.label}</option>
-                  ))}
-                </select>
-              </div>
-            </>
-          ) : (
+            ) : (
             <div className="space-y-4">
               {multipleTips.map((tip, index) => (
                 <div key={index} className="flex gap-4">
@@ -235,14 +251,17 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
               )}
             </div>
           )}
+          </div>
 
-          <button
-            type="submit"
-            className="w-full py-4 px-6 rounded-xl transition-all duration-300 text-white font-medium shadow-lg hover:shadow-2xl text-lg"
-            style={{ backgroundColor: baseColor }}
-          >
-            Add {betType === 'single' ? 'Single Bet' : 'Multiple Bet'}
-          </button>
+          <div className="px-8 pb-8 flex-shrink-0">
+            <button
+              type="submit"
+              className="w-full py-4 px-6 rounded-xl transition-all duration-300 text-white font-medium shadow-lg hover:shadow-2xl text-lg"
+              style={{ backgroundColor: baseColor }}
+            >
+              Add {betType === 'single' ? 'Single Bet' : 'Multiple Bet'}
+            </button>
+          </div>
         </form>
       </div>
     </div>
