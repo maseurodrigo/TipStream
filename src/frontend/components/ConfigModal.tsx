@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { Checkbox, Typography } from "@material-tailwind/react";
+import { Checkbox, Typography, Input } from "@material-tailwind/react";
 import { DisplaySettings } from '../utils/types';
 import { getColorWithOpacity } from '../utils/helpers';
 
@@ -21,10 +21,11 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center pointer-events-auto z-50">
       <div
-        className="bg-gray-900/95 p-8 rounded-3xl w-full max-w-2xl shadow-[0_0_50px_rgba(0,0,0,0.3)] transform transition-all duration-300"
+        className="bg-gray-900/95 rounded-3xl w-full max-w-3xl shadow-[0_0_50px_rgba(0,0,0,0.3)] transform transition-all duration-300 max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center mb-8">
+        {/* Header */}
+        <div className="flex justify-between items-center px-8 pt-8 pb-6 border-b border-gray-700/50">
           <h2 className="text-3xl font-bold text-white tracking-tight">Overlay Settings</h2>
           <button
             onClick={onClose}
@@ -33,159 +34,253 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
             <X size={24} />
           </button>
         </div>
-        <div className="space-y-8">
-          <div className="flex items-center justify-evenly w-full pb-4 border-b-2 border-gray-600/50">
-            <Checkbox
-              defaultChecked={config.showHeader}
-              ripple={true}
-              label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Show Header</Typography>}
-              color="blue"
-              className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
-              onChange={(e) => onConfigChange({ showHeader: e.target.checked })}
-              crossOrigin={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-            />
-            <Checkbox
-              defaultChecked={config.showPnLTracker}
-              ripple={true}
-              label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Show PnL Tracker</Typography>}
-              color="blue"
-              className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
-              onChange={(e) => onConfigChange({ showPnLTracker: e.target.checked })}
-              crossOrigin={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-            />
-            <Checkbox
-              defaultChecked={config.carouselMode}
-              disabled={config.maxHeightMode}
-              ripple={true}
-              label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Carousel Mode</Typography>}
-              color="blue"
-              className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
-              onChange={(e) => onConfigChange({ carouselMode: e.target.checked })}
-              crossOrigin={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-            />
-            <Checkbox
-              defaultChecked={config.maxHeightMode}
-              disabled={config.carouselMode}
-              ripple={true}
-              label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Max Height</Typography>}
-              color="blue"
-              className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
-              onChange={(e) => onConfigChange({ maxHeightMode: e.target.checked })}
-              crossOrigin={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-            />
-          </div>
-          <div className={config.showHeader ? 'block' : 'hidden'}>
-            <label className="block text-sm font-medium text-gray-200 mb-3">Title</label>
-            <input
-              disabled={!config.showHeader}
-              type="text"
-              value={config.headerTitle}
-              onChange={(e) => onConfigChange({ headerTitle: e.target.value })}
-              placeholder="Box title..."
-              className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
-            />
-          </div>
-          <div className={`${config.showHeader ? 'flex items-center justify-center gap-6' : 'hidden'}`}>
-            <div className="w-3/5">
-              <label className="block text-sm font-medium text-gray-200 mb-3">Logo URL</label>
-              <input
-                disabled={!config.showHeader}
-                type="text"
-                value={config.logoUrl}
-                onChange={(e) => onConfigChange({ logoUrl: e.target.value })}
-                placeholder="Box logo URL..."
-                className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+
+        {/* Content */}
+        <div className="px-8 py-6 space-y-8 overflow-y-auto flex-1">
+
+          {/* Display Options */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-white">Display Options</h3>
+            <div className="grid grid-cols-4 gap-4">
+              <Checkbox
+                defaultChecked={config.showHeader}
+                ripple={true}
+                label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Show Header</Typography>}
+                color="blue"
+                className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
+                onChange={(e) => onConfigChange({ showHeader: e.target.checked })}
+                crossOrigin={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
               />
-              {config.logoUrl && (
-                <div className="mt-2 p-2 bg-gray-800/50 rounded-xl">
-                  <img
-                    src={config.logoUrl}
-                    alt="Logo preview"
-                    className={`h-8 w-8 object-cover rounded-full mx-auto shadow-lg`}
-                    onError={(e) => {
-                      const img = e.target as HTMLImageElement;
-                      img.style.display = 'none';
+              <Checkbox
+                defaultChecked={config.showPnLTracker}
+                ripple={true}
+                label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Show PnL Tracker</Typography>}
+                color="blue"
+                className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
+                onChange={(e) => onConfigChange({ showPnLTracker: e.target.checked })}
+                crossOrigin={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              />
+              <Checkbox
+                defaultChecked={config.carouselMode}
+                disabled={config.maxHeightMode}
+                ripple={true}
+                label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Carousel Mode</Typography>}
+                color="blue"
+                className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
+                onChange={(e) => onConfigChange({ carouselMode: e.target.checked })}
+                crossOrigin={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              />
+              <Checkbox
+                defaultChecked={config.maxHeightMode}
+                disabled={config.carouselMode}
+                ripple={true}
+                label={<Typography className="font-space font-medium text-sm text-gray-200" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Max Height Mode</Typography>}
+                color="blue"
+                className="text-gray-500 bg-gray-800/50 border-gray-600/50 focus:border-gray-500 transition-all duration-300 rounded-xl"
+                onChange={(e) => onConfigChange({ maxHeightMode: e.target.checked })}
+                crossOrigin={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              />
+            </div>
+          </div>
+
+          {/* Header Settings */}
+          {config.showHeader && (
+            <div className="space-y-4 pb-8 border-b border-gray-700/50">
+              <h3 className="text-lg font-semibold text-white">Header Settings</h3>
+
+              <div className="grid grid-cols-2 gap-6">
+                {/* Left Column */}
+                <div className="space-y-4">
+                  <Input
+                    type="text"
+                    value={config.headerTitle}
+                    onChange={(e) => onConfigChange({ headerTitle: e.target.value })}
+                    label="Header Title"
+                    variant="outlined"
+                    color="blue"
+                    className="text-white"
+                    containerProps={{ className: "min-w-0" }}
+                    labelProps={{
+                      className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
                     }}
-                    onLoad={(e) => {
-                      const img = e.target as HTMLImageElement;
-                      img.style.display = 'block';
+                    crossOrigin={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  />
+
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-300">
+                      Header Opacity: <span className="text-blue-400">{Math.round(config.opacity * 100)}%</span>
+                    </label>
+                    <div className="bg-gray-800/30 p-4 rounded-xl border border-gray-700/30">
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={config.opacity * 100}
+                        onChange={(e) => onConfigChange({ opacity: parseInt(e.target.value) / 100 })}
+                        className="w-full h-2 rounded-lg appearance-none cursor-pointer transition-all duration-200 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-blue-400 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:hover:bg-blue-400 [&::-webkit-slider-thumb]:transition-all [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-blue-500 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-blue-400 [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:hover:bg-blue-400 [&::-moz-range-thumb]:transition-all"
+                        style={{
+                          backgroundImage: `linear-gradient(to right, ${getColorWithOpacity(config.baseColor, 1)}, ${getColorWithOpacity(config.baseColor, 1)} ${config.opacity * 100}%, #374151 ${config.opacity * 100}%, #374151)`
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1">
+                      <Input
+                        type="text"
+                        value={config.logoUrl}
+                        onChange={(e) => onConfigChange({ logoUrl: e.target.value })}
+                        label="Logo URL"
+                        variant="outlined"
+                        color="blue"
+                        className="text-white"
+                        containerProps={{ className: "min-w-0" }}
+                        labelProps={{
+                          className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
+                        }}
+                        crossOrigin={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      />
+                    </div>
+                    {config.logoUrl && (
+                      <div className="flex-shrink-0 p-1 bg-gray-800/30 rounded-lg border border-gray-700/30">
+                        <img
+                          src={config.logoUrl}
+                          alt="Logo preview"
+                          className="h-8 w-8 object-cover rounded-lg shadow-md"
+                          onError={(e) => {
+                            const img = e.target as HTMLImageElement;
+                            img.style.display = 'none';
+                          }}
+                          onLoad={(e) => {
+                            const img = e.target as HTMLImageElement;
+                            img.style.display = 'block';
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-300">
+                      Logo Size: <span className="text-blue-400">{config.logoSize}</span>
+                    </label>
+                    <div className="bg-gray-800/30 p-4 rounded-xl border border-gray-700/30">
+                      <input
+                        type="range"
+                        min="2"
+                        max="5"
+                        step="1"
+                        value={config.logoSize}
+                        onChange={(e) => onConfigChange({ logoSize: parseInt(e.target.value, 10) })}
+                        className="w-full h-2 bg-gray-700/50 rounded-lg appearance-none cursor-pointer transition-all duration-200 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-blue-400 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:hover:bg-blue-400 [&::-webkit-slider-thumb]:transition-all [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-blue-500 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-blue-400 [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:hover:bg-blue-400 [&::-moz-range-thumb]:transition-all"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Appearance */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-white">Appearance</h3>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-300">Base Color</label>
+              <div className="flex items-center gap-4 bg-gray-800/30 p-4 rounded-xl border border-gray-700/30">
+                <div className="relative group w-12 h-12 flex-shrink-0">
+                  <input
+                    type="color"
+                    value={config.baseColor}
+                    onChange={(e) => onConfigChange({ baseColor: e.target.value })}
+                    className="opacity-0 absolute inset-0 w-full h-full cursor-pointer z-10"
+                  />
+                  <div
+                    className="absolute inset-0 rounded-lg shadow-md ring-2 ring-gray-600/50 group-hover:ring-blue-500/50 transition-all duration-300 cursor-pointer"
+                    style={{ backgroundColor: config.baseColor }}
+                  />
+                </div>
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-gray-400 uppercase">HEX</span>
+                    <code className="text-sm font-mono text-blue-400 bg-gray-900/50 px-3 py-1.5 rounded-lg">{config.baseColor}</code>
+                  </div>
+                  <span className="text-xs text-gray-500">Click swatch to change</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Layout Settings */}
+          {(!config.maxHeightMode || config.carouselMode) && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">Layout Settings</h3>
+
+              {!config.carouselMode && !config.maxHeightMode && (
+                <div>
+                  <Input
+                    type="number"
+                    min="2"
+                    max="10"
+                    value={config.maxBetsPCol.toString()}
+                    onChange={(e) => onConfigChange({ maxBetsPCol: parseInt(e.target.value) })}
+                    label="Max Bets per Column"
+                    variant="outlined"
+                    color="blue"
+                    className="text-white"
+                    containerProps={{ className: "min-w-0" }}
+                    labelProps={{
+                      className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
                     }}
+                    crossOrigin={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  />
+                </div>
+              )}
+
+              {config.carouselMode && (
+                <div>
+                  <Input
+                    type="number"
+                    min="3"
+                    max="30"
+                    step="1"
+                    value={config.carouselTimer.toString()}
+                    onChange={(e) => onConfigChange({ carouselTimer: parseInt(e.target.value) })}
+                    label="Carousel Timer (seconds)"
+                    variant="outlined"
+                    color="blue"
+                    className="text-white"
+                    containerProps={{ className: "min-w-0" }}
+                    labelProps={{
+                      className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
+                    }}
+                    crossOrigin={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
                   />
                 </div>
               )}
             </div>
-            <div className="w-2/5">
-              <label className="block text-sm font-medium text-gray-200 mb-3">Logo Size</label>
-              <input
-                disabled={!config.showHeader}
-                type="range"
-                min="2"
-                max="5"
-                step="1"
-                value={config.logoSize}
-                onChange={(e) => onConfigChange({ logoSize: parseInt(e.target.value, 10) })}
-                className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-              />
-            </div>
-          </div>
-          <div className="flex items-center justify-center gap-6">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-200 mb-3">Base Color</label>
-              <input
-                type="color"
-                value={config.baseColor}
-                onChange={(e) => onConfigChange({ baseColor: e.target.value })}
-                className="w-full h-14 rounded-xl cursor-pointer"
-              />
-            </div>
-            <div className={config.showHeader ? 'flex-1' : 'hidden'}>
-              <label className="block text-sm font-medium text-gray-200 mb-3">Header Color Opacity ({Math.round(config.opacity * 100)}%)</label>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={config.opacity * 100}
-                onChange={(e) => onConfigChange({ opacity: parseInt(e.target.value) / 100 })}
-                className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                style={{
-                  backgroundImage: `linear-gradient(to right, ${getColorWithOpacity(config.baseColor, 1)}, ${getColorWithOpacity(config.baseColor, 1)} ${config.opacity * 100}%, #374151 ${config.opacity * 100}%, #374151)`
-                }}
-              />
-            </div>
-          </div>
-          <div className={config.carouselMode || config.maxHeightMode ? 'hidden' : 'block'}>
-            <label className="block text-sm font-medium text-gray-200 mb-3">Max Bets/Column</label>
-            <input
-              type="number"
-              min="2"
-              max="10"
-              value={config.maxBetsPCol}
-              onChange={(e) => onConfigChange({ maxBetsPCol: parseInt(e.target.value) })}
-              placeholder="Bets number..."
-              className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
-            />
-          </div>
-          <div className={config.carouselMode ? 'block' : 'hidden'}>
-            <label className="block text-sm font-medium text-gray-200 mb-3">Bet Carousel Time (secs)</label>
-            <input
-              type="number"
-              min="3"
-              max="30"
-              step="1"
-              value={config.carouselTimer}
-              onChange={(e) => onConfigChange({ carouselTimer: parseInt(e.target.value) })}
-              placeholder="Seconds..."
-              className="w-full p-3 rounded-xl bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600/50 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 transition-all duration-300"
-            />
-          </div>
+          )}
+
         </div>
       </div>
     </div>
