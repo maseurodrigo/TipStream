@@ -1,10 +1,9 @@
 import * as XLSX from 'xlsx-js-style';
 import { Bet } from './types';
 
-export const exportBetsToExcel = (bets: Bet[]) => {
+export const exportBetsToExcel = (bets: Bet[]): boolean => {
   if (bets.length === 0) {
-    alert('No bets to export!');
-    return;
+    return false;
   }
 
   // Prepare data for Excel with better structure
@@ -155,4 +154,5 @@ export const exportBetsToExcel = (bets: Bet[]) => {
 
   // Download file
   XLSX.writeFile(workbook, filename);
+  return true;
 };

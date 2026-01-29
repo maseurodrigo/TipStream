@@ -83,31 +83,32 @@ export const PnLTracker: React.FC<PnLTrackerProps> = ({ bets, baseColor }) => {
 
   return (
     <div
-      className="mb-2 px-3 py-2 rounded-lg backdrop-blur-md shadow-md border-2 transition-all duration-300"
+      className="mb-3 px-4 py-3 rounded-2xl backdrop-blur-md shadow-xl border-2 transition-all duration-300 hover:shadow-2xl"
       style={{
-        backgroundColor: `${pnlColor}15`,
+        backgroundColor: `${pnlColor}18`,
         borderColor: pnlColor,
+        boxShadow: `0 8px 20px -3px rgba(0, 0, 0, 0.3), 0 4px 12px -2px ${pnlColor}20`
       }}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <div className="flex flex-col">
-          <span className="text-[9px] text-gray-400 font-semibold uppercase tracking-wider leading-tight">
+          <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-tight mb-1">
             Session PnL
           </span>
           <span
-            className="text-lg font-bold flex items-center transition-all duration-300 leading-tight mt-0.5"
+            className="text-xl font-bold flex items-center transition-all duration-300 leading-tight"
             style={{ color: pnlColor }}
           >
             {pnlSign}{pnlData.pnl.toFixed(2)}
             {CurrencyIcon}
           </span>
         </div>
-        <div className="flex flex-col items-end text-[11px] text-gray-300 gap-0.5 bg-gray-800/40 px-2 py-1.5 rounded-md">
-          <div className="flex items-center gap-1.5">
+        <div className="flex flex-col items-end text-xs text-gray-300 gap-1 bg-gradient-to-br from-gray-800/50 to-gray-800/30 px-3 py-2 rounded-xl shadow-lg">
+          <div className="flex items-center gap-2">
             <span className="font-semibold text-gray-400">Staked:</span>
-            <span className="font-bold">{pnlData.totalStaked.toFixed(2)}</span>
+            <span className="font-bold text-white">{pnlData.totalStaked.toFixed(2)}</span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <span className="font-semibold text-gray-400">Returns:</span>
             <span className="font-bold" style={{ color: pnlData.isProfit ? '#10b981' : '#f59e0b' }}>
               {pnlData.totalReturns.toFixed(2)}

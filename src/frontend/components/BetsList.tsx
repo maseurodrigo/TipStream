@@ -75,7 +75,7 @@ export const BetsList: React.FC<BetsListProps> = ({
       return (
         <div
           ref={containerRef}
-          className={`overflow-hidden h-full ${isStreamMode ? '' : 'overflow-y-auto'}`}
+          className={`overflow-hidden h-full rounded-lg ${isStreamMode ? '' : 'overflow-y-auto'}`}
         >
           <div className={shouldAutoScroll && isStreamMode ? 'auto-scroll-content' : ''}>
             <div ref={contentRef}>
@@ -168,9 +168,11 @@ export const BetsList: React.FC<BetsListProps> = ({
               ))}
             </Carousel>
             {bets.length === 0 && (
-              <div className="p-10 text-center text-gray-400">
-                <p className="text-lg">No open bets yet</p>
-                <p className="text-sm mt-2">{isStreamMode ? 'Wait for some suggestions to be added!' : 'Click the + button to add one!'}</p>
+              <div className="p-10 text-center">
+                <div className="inline-block px-8 py-6 rounded-2xl bg-gradient-to-br from-gray-800/40 to-gray-800/20 border border-gray-700/50 backdrop-blur-lg shadow-xl">
+                  <p className="text-lg font-semibold text-gray-300 mb-2">No open bets yet</p>
+                  <p className="text-sm text-gray-400">{isStreamMode ? 'Wait for some suggestions to be added!' : 'Click the + button to add one!'}</p>
+                </div>
               </div>
             )}
           </div>
@@ -196,9 +198,11 @@ export const BetsList: React.FC<BetsListProps> = ({
               </div>
             ))}
             {bets.length === 0 && (
-              <div className="p-10 text-center text-gray-400">
-                <p className="text-lg">No open bets yet</p>
-                <p className="text-sm mt-2">{isStreamMode ? 'Wait for some suggestions to be added!' : 'Click the + button to add one!'}</p>
+              <div className="p-10 text-center">
+                <div className="inline-block px-8 py-6 rounded-2xl bg-gradient-to-br from-gray-800/40 to-gray-800/20 border border-gray-700/50 backdrop-blur-lg shadow-xl">
+                  <p className="text-lg font-semibold text-gray-300 mb-2">No open bets yet</p>
+                  <p className="text-sm text-gray-400">{isStreamMode ? 'Wait for some suggestions to be added!' : 'Click the + button to add one!'}</p>
+                </div>
               </div>
             )}
           </div>
