@@ -105,90 +105,94 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
 
           <div className="px-8 py-6 flex-1 overflow-y-auto max-h-[60vh]">
             {betType === 'single' ? (
-              <div className="space-y-6">
-                <div>
+              <div className="space-y-5">
+                <div className="group">
                   <Input
                     type="text"
                     value={newTip}
                     onChange={(e) => setNewTip(e.target.value)}
-                    label="Betting tip"
+                    label="Betting Tip"
                     variant="outlined"
                     color="blue"
                     size="lg"
-                    className="text-white !text-base"
+                    className="text-white !text-base !font-medium"
                     containerProps={{ className: "min-w-0" }}
                     labelProps={{
-                      className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
+                      className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
                     }}
                     crossOrigin={undefined}
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
                   />
                 </div>
-                <div>
+                <div className="group">
                   <Input
                     type="text"
                     value={newTeams}
                     onChange={(e) => setNewTeams(e.target.value)}
-                    label="Teams (e.g., Team A vs Team B)"
+                    label="Match Teams"
                     variant="outlined"
                     color="blue"
                     size="lg"
-                    className="text-white !text-base"
+                    className="text-white !text-base !font-medium"
                     containerProps={{ className: "min-w-0" }}
                     labelProps={{
-                      className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
+                      className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
                     }}
                     crossOrigin={undefined}
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
                   />
+                  <p className="mt-1.5 text-xs text-gray-500 ml-3">e.g., Team A vs Team B</p>
                 </div>
-                <div className="flex gap-4">
-                  <div className="flex-1">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="group">
                     <Input
                       type="text"
                       inputMode="decimal"
                       value={newOdds}
                       onChange={(e) => handleOddsChange(e.target.value)}
-                      label="Odds (e.g., 1.75)"
+                      label="Odds"
                       variant="outlined"
                       color="blue"
                       size="lg"
-                      className="text-white !text-base"
+                      className="text-white !text-base !font-medium"
                       containerProps={{ className: "min-w-0" }}
                       labelProps={{
-                        className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
+                        className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
                       }}
                       crossOrigin={undefined}
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
                     />
+                    <p className="mt-1.5 text-xs text-gray-500 ml-3">e.g., 1.95</p>
                   </div>
-                  <div className="flex-1">
+                  <div className="group">
                     <div className="flex gap-2">
-                      <Input
-                        type="text"
-                        inputMode="decimal"
-                        value={newBalance}
-                        onChange={(e) => handleBalanceChange(e.target.value)}
-                        label={newBalanceType === 'units' ? "Units" : "Amount"}
-                        variant="outlined"
-                        color="blue"
-                        size="lg"
-                        className="text-white !text-base"
-                        containerProps={{ className: "min-w-0" }}
-                        labelProps={{
-                          className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
-                        }}
-                        crossOrigin={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
-                      />
+                      <div className="flex-1">
+                        <Input
+                          type="text"
+                          inputMode="decimal"
+                          value={newBalance}
+                          onChange={(e) => handleBalanceChange(e.target.value)}
+                          label={newBalanceType === 'units' ? "Units" : "Amount"}
+                          variant="outlined"
+                          color="blue"
+                          size="lg"
+                          className="text-white !text-base !font-medium"
+                          containerProps={{ className: "min-w-0" }}
+                          labelProps={{
+                            className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
+                          }}
+                          crossOrigin={undefined}
+                          onPointerEnterCapture={undefined}
+                          onPointerLeaveCapture={undefined}
+                        />
+                      </div>
                       <button
                         type="button"
                         onClick={() => setNewBalanceType(prev => prev === 'units' ? 'money' : 'units')}
-                        className="px-4 rounded-xl bg-gray-800/50 text-blue-400 hover:text-blue-300 border border-blue-500/20 hover:bg-blue-500/10 hover:border-blue-500/30 transition-all duration-300"
+                        className="px-3.5 rounded-lg bg-gray-800/60 text-blue-400 hover:text-blue-300 border border-blue-500/30 hover:bg-blue-500/15 hover:border-blue-400/50 transition-all duration-200 shadow-sm hover:shadow-md"
                         title={newBalanceType === 'units' ? 'Switch to Money' : 'Switch to Units'}
                       >
                         {newBalanceType === 'units' ? (
@@ -202,9 +206,12 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                         )}
                       </button>
                     </div>
+                    <p className="mt-1.5 text-xs text-gray-500 ml-3">
+                      {newBalanceType === 'units' ? 'e.g., 1.5' : 'e.g., 25'}
+                    </p>
                   </div>
                 </div>
-                <div>
+                <div className="group">
                   <Select
                     value={newSite}
                     onChange={(val) => setNewSite(val as string)}
@@ -212,20 +219,20 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                     variant="outlined"
                     color="blue"
                     size="lg"
-                    className="text-white !text-base"
+                    className="text-white !text-base !font-medium"
                     containerProps={{ className: "min-w-0" }}
                     labelProps={{
-                      className: "!text-gray-400 peer-focus:!text-blue-400"
+                      className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-focus:!font-semibold"
                     }}
                     menuProps={{
-                      className: "bg-gray-800 border border-gray-700 max-h-40 overflow-y-auto"
+                      className: "bg-gray-800 border border-gray-700 max-h-40 overflow-y-auto shadow-xl"
                     }}
                     placeholder={undefined}
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
                   >
                     {bettingSites.map(site => (
-                      <Option key={site.value} value={site.value} className="text-white hover:bg-gray-700">
+                      <Option key={site.value} value={site.value} className="text-white hover:bg-gray-700 !font-medium">
                         {site.label}
                       </Option>
                     ))}
@@ -235,111 +242,127 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
             ) : (
             <div className="space-y-4">
               {multipleTips.map((tip, index) => (
-                <div key={index} className="flex gap-2 items-stretch w-full">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex gap-2 flex-wrap">
-                      <div className="flex-[2] min-w-[200px] space-y-2">
-                        <Input
-                          type="text"
-                          value={tip.tip}
-                          onChange={(e) => updateMultipleTip(index, 'tip', e.target.value)}
-                          label={`Tip ${index + 1}`}
-                          variant="outlined"
-                          color="blue"
-                          className="text-white !text-base"
-                          containerProps={{ className: "min-w-0" }}
-                          labelProps={{
-                            className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
-                          }}
-                          crossOrigin={undefined}
-                          onPointerEnterCapture={undefined}
-                          onPointerLeaveCapture={undefined}
-                        />
-                        <Input
-                          type="text"
-                          value={tip.teams}
-                          onChange={(e) => updateMultipleTip(index, 'teams', e.target.value)}
-                          label="Teams (e.g., Team A vs Team B)"
-                          variant="outlined"
-                          color="blue"
-                          className="text-white !text-base"
-                          containerProps={{ className: "min-w-0" }}
-                          labelProps={{
-                            className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
-                          }}
-                          crossOrigin={undefined}
-                          onPointerEnterCapture={undefined}
-                          onPointerLeaveCapture={undefined}
-                        />
-                      </div>
-                      <div className="flex-1 min-w-[120px] self-start pt-1">
-                        <Input
-                          type="text"
-                          inputMode="decimal"
-                          value={tip.odds}
-                          onChange={(e) => updateMultipleTip(index, 'odds', e.target.value)}
-                          label="Odds"
-                          variant="outlined"
-                          color="blue"
-                          className="text-white !text-base"
-                          containerProps={{ className: "min-w-0" }}
-                          labelProps={{
-                            className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
-                          }}
-                          crossOrigin={undefined}
-                          onPointerEnterCapture={undefined}
-                          onPointerLeaveCapture={undefined}
-                        />
+                <div key={index} className="p-5 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:border-gray-600/50 transition-colors duration-200 shadow-sm">
+                  <div className="flex gap-3 items-start w-full">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex gap-3 flex-wrap">
+                        <div className="flex-[2] min-w-[200px] space-y-3.5">
+                          <div className="group">
+                            <Input
+                              type="text"
+                              value={tip.tip}
+                              onChange={(e) => updateMultipleTip(index, 'tip', e.target.value)}
+                              label={`Tip ${index + 1}`}
+                              variant="outlined"
+                              color="blue"
+                              className="text-white !text-base !font-medium"
+                              containerProps={{ className: "min-w-0" }}
+                              labelProps={{
+                                className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
+                              }}
+                              crossOrigin={undefined}
+                              onPointerEnterCapture={undefined}
+                              onPointerLeaveCapture={undefined}
+                            />
+                          </div>
+                          <div className="group">
+                            <Input
+                              type="text"
+                              value={tip.teams}
+                              onChange={(e) => updateMultipleTip(index, 'teams', e.target.value)}
+                              label="Match Teams"
+                              variant="outlined"
+                              color="blue"
+                              className="text-white !text-base !font-medium"
+                              containerProps={{ className: "min-w-0" }}
+                              labelProps={{
+                                className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
+                              }}
+                              crossOrigin={undefined}
+                              onPointerEnterCapture={undefined}
+                              onPointerLeaveCapture={undefined}
+                            />
+                            <p className="mt-1.5 text-xs text-gray-500 ml-3">e.g., Team A vs Team B</p>
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-[120px] self-start group">
+                          <Input
+                            type="text"
+                            inputMode="decimal"
+                            value={tip.odds}
+                            onChange={(e) => updateMultipleTip(index, 'odds', e.target.value)}
+                            label="Odds"
+                            variant="outlined"
+                            color="blue"
+                            className="text-white !text-base !font-medium"
+                            containerProps={{ className: "min-w-0" }}
+                            labelProps={{
+                              className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
+                            }}
+                            crossOrigin={undefined}
+                            onPointerEnterCapture={undefined}
+                            onPointerLeaveCapture={undefined}
+                          />
+                          <p className="mt-1.5 text-xs text-gray-500 ml-3">e.g., 1.95</p>
+                        </div>
                       </div>
                     </div>
+                    {multipleTips.length > 1 && (
+                      <div className="flex-shrink-0 flex pt-0.5">
+                        <button
+                          type="button"
+                          onClick={() => removeTip(index)}
+                          className="px-3 py-2.5 rounded-lg hover:bg-red-600/20 text-red-500 hover:text-red-400 transition-all duration-200 border border-red-500/30 hover:border-red-500/50 flex items-center justify-center shadow-sm hover:shadow-md"
+                          title="Remove this tip"
+                        >
+                          <X size={18} />
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  {multipleTips.length > 1 && (
-                    <div className="flex-shrink-0 flex">
-                      <button
-                        type="button"
-                        onClick={() => removeTip(index)}
-                        className="h-full px-3 rounded-xl hover:bg-red-600/20 text-red-500 hover:text-red-400 transition-all duration-300 border border-red-500/20 hover:border-red-500/30 flex items-center justify-center"
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  )}
                 </div>
               ))}
               <button
                 type="button"
                 onClick={() => addTip()}
-                className="w-full py-3 rounded-xl text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 transition-all duration-300 border border-blue-500/20 hover:border-blue-500/30 flex items-center justify-center"
+                className="w-full py-2.5 rounded-xl text-blue-400 hover:text-blue-300 hover:bg-blue-500/15 transition-all duration-200 border-2 border-dashed border-blue-500/30 hover:border-blue-400/50 flex items-center justify-center gap-2 font-medium shadow-sm hover:shadow-md"
               >
                 <Plus size={20} />
+                <span>Add Another Tip</span>
               </button>
               {multipleTips.length > 1 && (
-                <div className="mt-4 p-4 rounded-xl bg-white/5 border border-white/10 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-gray-400">Total Odds: <span className="text-white font-medium">{calculateTotalOdds(multipleTips)}</span></p>
+                <div className="mt-5 p-5 rounded-xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 shadow-lg space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                    <p className="text-sm text-gray-400 font-medium">Total Combined Odds</p>
+                    <p className="text-lg text-white font-bold tracking-tight">{calculateTotalOdds(multipleTips)}</p>
                   </div>
-                  <div className="flex gap-2">
-                    <Input
-                      type="text"
-                      inputMode="decimal"
-                      value={newBalance}
-                      onChange={(e) => handleBalanceChange(e.target.value)}
-                      label={newBalanceType === 'units' ? "Units" : "Amount"}
-                      variant="outlined"
-                      color="blue"
-                      className="text-white !text-base"
-                      containerProps={{ className: "min-w-0" }}
-                      labelProps={{
-                        className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
-                      }}
-                      crossOrigin={undefined}
-                      onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}
-                    />
+                  <div className="grid grid-cols-[1fr_auto] gap-3 items-start">
+                    <div className="group">
+                      <Input
+                        type="text"
+                        inputMode="decimal"
+                        value={newBalance}
+                        onChange={(e) => handleBalanceChange(e.target.value)}
+                        label={newBalanceType === 'units' ? "Units" : "Amount"}
+                        variant="outlined"
+                        color="blue"
+                        className="text-white !text-base !font-medium"
+                        containerProps={{ className: "min-w-0" }}
+                        labelProps={{
+                          className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
+                        }}
+                        crossOrigin={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      />
+                      <p className="mt-1.5 text-xs text-gray-500 ml-3">
+                        {newBalanceType === 'units' ? 'e.g., 1.5' : 'e.g., 25'}
+                      </p>
+                    </div>
                     <button
                       type="button"
                       onClick={() => setNewBalanceType(prev => prev === 'units' ? 'money' : 'units')}
-                      className="px-4 rounded-xl bg-gray-800/50 text-blue-400 hover:text-blue-300 border border-blue-500/20 hover:bg-blue-500/10 hover:border-blue-500/30 transition-all duration-300"
+                      className="px-3.5 py-[11px] rounded-lg bg-gray-800/60 text-blue-400 hover:text-blue-300 border border-blue-500/30 hover:bg-blue-500/15 hover:border-blue-400/50 transition-all duration-200 shadow-sm hover:shadow-md"
                       title={newBalanceType === 'units' ? 'Switch to Money' : 'Switch to Units'}
                     >
                       {newBalanceType === 'units' ? (
@@ -353,27 +376,27 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                       )}
                     </button>
                   </div>
-                  <div>
+                  <div className="group">
                     <Select
                       value={newSite}
                       onChange={(val) => setNewSite(val as string)}
                       label="Betting Site"
                       variant="outlined"
                       color="blue"
-                      className="text-white !text-base"
+                      className="text-white !text-base !font-medium"
                       containerProps={{ className: "min-w-0" }}
                       labelProps={{
-                        className: "!text-gray-400 peer-focus:!text-blue-400"
+                        className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-focus:!font-semibold"
                       }}
                       menuProps={{
-                        className: "bg-gray-800 border border-gray-700 max-h-60 overflow-y-auto mt-2"
+                        className: "bg-gray-800 border border-gray-700 max-h-60 overflow-y-auto shadow-xl"
                       }}
                       placeholder={undefined}
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
                     >
                       {bettingSites.map(site => (
-                        <Option key={site.value} value={site.value} className="text-white hover:bg-gray-700">
+                        <Option key={site.value} value={site.value} className="text-white hover:bg-gray-700 !font-medium">
                           {site.label}
                         </Option>
                       ))}
@@ -388,8 +411,11 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
           <div className="px-8 pb-8 flex-shrink-0">
             <button
               type="submit"
-              className="w-full py-4 px-6 rounded-xl transition-all duration-300 text-white font-medium shadow-lg hover:shadow-2xl text-lg"
-              style={{ backgroundColor: baseColor }}
+              className="w-full py-4 px-6 rounded-xl transition-all duration-200 text-white font-semibold text-base tracking-wide hover:scale-[1.01] active:scale-[0.99] hover:brightness-110"
+              style={{
+                backgroundColor: baseColor,
+                boxShadow: `0 8px 20px -3px rgba(0, 0, 0, 0.3), 0 4px 12px -2px ${baseColor}40, 0 2px 6px -1px rgba(0, 0, 0, 0.25)`
+              }}
             >
               Add {betType === 'single' ? 'Single Bet' : 'Multiple Bet'}
             </button>

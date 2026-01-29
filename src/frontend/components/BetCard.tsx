@@ -133,7 +133,7 @@ export const BetCard: React.FC<BetCardProps> = ({
                   type="text"
                   value={editState.editTeams}
                   onChange={(e) => editState.setEditTeams(e.target.value)}
-                  label="Teams (e.g., Team A vs Team B)"
+                  label="Teams"
                   variant="outlined"
                   color="blue"
                   className="text-white"
@@ -257,7 +257,7 @@ export const BetCard: React.FC<BetCardProps> = ({
                             type="text"
                             value={tip.teams}
                             onChange={(e) => editState.updateEditMultipleTip(index, 'teams', e.target.value)}
-                            label="Teams (e.g., Team A vs Team B)"
+                            label="Teams"
                             variant="outlined"
                             color="blue"
                             className="text-white"

@@ -99,22 +99,25 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
               <div className="grid grid-cols-2 gap-6">
                 {/* Left Column */}
                 <div className="space-y-4">
-                  <Input
-                    type="text"
-                    value={config.headerTitle}
-                    onChange={(e) => onConfigChange({ headerTitle: e.target.value })}
-                    label="Header Title"
-                    variant="outlined"
-                    color="blue"
-                    className="text-white"
-                    containerProps={{ className: "min-w-0" }}
-                    labelProps={{
-                      className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
-                    }}
-                    crossOrigin={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                  />
+                  <div className="group">
+                    <Input
+                      type="text"
+                      value={config.headerTitle}
+                      onChange={(e) => onConfigChange({ headerTitle: e.target.value })}
+                      label="Header Title"
+                      variant="outlined"
+                      color="blue"
+                      size="lg"
+                      className="text-white !text-base !font-medium"
+                      containerProps={{ className: "min-w-0" }}
+                      labelProps={{
+                        className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
+                      }}
+                      crossOrigin={undefined}
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                    />
+                  </div>
 
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
@@ -139,7 +142,7 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
                 {/* Right Column */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
-                    <div className="flex-1">
+                    <div className="flex-1 group">
                       <Input
                         type="text"
                         value={config.logoUrl}
@@ -147,10 +150,11 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
                         label="Logo URL"
                         variant="outlined"
                         color="blue"
-                        className="text-white"
+                        size="lg"
+                        className="text-white !text-base !font-medium"
                         containerProps={{ className: "min-w-0" }}
                         labelProps={{
-                          className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
+                          className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
                         }}
                         crossOrigin={undefined}
                         onPointerEnterCapture={undefined}
@@ -233,7 +237,7 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
               <h3 className="text-lg font-semibold text-white">Layout Settings</h3>
 
               {!config.carouselMode && !config.maxHeightMode && (
-                <div>
+                <div className="group">
                   <Input
                     type="number"
                     min="2"
@@ -243,20 +247,22 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
                     label="Max Bets per Column"
                     variant="outlined"
                     color="blue"
-                    className="text-white"
+                    size="lg"
+                    className="text-white !text-base !font-medium"
                     containerProps={{ className: "min-w-0" }}
                     labelProps={{
-                      className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
+                      className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
                     }}
                     crossOrigin={undefined}
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
                   />
+                  <p className="mt-1.5 text-xs text-gray-500 ml-3">e.g., 5</p>
                 </div>
               )}
 
               {config.carouselMode && (
-                <div>
+                <div className="group">
                   <Input
                     type="number"
                     min="3"
@@ -264,18 +270,20 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
                     step="1"
                     value={config.carouselTimer.toString()}
                     onChange={(e) => onConfigChange({ carouselTimer: parseInt(e.target.value) })}
-                    label="Carousel Timer (seconds)"
+                    label="Carousel Timer"
                     variant="outlined"
                     color="blue"
-                    className="text-white"
+                    size="lg"
+                    className="text-white !text-base !font-medium"
                     containerProps={{ className: "min-w-0" }}
                     labelProps={{
-                      className: "!text-gray-400 peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-400"
+                      className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
                     }}
                     crossOrigin={undefined}
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
                   />
+                  <p className="mt-1.5 text-xs text-gray-500 ml-3">Seconds between transitions (e.g., 5)</p>
                 </div>
               )}
             </div>
