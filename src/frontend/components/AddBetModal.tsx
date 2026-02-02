@@ -211,7 +211,7 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                         <button
                           type="button"
                           onClick={() => setNewBalanceType(prev => prev === 'units' ? 'money' : 'units')}
-                          className="px-3.5 rounded-lg bg-gray-800/60 text-blue-400 hover:text-blue-300 border border-blue-500/30 hover:bg-blue-500/15 hover:border-blue-400/50 transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="px-4 rounded-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 text-blue-400 hover:text-blue-300 border border-blue-500/40 hover:bg-blue-500/20 hover:border-blue-400/60 transition-all duration-200 shadow-lg hover:shadow-blue-500/5 ring-1 ring-white/5"
                           title={newBalanceType === 'units' ? 'Switch to Money' : 'Switch to Units'}
                         >
                           {newBalanceType === 'units' ? (
@@ -343,7 +343,7 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                           <button
                             type="button"
                             onClick={() => removeTip(index)}
-                            className="px-3 py-3 rounded-xl hover:bg-red-600/20 text-red-500 hover:text-red-400 transition-all duration-200 border border-red-500/30 hover:border-red-500/50 flex items-center justify-center shadow-sm hover:shadow-md group"
+                            className="px-3 py-3 rounded-xl hover:bg-red-600/25 text-red-400 hover:text-red-300 transition-all duration-200 border border-red-500/40 hover:border-red-400/60 flex items-center justify-center shadow-lg hover:shadow-red-500/5 group bg-gradient-to-br from-gray-800/50 to-gray-900/50 ring-1 ring-white/5"
                             title="Remove this tip"
                           >
                             <X size={18} className="group-hover:rotate-90 transition-transform duration-200" />
@@ -402,7 +402,7 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setNewBalanceType(prev => prev === 'units' ? 'money' : 'units')}
-                        className="px-3.5 py-[11px] rounded-lg bg-gray-800/60 text-blue-400 hover:text-blue-300 border border-blue-500/30 hover:bg-blue-500/15 hover:border-blue-400/50 transition-all duration-200 shadow-sm hover:shadow-md"
+                        className="px-3.5 py-2.5 rounded-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 text-blue-400 hover:text-blue-300 border border-blue-500/40 hover:bg-blue-500/20 hover:border-blue-400/60 transition-all duration-200 shadow-lg hover:shadow-blue-500/5 ring-1 ring-white/5"
                         title={newBalanceType === 'units' ? 'Switch to Money' : 'Switch to Units'}
                       >
                         {newBalanceType === 'units' ? (

@@ -71,5 +71,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Serve static files from dist after building
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Start the Express server
-server.listen(8080);
+// Start the Express server on the configured PORT or 3000 (default)
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+});

@@ -65,7 +65,10 @@ This React-based overlay allows streamers to manage and display betting tips dir
    ```
 3. Start the app:
    ```bash
-   npm run start
+   npm run start:server
+   ```
+   ```bash
+   npm run start:frontend
    ```
 
 4. Use the overlay URL in your streaming software.

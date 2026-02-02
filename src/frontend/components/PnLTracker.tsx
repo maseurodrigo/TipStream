@@ -83,7 +83,7 @@ export const PnLTracker: React.FC<PnLTrackerProps> = ({ bets, baseColor }) => {
 
   return (
     <div
-      className="mb-3 px-4 py-3 rounded-2xl backdrop-blur-md shadow-xl border-2 transition-all duration-300 hover:shadow-2xl"
+      className="mb-3 px-3 py-2 rounded-2xl backdrop-blur-md shadow-xl border-2 transition-all duration-300 hover:shadow-2xl"
       style={{
         backgroundColor: `${pnlColor}18`,
         borderColor: pnlColor,
@@ -91,7 +91,7 @@ export const PnLTracker: React.FC<PnLTrackerProps> = ({ bets, baseColor }) => {
       }}
     >
       <div className="flex items-center justify-between gap-3">
-        <div className="flex flex-col">
+        <div className="flex flex-col pl-1">
           <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-tight mb-1">
             Session PnL
           </span>

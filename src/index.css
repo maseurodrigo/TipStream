@@ -29,6 +29,14 @@ html, body {
 
 .auto-scroll-content {
   animation: autoScroll 30s linear infinite;
+  /* Fix for browser source rendering issues */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* Ensure proper layer composition in OBS */
+  -webkit-transform: translateZ(0);
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 .auto-scroll-content:hover {

@@ -76,6 +76,7 @@ export const BetsList: React.FC<BetsListProps> = ({
         <div
           ref={containerRef}
           className={`overflow-hidden h-full rounded-lg ${isStreamMode ? '' : 'overflow-y-auto'}`}
+          style={shouldAutoScroll && isStreamMode ? { isolation: 'isolate' } : undefined}
         >
           <div className={shouldAutoScroll && isStreamMode ? 'auto-scroll-content' : ''}>
             <div ref={contentRef}>
