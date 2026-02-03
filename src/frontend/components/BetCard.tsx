@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Check, X, Pencil, Trash2, Plus } from 'lucide-react';
+import { Check, X, Pencil, Trash2, Plus, MoreHorizontal } from 'lucide-react';
+import { useState } from 'react';
 import { Bet, BettingSite } from '../utils/types';
 import { calculateTotalOdds } from '../utils/helpers';
 
@@ -32,7 +33,7 @@ interface BetCardProps {
   onSaveEdit?: () => void;
   onCancelEdit?: () => void;
   onDelete?: (id: string) => void;
-  onStatusChange?: (id: string, status: 'green' | 'red') => void;
+  onStatusChange?: (id: string, status: 'green' | 'red' | 'void' | 'half-win' | 'half-loss') => void;
 }
 
 export const BetCard: React.FC<BetCardProps> = ({
@@ -47,6 +48,8 @@ export const BetCard: React.FC<BetCardProps> = ({
   onDelete,
   onStatusChange,
 }) => {
+  const [showStatusPopup, setShowStatusPopup] = useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -257,7 +260,13 @@ export const BetCard: React.FC<BetCardProps> = ({
                     <span className={`text-xs font-bold px-3 py-1.5 rounded-lg shadow-md uppercase tracking-wider ${
                       bet.status === 'green'
                         ? 'bg-green-500/20 text-green-400 border border-green-500/40'
-                        : 'bg-red-500/20 text-red-400 border border-red-500/40'
+                        : bet.status === 'red'
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/40'
+                        : bet.status === 'void'
+                        ? 'bg-gray-500/20 text-gray-400 border border-gray-500/40'
+                        : bet.status === 'half-win'
+                        ? 'bg-lime-500/20 text-lime-400 border border-lime-500/40'
+                        : 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
                     }`}>
                       {bet.status}
                     </span>
@@ -349,6 +358,56 @@ export const BetCard: React.FC<BetCardProps> = ({
                   >
                     <Check size={18} />
                   </button>
+
+                  {/* Middle button with hover popup for additional status options */}
+                  <div
+                    className="relative"
+                    onMouseEnter={() => setShowStatusPopup(true)}
+                    onMouseLeave={() => setShowStatusPopup(false)}
+                  >
+                    <button
+                      className="p-2.5 rounded-lg bg-gray-500/10 hover:bg-gray-500/20 text-gray-400 hover:text-gray-300 transition-all duration-200 border border-gray-500/30 hover:border-gray-500/50 shadow-sm"
+                      title="More status options"
+                    >
+                      <MoreHorizontal size={18} />
+                    </button>
+
+                    {/* Hover popup */}
+                    {showStatusPopup && (
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 z-50 pt-2">
+                        <div className="bg-gray-900/95 backdrop-blur-md rounded-xl border border-gray-700/50 shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden min-w-[140px] animate-in fade-in slide-in-from-top-2 duration-200">
+                          <button
+                            onClick={() => {
+                              onStatusChange?.(bet.id, 'half-win');
+                              setShowStatusPopup(false);
+                            }}
+                            className="w-full px-4 py-2.5 text-center text-sm font-semibold text-lime-400 hover:bg-lime-500/10 transition-all duration-150 border-b border-gray-800/50 hover:text-lime-300"
+                          >
+                            Half Win
+                          </button>
+                          <button
+                            onClick={() => {
+                              onStatusChange?.(bet.id, 'void');
+                              setShowStatusPopup(false);
+                            }}
+                            className="w-full px-4 py-2.5 text-center text-sm font-semibold text-gray-400 hover:bg-gray-500/10 transition-all duration-150 border-b border-gray-800/50 hover:text-gray-300"
+                          >
+                            Void
+                          </button>
+                          <button
+                            onClick={() => {
+                              onStatusChange?.(bet.id, 'half-loss');
+                              setShowStatusPopup(false);
+                            }}
+                            className="w-full px-4 py-2.5 text-center text-sm font-semibold text-orange-400 hover:bg-orange-500/10 transition-all duration-150 hover:text-orange-300"
+                          >
+                            Half Loss
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   <button
                     onClick={() => onStatusChange?.(bet.id, 'red')}
                     className="p-2.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-all duration-200 border border-red-500/30 hover:border-red-500/50 shadow-sm"
@@ -359,11 +418,17 @@ export const BetCard: React.FC<BetCardProps> = ({
                 </>
               ) : (
                 <button
-                  onClick={() => onStatusChange?.(bet.id, bet.status === 'green' ? 'green' : 'red')}
+                  onClick={() => onStatusChange?.(bet.id, bet.status)}
                   className={`h-[38px] flex items-center text-xs font-bold px-3 rounded-lg shadow-md mr-1.5 cursor-pointer transition-all duration-200 uppercase tracking-wide ${
                     bet.status === 'green'
                       ? 'text-green-400 bg-green-500/15 border border-green-500/40 hover:bg-green-500/25 hover:border-green-500/50'
-                      : 'text-red-400 bg-red-500/15 border border-red-500/40 hover:bg-red-500/25 hover:border-red-500/50'
+                      : bet.status === 'red'
+                      ? 'text-red-400 bg-red-500/15 border border-red-500/40 hover:bg-red-500/25 hover:border-red-500/50'
+                      : bet.status === 'void'
+                      ? 'text-gray-400 bg-gray-500/15 border border-gray-500/40 hover:bg-gray-500/25 hover:border-gray-500/50'
+                      : bet.status === 'half-win'
+                      ? 'text-lime-400 bg-lime-500/15 border border-lime-500/40 hover:bg-lime-500/25 hover:border-lime-500/50'
+                      : 'text-orange-400 bg-orange-500/15 border border-orange-500/40 hover:bg-orange-500/25 hover:border-orange-500/50'
                   }`}
                   title="Click to change status"
                 >

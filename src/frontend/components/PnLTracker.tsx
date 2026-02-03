@@ -35,6 +35,16 @@ export const PnLTracker: React.FC<PnLTrackerProps> = ({ bets, baseColor }) => {
           totalReturns += balance * odds;
         } else if (bet.status === 'red') {
           // Red bet contributes nothing to returns
+        } else if (bet.status === 'void') {
+          // Void bet returns the stake (breakeven)
+          totalReturns += balance;
+        } else if (bet.status === 'half-win') {
+          // Half win returns stake + half of the profit
+          const profit = balance * (odds - 1);
+          totalReturns += balance + (profit / 2);
+        } else if (bet.status === 'half-loss') {
+          // Half loss returns half of the stake
+          totalReturns += balance / 2;
         } else {
           // Pending bet - we still count the stake against PnL
         }
@@ -46,6 +56,16 @@ export const PnLTracker: React.FC<PnLTrackerProps> = ({ bets, baseColor }) => {
           totalReturns += balance * totalOdds;
         } else if (bet.status === 'red') {
           // Red bet contributes nothing to returns
+        } else if (bet.status === 'void') {
+          // Void bet returns the stake (breakeven)
+          totalReturns += balance;
+        } else if (bet.status === 'half-win') {
+          // Half win returns stake + half of the profit
+          const profit = balance * (totalOdds - 1);
+          totalReturns += balance + (profit / 2);
+        } else if (bet.status === 'half-loss') {
+          // Half loss returns half of the stake
+          totalReturns += balance / 2;
         } else {
           // Pending bet - we still count the stake against PnL
         }

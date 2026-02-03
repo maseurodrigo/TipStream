@@ -6,7 +6,7 @@ export interface SingleBet {
   site: string;
   balance: string;
   balanceType: 'units' | 'money';
-  status: 'pending' | 'green' | 'red';
+  status: 'pending' | 'green' | 'red' | 'void' | 'half-win' | 'half-loss';
   timestamp: string;
   type: 'single';
 }
@@ -22,7 +22,7 @@ export interface MultipleBet {
   balanceType: 'units' | 'money';
   totalOdds: string;
   site: string;
-  status: 'pending' | 'green' | 'red';
+  status: 'pending' | 'green' | 'red' | 'void' | 'half-win' | 'half-loss';
   timestamp: string;
   type: 'multiple';
 }

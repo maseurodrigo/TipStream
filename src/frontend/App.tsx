@@ -49,7 +49,7 @@ function App() {
     }
   };
 
-  const updateBetStatus = (id: string, newStatus: 'green' | 'red') => {
+  const updateBetStatus = (id: string, newStatus: 'green' | 'red' | 'void' | 'half-win' | 'half-loss') => {
     setBets((prev) =>
       prev.map((bet) => {
         if (bet.id === id) {
