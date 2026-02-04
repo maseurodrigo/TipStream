@@ -367,7 +367,6 @@ export const BetCard: React.FC<BetCardProps> = ({
                   >
                     <button
                       className="p-2.5 rounded-lg bg-gray-500/10 hover:bg-gray-500/20 text-gray-400 hover:text-gray-300 transition-all duration-200 border border-gray-500/30 hover:border-gray-500/50 shadow-sm"
-                      title="More status options"
                     >
                       <MoreHorizontal size={18} />
                     </button>
@@ -418,7 +417,7 @@ export const BetCard: React.FC<BetCardProps> = ({
                 </>
               ) : (
                 <button
-                  onClick={() => onStatusChange?.(bet.id, bet.status)}
+                  onClick={() => bet.status !== 'pending' && onStatusChange?.(bet.id, bet.status)}
                   className={`h-[38px] flex items-center text-xs font-bold px-3 rounded-lg shadow-md mr-1.5 cursor-pointer transition-all duration-200 uppercase tracking-wide ${
                     bet.status === 'green'
                       ? 'text-green-400 bg-green-500/15 border border-green-500/40 hover:bg-green-500/25 hover:border-green-500/50'

@@ -3,10 +3,9 @@ import { Bet } from '../utils/types';
 
 interface PnLTrackerProps {
   bets: Bet[];
-  baseColor: string;
 }
 
-export const PnLTracker: React.FC<PnLTrackerProps> = ({ bets, baseColor }) => {
+export const PnLTracker: React.FC<PnLTrackerProps> = ({ bets }) => {
   const pnlData = useMemo(() => {
     if (bets.length === 0) {
       return null;

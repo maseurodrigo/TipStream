@@ -1,9 +1,9 @@
 [
+  { "value": "bet365", "label": "Bet365", "logo": "/src/assets/logos/bet365.png" },
+  { "value": "bet7", "label": "Bet7", "logo": "/src/assets/logos/bet7.png" },
   { "value": "betano", "label": "Betano", "logo": "/src/assets/logos/betano.png" },
+  { "value": "bwin", "label": "Bwin", "logo": "/src/assets/logos/bwin.png" },
   { "value": "esc", "label": "ESC Online", "logo": "/src/assets/logos/esc.png" },
   { "value": "lebull", "label": "Lebull", "logo": "/src/assets/logos/lebull.png" },
-  { "value": "solverde", "label": "Solverde", "logo": "/src/assets/logos/solverde.png" },
-  { "value": "bwin", "label": "Bwin", "logo": "/src/assets/logos/bwin.png" },
-  { "value": "bet7", "label": "Bet7", "logo": "/src/assets/logos/bet7.png" },
-  { "value": "bet365", "label": "Bet365", "logo": "/src/assets/logos/bet365.png" }
+  { "value": "solverde", "label": "Solverde", "logo": "/src/assets/logos/solverde.png" }
 ]

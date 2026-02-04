@@ -17,35 +17,111 @@ interface UseSocketConnectionReturn {
   sessionID: string;
   wsSockets: string[];
   isConnected: boolean;
+  resetSession: () => void;
 }
+
+const DEFAULT_DISPLAY_SETTINGS: DisplaySettings = {
+  tipsBoxWidth: 400,
+  tipsBoxHeight: 600,
+  maxHeightMode: false,
+  showHeader: false,
+  showPnLTracker: true,
+  carouselMode: false,
+  headerTitle: 'Live Bets',
+  logoUrl: '',
+  logoSize: 2,
+  baseColor: '#2D3748',
+  opacity: 0.8,
+  maxBetsPCol: 8,
+  carouselTimer: 8,
+};
 
 export const useSocketConnection = ({
   sessionId,
   isEditor = false,
 }: UseSocketConnectionProps): UseSocketConnectionReturn => {
-  const [bets, setBets] = useState<Bet[]>([]);
   const [bettingSites, setBettingSites] = useState<BettingSite[]>([]);
   const [wsSockets, setWSSockets] = useState<string[]>([]);
   const [isConnected, setIsConnected] = useState(false);
-  const [generatedSessionID, setGeneratedSessionID] = useState('');
 
-  const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({
-    tipsBoxWidth: 400,
-    tipsBoxHeight: 600,
-    maxHeightMode: false,
-    showHeader: false,
-    showPnLTracker: true,
-    carouselMode: false,
-    headerTitle: 'Live Bets',
-    logoUrl: '',
-    logoSize: 2,
-    baseColor: '#2D3748',
-    opacity: 0.8,
-    maxBetsPCol: 8,
-    carouselTimer: 8,
-  });
+  // Load persisted data from localStorage (only for editor)
+  const loadPersistedSessionID = () => {
+    if (isEditor) {
+      const stored = localStorage.getItem('editorSessionID');
+      return stored || crypto.randomUUID();
+    }
+    return '';
+  };
+
+  const loadPersistedBets = (): Bet[] => {
+    if (isEditor) {
+      const stored = localStorage.getItem('editorBets');
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch {
+          return [];
+        }
+      }
+    }
+    return [];
+  };
+
+  const loadPersistedDisplaySettings = (): DisplaySettings => {
+    if (isEditor) {
+      const stored = localStorage.getItem('editorDisplaySettings');
+      if (stored) {
+        try {
+          return { ...DEFAULT_DISPLAY_SETTINGS, ...JSON.parse(stored) };
+        } catch {
+          return DEFAULT_DISPLAY_SETTINGS;
+        }
+      }
+    }
+    return DEFAULT_DISPLAY_SETTINGS;
+  };
+
+  const [generatedSessionID] = useState(loadPersistedSessionID);
+  const [bets, setBets] = useState<Bet[]>(loadPersistedBets);
+  const [displaySettings, setDisplaySettings] = useState<DisplaySettings>(loadPersistedDisplaySettings);
 
   const socketRef = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
+
+  // Save sessionID to localStorage when it changes (only for editor)
+  useEffect(() => {
+    if (isEditor && generatedSessionID) {
+      localStorage.setItem('editorSessionID', generatedSessionID);
+    }
+  }, [generatedSessionID, isEditor]);
+
+  // Save bets to localStorage when they change (only for editor)
+  useEffect(() => {
+    if (isEditor) {
+      localStorage.setItem('editorBets', JSON.stringify(bets));
+    }
+  }, [bets, isEditor]);
+
+  // Save displaySettings to localStorage when they change (only for editor)
+  useEffect(() => {
+    if (isEditor) {
+      localStorage.setItem('editorDisplaySettings', JSON.stringify(displaySettings));
+    }
+  }, [displaySettings, isEditor]);
+
+  // Reset session function
+  const resetSession = () => {
+    if (!isEditor) return;
+
+    // Clear localStorage (but keep the sessionID)
+    localStorage.removeItem('editorBets');
+    localStorage.removeItem('editorDisplaySettings');
+    localStorage.removeItem('tipsBoxWidth');
+    localStorage.removeItem('tipsBoxHeight');
+
+    // Reset state (keep the same room/sessionID)
+    setBets([]);
+    setDisplaySettings(DEFAULT_DISPLAY_SETTINGS);
+  };
 
   useEffect(() => {
     // Load betting sites from external JSON file
@@ -54,32 +130,24 @@ export const useSocketConnection = ({
       .then(data => setBettingSites(data))
       .catch(() => setBettingSites([]));
 
-    // Load stored tips box width and height from localStorage (only for editor)
-    if (isEditor) {
-      const storedWidth = localStorage.getItem('tipsBoxWidth');
-      if (storedWidth) {
-        setDisplaySettings(prev => ({ ...prev, tipsBoxWidth: Number(storedWidth) }));
-      }
-      const storedHeight = localStorage.getItem('tipsBoxHeight');
-      if (storedHeight) {
-        setDisplaySettings(prev => ({ ...prev, tipsBoxHeight: Number(storedHeight) }));
-      }
-    }
-
     // Initialize Socket.io client
     socketRef.current = io(import.meta.env.VITE_SOCKET_SERVER_URL, { transports: ['websocket'] });
 
-    const currentSessionId = isEditor ? crypto.randomUUID() : sessionId;
-
-    if (isEditor) {
-      setGeneratedSessionID(currentSessionId!);
-    }
+    // Use the already loaded sessionID (from localStorage) instead of creating a new one
+    const currentSessionId = isEditor ? generatedSessionID : sessionId;
 
     // Join the session room
     socketRef.current?.emit('joinRoom', currentSessionId);
     setIsConnected(true);
 
     if (isEditor) {
+      // Editor: Fetch initial room sockets immediately after joining
+      socketRef.current?.emit('getRoomSockets', currentSessionId, (response: any) => {
+        if (response.success) {
+          setWSSockets(response.sockets);
+        }
+      });
+
       // Editor: Listen for room updates and fetch sockets
       const handleRoomUpdate = () => {
         socketRef.current?.emit('getRoomSockets', currentSessionId, (response: any) => {
@@ -220,5 +288,6 @@ export const useSocketConnection = ({
     sessionID: isEditor ? generatedSessionID : (sessionId || ''),
     wsSockets,
     isConnected,
+    resetSession,
   };
 };

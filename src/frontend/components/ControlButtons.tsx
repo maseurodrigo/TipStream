@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, EyeOff, Settings, PlusCircle, Download } from 'lucide-react';
+import { Eye, EyeOff, Settings, PlusCircle, Download, RefreshCw } from 'lucide-react';
 
 interface ControlButtonsProps {
   sessionID: string;
@@ -9,6 +9,7 @@ interface ControlButtonsProps {
   onOpenConfig: () => void;
   onOpenForm: () => void;
   onExportBets: () => boolean;
+  onReset: () => void;
   baseColor: string;
 }
 
@@ -20,11 +21,13 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
   onOpenConfig,
   onOpenForm,
   onExportBets,
+  onReset,
   baseColor,
 }) => {
-  const [showExportTooltip, setShowExportTooltip] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [showNoBetsMessage, setShowNoBetsMessage] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showResetSuccess, setShowResetSuccess] = useState(false);
   const fullViewerLink = `${window.location.origin}/stream/${sessionID}`;
 
   const copyURLToClipboard = () => {
@@ -38,6 +41,18 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
     if (!success) {
       setShowNoBetsMessage(true);
       setTimeout(() => setShowNoBetsMessage(false), 2000);
+    }
+  };
+
+  const handleReset = () => {
+    if (showResetConfirm) {
+      onReset();
+      setShowResetConfirm(false);
+      setShowResetSuccess(true);
+      setTimeout(() => setShowResetSuccess(false), 2000);
+    } else {
+      setShowResetConfirm(true);
+      setTimeout(() => setShowResetConfirm(false), 3000);
     }
   };
 
@@ -156,8 +171,6 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
           <div className="relative">
             <button
               onClick={handleExportBets}
-              onMouseEnter={() => setShowExportTooltip(true)}
-              onMouseLeave={() => setShowExportTooltip(false)}
               className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-br from-gray-800/40 to-gray-800/20 hover:from-gray-800/50 hover:to-gray-800/30 border border-gray-700/50 hover:border-gray-600/60 transition-all duration-200 w-full group/export shadow-sm"
             >
               <div className="flex items-center justify-center">
@@ -171,6 +184,47 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
             {showNoBetsMessage && (
               <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap bg-amber-600 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-xl border border-amber-500/50 backdrop-blur-lg animate-in fade-in zoom-in-95 duration-200">
                 No bets to export!
+              </div>
+            )}
+          </div>
+
+          {/* Reset Button */}
+          <div className="relative">
+            <button
+              onClick={handleReset}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-br transition-all duration-200 w-full group/reset shadow-sm ${
+                showResetConfirm
+                  ? 'from-red-600/40 to-red-700/30 border-red-500/60 hover:border-red-400/70'
+                  : 'from-gray-800/40 to-gray-800/20 hover:from-gray-800/50 hover:to-gray-800/30 border-gray-700/50 hover:border-gray-600/60'
+              } border`}
+            >
+              <div className="flex items-center justify-center">
+                <RefreshCw
+                  size={18}
+                  className={`transition-all duration-200 ${
+                    showResetConfirm
+                      ? 'text-red-400 rotate-180'
+                      : 'text-gray-400 group-hover/reset:text-blue-400 group-hover/reset:rotate-180'
+                  }`}
+                />
+              </div>
+              <div className="flex-1 text-left">
+                <p className={`text-sm font-medium ${showResetConfirm ? 'text-red-300' : 'text-white'}`}>
+                  {showResetConfirm ? 'Click Again to Confirm' : 'Reset All Data'}
+                </p>
+                <p className={`text-xs mt-0.5 ${showResetConfirm ? 'text-red-400' : 'text-gray-500'}`}>
+                  {showResetConfirm ? 'Clear bets & settings' : 'Clear bets & settings'}
+                </p>
+              </div>
+            </button>
+            {showResetConfirm && (
+              <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap bg-red-600 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-xl border border-red-500/50 backdrop-blur-lg animate-in fade-in zoom-in-95 duration-200">
+                This will clear everything!
+              </div>
+            )}
+            {showResetSuccess && (
+              <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap bg-gradient-to-br from-green-600 to-green-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-lg border border-green-500/50 backdrop-blur-lg animate-in fade-in zoom-in-95 duration-300">
+                Data cleared successfully!
               </div>
             )}
           </div>

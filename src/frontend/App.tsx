@@ -24,6 +24,7 @@ function App() {
     setDisplaySettings,
     sessionID,
     wsSockets,
+    resetSession,
   } = useSocketConnection({ isEditor: true });
 
   // Bet form management
@@ -92,6 +93,7 @@ function App() {
           setIsFormOpen(true);
         }}
         onExportBets={() => exportBetsToExcel(bets)}
+        onReset={resetSession}
         baseColor={displaySettings.baseColor}
       />
 
@@ -114,6 +116,7 @@ function App() {
         onSubmit={handleSubmit}
         bettingSites={bettingSites}
         baseColor={displaySettings.baseColor}
+        existingBets={bets}
       />
 
       {/* Betting Tips Box with Resize Handle */}

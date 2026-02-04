@@ -44,7 +44,7 @@ export const useBetEdit = (defaultSite: string): UseBetEditReturn => {
   const [editBalanceType, setEditBalanceType] = useState<'units' | 'money'>('units');
   const [editingMultipleTips, setEditingMultipleTips] = useState<MultipleTip[]>([]);
 
-  const startEdit = (bet: Bet, site: string) => {
+  const startEdit = (bet: Bet) => {
     setEditingId(bet.id);
     if (bet.type === 'single') {
       setEditText(bet.tip);
