@@ -27,7 +27,7 @@ interface BetsListProps {
   onSaveEdit?: () => void;
   onCancelEdit?: () => void;
   onDelete?: (id: string) => void;
-  onStatusChange?: (id: string, status: 'green' | 'red') => void;
+  onStatusChange?: (id: string, status: 'green' | 'red' | 'void' | 'half-win' | 'half-loss') => void;
 }
 
 export const BetsList: React.FC<BetsListProps> = ({
@@ -132,7 +132,7 @@ export const BetsList: React.FC<BetsListProps> = ({
         opacity={opacity}
       />
 
-      {showPnLTracker && <PnLTracker bets={bets} baseColor={baseColor} />}
+      {showPnLTracker && <PnLTracker bets={bets} />}
 
       <div className={maxHeightMode ? 'flex-1 min-h-0' : ''}>
         {maxHeightMode ? (

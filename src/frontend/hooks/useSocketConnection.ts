@@ -136,18 +136,29 @@ export const useSocketConnection = ({
     // Use the already loaded sessionID (from localStorage) instead of creating a new one
     const currentSessionId = isEditor ? generatedSessionID : sessionId;
 
-    // Join the session room
-    socketRef.current?.emit('joinRoom', currentSessionId);
-    setIsConnected(true);
+    // Handle connection and reconnection
+    socketRef.current.on('connect', () => {
+      setIsConnected(true);
+
+      // Join the session room (on connect and reconnect)
+      socketRef.current?.emit('joinRoom', currentSessionId);
+
+      if (isEditor) {
+        // Editor: Fetch initial room sockets after joining
+        socketRef.current?.emit('getRoomSockets', currentSessionId, (response: any) => {
+          if (response.success) {
+            setWSSockets(response.sockets);
+          }
+        });
+      }
+    });
+
+    // Handle disconnection
+    socketRef.current.on('disconnect', () => {
+      setIsConnected(false);
+    });
 
     if (isEditor) {
-      // Editor: Fetch initial room sockets immediately after joining
-      socketRef.current?.emit('getRoomSockets', currentSessionId, (response: any) => {
-        if (response.success) {
-          setWSSockets(response.sockets);
-        }
-      });
-
       // Editor: Listen for room updates and fetch sockets
       const handleRoomUpdate = () => {
         socketRef.current?.emit('getRoomSockets', currentSessionId, (response: any) => {
@@ -254,6 +265,8 @@ export const useSocketConnection = ({
 
     // Cleanup
     return () => {
+      socketRef.current?.off('connect');
+      socketRef.current?.off('disconnect');
       if (isEditor) {
         socketRef.current?.off('roomUpdate');
       } else {
