@@ -2,6 +2,7 @@ import { X } from 'lucide-react';
 import { Checkbox, Typography, Input } from "@material-tailwind/react";
 import { DisplaySettings } from '../utils/types';
 import { getColorWithOpacity } from '../utils/helpers';
+import { Slider } from './Slider';
 
 interface ConfigModalProps {
   isOpen: boolean;
@@ -134,24 +135,17 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-300">
-                      Header Opacity: <span className="text-blue-400">{Math.round(config.opacity * 100)}%</span>
-                    </label>
-                    <div className="bg-gray-800/30 p-4 rounded-xl border border-gray-700/30">
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={config.opacity * 100}
-                        onChange={(e) => onConfigChange({ opacity: parseInt(e.target.value) / 100 })}
-                        className="w-full h-2 rounded-lg appearance-none cursor-pointer transition-all duration-200 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-blue-400 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:hover:bg-blue-400 [&::-webkit-slider-thumb]:transition-all [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-blue-500 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-blue-400 [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:hover:bg-blue-400 [&::-moz-range-thumb]:transition-all"
-                        style={{
-                          backgroundImage: `linear-gradient(to right, ${getColorWithOpacity(config.baseColor, 1)}, ${getColorWithOpacity(config.baseColor, 1)} ${config.opacity * 100}%, #374151 ${config.opacity * 100}%, #374151)`
-                        }}
-                      />
-                    </div>
-                  </div>
+                  <Slider
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={config.opacity * 100}
+                    onChange={(value) => onConfigChange({ opacity: value / 100 })}
+                    label="Header Opacity"
+                    valueFormatter={(value) => `${Math.round(value)}%`}
+                    trackColor={config.baseColor}
+                    thumbColor={config.baseColor}
+                  />
                 </div>
 
                 {/* Right Column */}
@@ -195,22 +189,16 @@ export const ConfigModal: React.FC<ConfigModalProps> = ({
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-300">
-                      Logo Size: <span className="text-blue-400">{config.logoSize}</span>
-                    </label>
-                    <div className="bg-gray-800/30 p-4 rounded-xl border border-gray-700/30">
-                      <input
-                        type="range"
-                        min="2"
-                        max="5"
-                        step="1"
-                        value={config.logoSize}
-                        onChange={(e) => onConfigChange({ logoSize: parseInt(e.target.value, 10) })}
-                        className="w-full h-2 bg-gray-700/50 rounded-lg appearance-none cursor-pointer transition-all duration-200 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-blue-400 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:hover:bg-blue-400 [&::-webkit-slider-thumb]:transition-all [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-blue-500 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-blue-400 [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:hover:bg-blue-400 [&::-moz-range-thumb]:transition-all"
-                      />
-                    </div>
-                  </div>
+                  <Slider
+                    min={2}
+                    max={5}
+                    step={1}
+                    value={config.logoSize}
+                    onChange={(value) => onConfigChange({ logoSize: value })}
+                    label="Logo Size"
+                    trackColor={config.baseColor}
+                    thumbColor={config.baseColor}
+                  />
                 </div>
               </div>
                 </div>
