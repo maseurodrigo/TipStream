@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, EyeOff, Settings, PlusCircle, Download, RefreshCw } from 'lucide-react';
+import { Eye, EyeOff, Settings, PlusCircle, Download, RefreshCw, Target, Sliders, Trash2 } from 'lucide-react';
 
 interface ControlButtonsProps {
   sessionID: string;
@@ -9,7 +9,7 @@ interface ControlButtonsProps {
   onOpenConfig: () => void;
   onOpenForm: () => void;
   onExportBets: () => boolean;
-  onReset: () => void;
+  onReset: (type?: 'bets' | 'settings' | 'all') => void;
   baseColor: string;
 }
 
@@ -28,6 +28,8 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
   const [showNoBetsMessage, setShowNoBetsMessage] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showResetSuccess, setShowResetSuccess] = useState(false);
+  const [showResetSubmenu, setShowResetSubmenu] = useState(false);
+  const [resetType, setResetType] = useState<'bets' | 'settings' | 'all'>('all');
   const fullViewerLink = `${window.location.origin}/stream/${sessionID}`;
 
   const copyURLToClipboard = () => {
@@ -44,13 +46,15 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
     }
   };
 
-  const handleReset = () => {
-    if (showResetConfirm) {
-      onReset();
+  const handleReset = (type: 'bets' | 'settings' | 'all') => {
+    if (showResetConfirm && resetType === type) {
+      onReset(type);
       setShowResetConfirm(false);
       setShowResetSuccess(true);
+      setShowResetSubmenu(false);
       setTimeout(() => setShowResetSuccess(false), 2000);
     } else {
+      setResetType(type);
       setShowResetConfirm(true);
       setTimeout(() => setShowResetConfirm(false), 3000);
     }
@@ -188,40 +192,99 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
             )}
           </div>
 
-          {/* Reset Button */}
+          {/* Reset Button with Expandable Submenu */}
           <div className="relative">
-            <button
-              onClick={handleReset}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-br transition-all duration-200 w-full group/reset shadow-sm ${
-                showResetConfirm
-                  ? 'from-red-600/40 to-red-700/30 border-red-500/60 hover:border-red-400/70'
-                  : 'from-gray-800/40 to-gray-800/20 hover:from-gray-800/50 hover:to-gray-800/30 border-gray-700/50 hover:border-gray-600/60'
-              } border`}
+            <div
+              onMouseEnter={() => setShowResetSubmenu(true)}
+              onMouseLeave={() => {
+                setShowResetSubmenu(false);
+                setShowResetConfirm(false);
+              }}
             >
-              <div className="flex items-center justify-center">
-                <RefreshCw
-                  size={18}
-                  className={`transition-all duration-200 ${
-                    showResetConfirm
-                      ? 'text-red-400 rotate-180'
-                      : 'text-gray-400 group-hover/reset:text-blue-400 group-hover/reset:rotate-180'
+              <button
+                className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-br from-gray-800/40 to-gray-800/20 hover:from-gray-800/50 hover:to-gray-800/30 border border-gray-700/50 hover:border-gray-600/60 transition-all duration-200 w-full group/reset shadow-sm"
+              >
+                <div className="flex items-center justify-center">
+                  <RefreshCw
+                    size={18}
+                    className="text-gray-400 group-hover/reset:text-blue-400 group-hover/reset:rotate-180 transition-all duration-200"
+                  />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="text-sm font-medium text-white">Reset Data</p>
+                  <p className="text-xs text-gray-500 mt-0.5">Clear bets & settings</p>
+                </div>
+              </button>
+
+              {/* Expandable Submenu */}
+              {showResetSubmenu && (
+                <div className="absolute left-0 top-full pt-2 w-full">
+                  <div className="bg-gray-900/95 rounded-lg border border-gray-700/50 shadow-xl backdrop-blur-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                {/* Bets Option */}
+                <button
+                  onClick={() => handleReset('bets')}
+                  className={`flex items-center gap-3 px-4 py-2.5 w-full hover:bg-gray-800/50 transition-all duration-150 border-b border-gray-800/50 ${
+                    showResetConfirm && resetType === 'bets'
+                      ? 'bg-red-600/20 border-red-500/30'
+                      : ''
                   }`}
-                />
-              </div>
-              <div className="flex-1 text-left">
-                <p className={`text-sm font-medium ${showResetConfirm ? 'text-red-300' : 'text-white'}`}>
-                  {showResetConfirm ? 'Click Again to Confirm' : 'Reset All Data'}
-                </p>
-                <p className={`text-xs mt-0.5 ${showResetConfirm ? 'text-red-400' : 'text-gray-500'}`}>
-                  {showResetConfirm ? 'Clear bets & settings' : 'Clear bets & settings'}
-                </p>
-              </div>
-            </button>
-            {showResetConfirm && (
-              <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap bg-red-600 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-xl border border-red-500/50 backdrop-blur-lg animate-in fade-in zoom-in-95 duration-200">
-                This will clear everything!
-              </div>
-            )}
+                >
+                  <Target size={16} className={`${showResetConfirm && resetType === 'bets' ? 'text-red-400' : 'text-gray-400'}`} />
+                  <div className="flex-1 text-left">
+                    <p className={`text-sm font-medium ${showResetConfirm && resetType === 'bets' ? 'text-red-300' : 'text-white'}`}>
+                      {showResetConfirm && resetType === 'bets' ? 'Click to Confirm' : 'Bets'}
+                    </p>
+                    <p className={`text-xs mt-0.5 ${showResetConfirm && resetType === 'bets' ? 'text-red-400' : 'text-gray-500'}`}>
+                      Clear only bets
+                    </p>
+                  </div>
+                </button>
+
+                {/* Settings Option */}
+                <button
+                  onClick={() => handleReset('settings')}
+                  className={`flex items-center gap-3 px-4 py-2.5 w-full hover:bg-gray-800/50 transition-all duration-150 border-b border-gray-800/50 ${
+                    showResetConfirm && resetType === 'settings'
+                      ? 'bg-red-600/20 border-red-500/30'
+                      : ''
+                  }`}
+                >
+                  <Sliders size={16} className={`${showResetConfirm && resetType === 'settings' ? 'text-red-400' : 'text-gray-400'}`} />
+                  <div className="flex-1 text-left">
+                    <p className={`text-sm font-medium ${showResetConfirm && resetType === 'settings' ? 'text-red-300' : 'text-white'}`}>
+                      {showResetConfirm && resetType === 'settings' ? 'Click to Confirm' : 'Settings'}
+                    </p>
+                    <p className={`text-xs mt-0.5 ${showResetConfirm && resetType === 'settings' ? 'text-red-400' : 'text-gray-500'}`}>
+                      Clear only settings
+                    </p>
+                  </div>
+                </button>
+
+                {/* All Option */}
+                <button
+                  onClick={() => handleReset('all')}
+                  className={`flex items-center gap-3 px-4 py-2.5 w-full hover:bg-gray-800/50 transition-all duration-150 ${
+                    showResetConfirm && resetType === 'all'
+                      ? 'bg-red-600/20 border-red-500/30'
+                      : ''
+                  }`}
+                >
+                  <Trash2 size={16} className={`${showResetConfirm && resetType === 'all' ? 'text-red-400' : 'text-gray-400'}`} />
+                  <div className="flex-1 text-left">
+                    <p className={`text-sm font-medium ${showResetConfirm && resetType === 'all' ? 'text-red-300' : 'text-white'}`}>
+                      {showResetConfirm && resetType === 'all' ? 'Click to Confirm' : 'All'}
+                    </p>
+                    <p className={`text-xs mt-0.5 ${showResetConfirm && resetType === 'all' ? 'text-red-400' : 'text-gray-500'}`}>
+                      Clear bets & settings
+                    </p>
+                  </div>
+                </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Success Message */}
             {showResetSuccess && (
               <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap bg-gradient-to-br from-green-600 to-green-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-lg border border-green-500/50 backdrop-blur-lg animate-in fade-in zoom-in-95 duration-300">
                 Data cleared successfully!
@@ -234,7 +297,7 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
         <div className="px-4 py-4 border-t border-gray-700/50">
           <button
             onClick={onOpenForm}
-            className="flex items-center justify-center gap-3 px-4 py-4 rounded-xl transition-all duration-200 w-full group/add border border-white/20 hover:border-white/30 shadow-lg hover:shadow-xl active:scale-[0.98]"
+            className="flex items-center justify-center gap-3 px-4 py-4 rounded-xl transition-all duration-200 w-full group/add shadow-lg hover:shadow-xl active:scale-[0.98]"
             style={{
               background: `linear-gradient(135deg, ${baseColor}, ${baseColor}dd)`,
               boxShadow: `0 4px 16px -2px ${baseColor}60`

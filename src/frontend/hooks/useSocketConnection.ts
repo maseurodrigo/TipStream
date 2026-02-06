@@ -17,7 +17,7 @@ interface UseSocketConnectionReturn {
   sessionID: string;
   wsSockets: string[];
   isConnected: boolean;
-  resetSession: () => void;
+  resetSession: (type?: 'bets' | 'settings' | 'all') => void;
 }
 
 const DEFAULT_DISPLAY_SETTINGS: DisplaySettings = {
@@ -109,18 +109,24 @@ export const useSocketConnection = ({
   }, [displaySettings, isEditor]);
 
   // Reset session function
-  const resetSession = () => {
+  const resetSession = (type: 'bets' | 'settings' | 'all' = 'all') => {
     if (!isEditor) return;
 
-    // Clear localStorage (but keep the sessionID)
-    localStorage.removeItem('editorBets');
-    localStorage.removeItem('editorDisplaySettings');
-    localStorage.removeItem('tipsBoxWidth');
-    localStorage.removeItem('tipsBoxHeight');
+    if (type === 'bets' || type === 'all') {
+      // Clear bets from localStorage
+      localStorage.removeItem('editorBets');
+      // Reset bets state
+      setBets([]);
+    }
 
-    // Reset state (keep the same room/sessionID)
-    setBets([]);
-    setDisplaySettings(DEFAULT_DISPLAY_SETTINGS);
+    if (type === 'settings' || type === 'all') {
+      // Clear settings from localStorage
+      localStorage.removeItem('editorDisplaySettings');
+      localStorage.removeItem('tipsBoxWidth');
+      localStorage.removeItem('tipsBoxHeight');
+      // Reset display settings state
+      setDisplaySettings(DEFAULT_DISPLAY_SETTINGS);
+    }
   };
 
   useEffect(() => {
