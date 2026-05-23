@@ -5,5 +5,6 @@
   { "value": "bwin", "label": "Bwin", "logo": "/src/assets/logos/bwin.png" },
   { "value": "esc", "label": "ESC Online", "logo": "/src/assets/logos/esc.png" },
   { "value": "lebull", "label": "Lebull", "logo": "/src/assets/logos/lebull.png" },
+  { "value": "novibet", "label": "Novibet", "logo": "/src/assets/logos/novibet.png" },
   { "value": "solverde", "label": "Solverde", "logo": "/src/assets/logos/solverde.png" }
 ]
