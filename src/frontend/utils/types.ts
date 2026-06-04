@@ -35,6 +35,11 @@ export interface BettingSite {
   logo: string;
 }
 
+export interface TeamEntry {
+  words: string;
+  icon: string;
+}
+
 export interface DisplaySettings {
   tipsBoxWidth: number;
   tipsBoxHeight: number;

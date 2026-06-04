@@ -5,7 +5,7 @@ import { getColorWithOpacity } from './utils/helpers';
 
 export default function Viewer() {
   const { sessionId } = useParams();
-  const { bets, bettingSites, displaySettings } = useSocketConnection({ sessionId, isEditor: false });
+  const { bets, bettingSites, teamsConfig, displaySettings } = useSocketConnection({ sessionId, isEditor: false });
 
   return (
     <div className="pointer-events-auto inline-block fixed top-6 left-6 min-w-80 w-fit z-10">
@@ -28,6 +28,7 @@ export default function Viewer() {
           maxBetsPCol={displaySettings.maxBetsPCol}
           maxHeightMode={displaySettings.maxHeightMode}
           bettingSites={bettingSites}
+          teamsConfig={teamsConfig}
           isStreamMode={true}
           showHeader={displaySettings.showHeader}
           showPnLTracker={displaySettings.showPnLTracker}

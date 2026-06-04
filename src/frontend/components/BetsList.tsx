@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Carousel } from "@material-tailwind/react";
-import { Bet, BettingSite } from '../utils/types';
+import { Bet, BettingSite, TeamEntry } from '../utils/types';
 import { chunkArray } from '../utils/helpers';
 import { Header } from './Header';
 import { BetCard } from './BetCard';
@@ -13,6 +13,7 @@ interface BetsListProps {
   maxBetsPCol: number;
   maxHeightMode: boolean;
   bettingSites: BettingSite[];
+  teamsConfig: TeamEntry[];
   isStreamMode: boolean;
   showHeader: boolean;
   showPnLTracker: boolean;
@@ -37,6 +38,7 @@ export const BetsList: React.FC<BetsListProps> = ({
   maxBetsPCol,
   maxHeightMode,
   bettingSites,
+  teamsConfig,
   isStreamMode,
   showHeader,
   showPnLTracker,
@@ -85,6 +87,7 @@ export const BetsList: React.FC<BetsListProps> = ({
                   <BetCard
                     bet={bet}
                     bettingSites={bettingSites}
+                    teamsConfig={teamsConfig}
                     isEditing={editingId === bet.id}
                     isStreamMode={isStreamMode}
                     editState={editState}
@@ -103,6 +106,7 @@ export const BetsList: React.FC<BetsListProps> = ({
                 <BetCard
                   bet={bet}
                   bettingSites={bettingSites}
+                  teamsConfig={teamsConfig}
                   isEditing={false}
                   isStreamMode={isStreamMode}
                   editState={editState}
@@ -157,6 +161,7 @@ export const BetsList: React.FC<BetsListProps> = ({
                   key={bet.id}
                   bet={bet}
                   bettingSites={bettingSites}
+                  teamsConfig={teamsConfig}
                   isEditing={editingId === bet.id}
                   isStreamMode={isStreamMode}
                   editState={editState}
@@ -184,6 +189,7 @@ export const BetsList: React.FC<BetsListProps> = ({
                     key={bet.id}
                     bet={bet}
                     bettingSites={bettingSites}
+                    teamsConfig={teamsConfig}
                     isEditing={editingId === bet.id}
                     isStreamMode={isStreamMode}
                     editState={editState}

@@ -20,6 +20,7 @@ function App() {
     bets,
     setBets,
     bettingSites,
+    teamsConfig,
     displaySettings,
     setDisplaySettings,
     sessionID,
@@ -142,6 +143,7 @@ function App() {
             maxBetsPCol={displaySettings.maxBetsPCol}
             maxHeightMode={displaySettings.maxHeightMode}
             bettingSites={bettingSites}
+            teamsConfig={teamsConfig}
             isStreamMode={isStreamMode}
             showHeader={displaySettings.showHeader}
             showPnLTracker={displaySettings.showPnLTracker}

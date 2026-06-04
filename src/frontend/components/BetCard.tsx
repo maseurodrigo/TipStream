@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 import { Check, X, Pencil, Trash2, Plus, MoreHorizontal } from 'lucide-react';
 import { useState } from 'react';
-import { Bet, BettingSite } from '../utils/types';
-import { calculateTotalOdds } from '../utils/helpers';
+import { Bet, BettingSite, TeamEntry } from '../utils/types';
+import { calculateTotalOdds, parseTeams } from '../utils/helpers';
 
 interface BetCardProps {
   bet: Bet;
   bettingSites: BettingSite[];
+  teamsConfig: TeamEntry[];
   isEditing: boolean;
   isStreamMode: boolean;
   editState?: {
@@ -36,9 +37,111 @@ interface BetCardProps {
   onStatusChange?: (id: string, status: 'green' | 'red' | 'void' | 'half-win' | 'half-loss') => void;
 }
 
+const TeamsWithIcons: React.FC<{
+  teams: string;
+  teamsConfig: TeamEntry[];
+  className?: string;
+  iconSize?: number;
+  showIcons?: boolean;
+}> = ({ teams, teamsConfig, className, iconSize = 16, showIcons = true }) => {
+  if (!showIcons) {
+    return <span className={`truncate ${className ?? ''}`}>{teams}</span>;
+  }
+
+  const parsed = parseTeams(teams, teamsConfig);
+  const sizeStyle = { width: iconSize, height: iconSize };
+
+  return (
+    <span className={`inline-flex items-center gap-1.5 min-w-0 ${className ?? ''}`}>
+      {parsed.leftIcon && (
+        <img
+          src={parsed.leftIcon}
+          alt=""
+          className="shrink-0 rounded-sm shadow-sm"
+          style={{ ...sizeStyle, objectFit: 'contain', background: 'transparent' }}
+        />
+      )}
+      <span className="truncate">
+        {parsed.leftText}
+        {parsed.separator && ` ${parsed.separator} `}
+        {parsed.rightText}
+      </span>
+      {parsed.rightIcon && (
+        <img
+          src={parsed.rightIcon}
+          alt=""
+          className="shrink-0 rounded-sm shadow-sm"
+          style={{ ...sizeStyle, objectFit: 'contain', background: 'transparent' }}
+        />
+      )}
+    </span>
+  );
+};
+
+const collectBetIcons = (bet: Bet, teamsConfig: TeamEntry[]): string[] => {
+  const seen = new Set<string>();
+  const add = (icon: string | null) => {
+    if (icon && !seen.has(icon)) seen.add(icon);
+  };
+
+  if (bet.type === 'single') {
+    const parsed = parseTeams(bet.teams, teamsConfig);
+    add(parsed.leftIcon);
+    add(parsed.rightIcon);
+  } else {
+    bet.tips.forEach((tip) => {
+      const parsed = parseTeams(tip.teams, teamsConfig);
+      add(parsed.leftIcon);
+      add(parsed.rightIcon);
+    });
+  }
+  return Array.from(seen);
+};
+
+const BetCardBackground: React.FC<{ icons: string[] }> = ({ icons }) => {
+  if (icons.length === 0) return null;
+
+  const rightMargin = -12;
+  const spacing = 56;
+  const iconSize = 136;
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl">
+      {icons.map((icon, i) => {
+        const rightPos = rightMargin + (icons.length - 1 - i) * spacing;
+        const rotation = (i % 2 === 0 ? -1 : 1) * (10 + (i % 3) * 3);
+        const t = icons.length > 1 ? i / (icons.length - 1) : 0;
+        const leftAlpha = 0.08 * (1 - t) + 0 * t;
+        const rightAlpha = 0 * (1 - t) + 0.08 * t;
+        const maskImage = `linear-gradient(to right, rgba(0,0,0,${leftAlpha}) 0%, rgba(0,0,0,${rightAlpha}) 100%)`;
+        return (
+          <img
+            key={`${icon}-${i}`}
+            src={icon}
+            alt=""
+            className="absolute"
+            style={{
+              top: '50%',
+              right: rightPos,
+              width: iconSize,
+              height: iconSize,
+              objectFit: 'contain',
+              transform: `translateY(-50%) rotate(${rotation}deg)`,
+              filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.4))',
+              maskImage,
+              WebkitMaskImage: maskImage,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
 export const BetCard: React.FC<BetCardProps> = ({
   bet,
   bettingSites,
+  teamsConfig,
   isEditing,
   isStreamMode,
   editState,
@@ -49,15 +152,17 @@ export const BetCard: React.FC<BetCardProps> = ({
   onStatusChange,
 }) => {
   const [showStatusPopup, setShowStatusPopup] = useState(false);
+  const backgroundIcons = isStreamMode ? collectBetIcons(bet, teamsConfig) : [];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 px-4 py-3.5 rounded-xl shadow-xl border border-gray-700/40 hover:border-gray-600/60 flex items-center gap-3 transition-all duration-300"
+      className="relative bg-gradient-to-br from-gray-900/90 to-gray-800/90 px-4 py-3.5 rounded-xl shadow-xl border border-gray-700/40 hover:border-gray-600/60 flex items-center gap-3 transition-all duration-300"
     >
-      <div className="flex-1 min-w-0 mr-4">
+      {isStreamMode && <BetCardBackground icons={backgroundIcons} />}
+      <div className="relative z-10 flex-1 min-w-0 mr-4">
         {isEditing && editState ? (
           <div className="space-y-3">
             {bet.type === 'single' ? (
@@ -227,7 +332,9 @@ export const BetCard: React.FC<BetCardProps> = ({
           <>
             {bet.type === 'single' ? (
               <>
-                <p className="font-semibold text-blue-400 text-sm mb-1 truncate tracking-wide">{bet.teams}</p>
+                <p className="font-semibold text-blue-400 text-sm mb-1 truncate tracking-wide">
+                  <TeamsWithIcons teams={bet.teams} teamsConfig={teamsConfig} showIcons={!isStreamMode} />
+                </p>
                 <p className="font-semibold text-white text-[17px] leading-tight truncate">{bet.tip}</p>
                 <div className="flex flex-wrap items-center gap-2.5 mt-2">
                   {bet.odds && (
@@ -278,7 +385,9 @@ export const BetCard: React.FC<BetCardProps> = ({
                 <div className="space-y-2">
                   {bet.tips.map((tip, index) => (
                     <div key={index} className="flex flex-col gap-1">
-                      <span className="text-blue-400 text-xs font-semibold tracking-wide">{tip.teams}</span>
+                      <span className="text-blue-400 text-xs font-semibold tracking-wide">
+                        <TeamsWithIcons teams={tip.teams} teamsConfig={teamsConfig} iconSize={14} showIcons={!isStreamMode} />
+                      </span>
                       <div className="flex items-center gap-2.5">
                         <p className="font-semibold text-white text-[15px] leading-tight truncate">{tip.tip}</p>
                         <span className="text-sm font-semibold px-2.5 py-1 rounded-lg shadow-md bg-gray-800/90 text-gray-100 border border-gray-700/50">

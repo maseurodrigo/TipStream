@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
-import { Bet, BettingSite, DisplaySettings } from '../utils/types';
+import { Bet, BettingSite, DisplaySettings, TeamEntry } from '../utils/types';
 
 interface UseSocketConnectionProps {
   sessionId?: string;
@@ -12,6 +12,7 @@ interface UseSocketConnectionReturn {
   bets: Bet[];
   setBets: (bets: Bet[] | ((prev: Bet[]) => Bet[])) => void;
   bettingSites: BettingSite[];
+  teamsConfig: TeamEntry[];
   displaySettings: DisplaySettings;
   setDisplaySettings: (settings: DisplaySettings | ((prev: DisplaySettings) => DisplaySettings)) => void;
   sessionID: string;
@@ -41,6 +42,7 @@ export const useSocketConnection = ({
   isEditor = false,
 }: UseSocketConnectionProps): UseSocketConnectionReturn => {
   const [bettingSites, setBettingSites] = useState<BettingSite[]>([]);
+  const [teamsConfig, setTeamsConfig] = useState<TeamEntry[]>([]);
   const [wsSockets, setWSSockets] = useState<string[]>([]);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -135,6 +137,12 @@ export const useSocketConnection = ({
       .then(res => res.json())
       .then(data => setBettingSites(data))
       .catch(() => setBettingSites([]));
+
+    // Load teams icon config from external JSON file
+    fetch('/src/data/teams.json')
+      .then(res => res.json())
+      .then(data => setTeamsConfig(Array.isArray(data?.teams) ? data.teams : []))
+      .catch(() => setTeamsConfig([]));
 
     // Initialize Socket.io client
     socketRef.current = io(import.meta.env.VITE_SOCKET_SERVER_URL, { transports: ['websocket'] });
@@ -302,6 +310,7 @@ export const useSocketConnection = ({
     bets,
     setBets,
     bettingSites,
+    teamsConfig,
     displaySettings,
     setDisplaySettings,
     sessionID: isEditor ? generatedSessionID : (sessionId || ''),
