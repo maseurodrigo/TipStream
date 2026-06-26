@@ -37,6 +37,8 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
     setNewOdds,
     newSite,
     setNewSite,
+    newAuthor,
+    setNewAuthor,
     newBalance,
     setNewBalance,
     newBalanceType,
@@ -190,6 +192,25 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                           </div>
                         </div>
                       )}
+                    </div>
+                    <div className="group">
+                      <Input
+                        type="text"
+                        value={newAuthor}
+                        onChange={(e) => setNewAuthor(e.target.value)}
+                        label="Author"
+                        variant="outlined"
+                        color="blue"
+                        size="lg"
+                        className="text-white !text-base !font-medium"
+                        containerProps={{ className: "min-w-0" }}
+                        labelProps={{
+                          className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
+                        }}
+                        crossOrigin={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      />
                     </div>
                   </div>
                 </div>
@@ -472,6 +493,24 @@ export const AddBetModal: React.FC<AddBetModalProps> = ({
                           </svg>
                         )}
                       </button>
+                    </div>
+                    <div className="group">
+                      <Input
+                        type="text"
+                        value={newAuthor}
+                        onChange={(e) => setNewAuthor(e.target.value)}
+                        label="Author"
+                        variant="outlined"
+                        color="blue"
+                        className="text-white !text-base !font-medium"
+                        containerProps={{ className: "min-w-0" }}
+                        labelProps={{
+                          className: "!text-gray-400 !font-medium peer-focus:!text-blue-400 peer-placeholder-shown:!text-gray-500 peer-focus:!font-semibold"
+                        }}
+                        crossOrigin={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      />
                     </div>
                     <div className="group">
                       <Select

@@ -4,6 +4,7 @@ export interface SingleBet {
   teams: string;
   odds: string;
   site: string;
+  author: string;
   balance: string;
   balanceType: 'units' | 'money';
   status: 'pending' | 'green' | 'red' | 'void' | 'half-win' | 'half-loss';
@@ -22,6 +23,7 @@ export interface MultipleBet {
   balanceType: 'units' | 'money';
   totalOdds: string;
   site: string;
+  author: string;
   status: 'pending' | 'green' | 'red' | 'void' | 'half-win' | 'half-loss';
   timestamp: string;
   type: 'multiple';

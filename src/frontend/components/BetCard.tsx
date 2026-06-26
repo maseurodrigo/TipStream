@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Check, X, Pencil, Trash2, Plus, MoreHorizontal } from 'lucide-react';
+import { Check, X, Pencil, Trash2, Plus, MoreHorizontal, User } from 'lucide-react';
 import { useState } from 'react';
 import { Bet, BettingSite, TeamEntry } from '../utils/types';
 import { calculateTotalOdds, parseTeams } from '../utils/helpers';
@@ -19,6 +19,8 @@ interface BetCardProps {
     setEditOdds: (odds: string) => void;
     editSite: string;
     setEditSite: (site: string) => void;
+    editAuthor: string;
+    setEditAuthor: (author: string) => void;
     editBalance: string;
     setEditBalance: (balance: string) => void;
     editBalanceType: 'units' | 'money';
@@ -182,6 +184,13 @@ export const BetCard: React.FC<BetCardProps> = ({
                   placeholder="Teams (e.g., Team A vs Team B)..."
                   className="w-full px-3 py-2.5 rounded-lg bg-gray-800/70 text-white border border-gray-600/60 focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 placeholder:text-gray-500"
                 />
+                <input
+                  type="text"
+                  value={editState.editAuthor}
+                  onChange={(e) => editState.setEditAuthor(e.target.value)}
+                  placeholder="Author..."
+                  className="w-full px-3 py-2.5 rounded-lg bg-gray-800/70 text-white border border-gray-600/60 focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 placeholder:text-gray-500"
+                />
                 <div className="flex flex-wrap gap-3">
                   <input
                     type="text"
@@ -312,6 +321,13 @@ export const BetCard: React.FC<BetCardProps> = ({
                         )}
                       </button>
                     </div>
+                    <input
+                      type="text"
+                      value={editState.editAuthor}
+                      onChange={(e) => editState.setEditAuthor(e.target.value)}
+                      placeholder="Author..."
+                      className="w-full px-3 py-2.5 rounded-lg bg-gray-800/70 text-white border border-gray-600/60 focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 placeholder:text-gray-500"
+                    />
                     <div>
                       <select
                         value={editState.editSite}
@@ -360,6 +376,12 @@ export const BetCard: React.FC<BetCardProps> = ({
                         </svg>
                       }
                       {bet.balance}
+                    </span>
+                  )}
+                  {bet.author && (
+                    <span className="inline-flex items-center text-sm font-semibold px-3 py-1.5 rounded-lg shadow-md bg-gray-800/90 text-gray-100 border border-gray-700/50">
+                      <User className="w-[17px] h-[17px] mr-1.5 text-gray-300" />
+                      {bet.author}
                     </span>
                   )}
                   <span className="text-xs text-gray-400 font-medium tracking-wide">{bet.timestamp}</span>
@@ -418,6 +440,12 @@ export const BetCard: React.FC<BetCardProps> = ({
                           </svg>
                         }
                         {bet.balance}
+                      </span>
+                    )}
+                    {bet.author && (
+                      <span className="inline-flex items-center text-sm font-semibold px-3 py-1.5 rounded-lg shadow-md bg-gray-800/90 text-gray-100 border border-gray-700/50">
+                        <User className="w-[17px] h-[17px] mr-1.5 text-gray-300" />
+                        {bet.author}
                       </span>
                     )}
                     <span className="text-xs text-gray-400 font-medium tracking-wide">{bet.timestamp}</span>

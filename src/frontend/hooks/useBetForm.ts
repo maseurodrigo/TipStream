@@ -19,6 +19,8 @@ export interface UseBetFormReturn {
   setNewOdds: (odds: string) => void;
   newSite: string;
   setNewSite: (site: string) => void;
+  newAuthor: string;
+  setNewAuthor: (author: string) => void;
   newBalance: string;
   setNewBalance: (balance: string) => void;
   newBalanceType: 'units' | 'money';
@@ -40,6 +42,7 @@ export const useBetForm = (bettingSites: BettingSite[]): UseBetFormReturn => {
   const [newTeams, setNewTeams] = useState('');
   const [newOdds, setNewOdds] = useState('');
   const [newSite, setNewSite] = useState(bettingSites[0]?.value || '');
+  const [newAuthor, setNewAuthor] = useState('');
   const [newBalance, setNewBalance] = useState('');
   const [newBalanceType, setNewBalanceType] = useState<'units' | 'money'>('units');
   const [multipleTips, setMultipleTips] = useState<MultipleTip[]>([{ tip: '', odds: '', teams: '' }]);
@@ -75,6 +78,7 @@ export const useBetForm = (bettingSites: BettingSite[]): UseBetFormReturn => {
     setNewTeams('');
     setNewOdds('');
     setNewSite(defaultSite || bettingSites[0]?.value);
+    setNewAuthor('');
     setNewBalance('');
     setNewBalanceType('units');
     setMultipleTips([{ tip: '', odds: '', teams: '' }]);
@@ -91,6 +95,7 @@ export const useBetForm = (bettingSites: BettingSite[]): UseBetFormReturn => {
         teams: newTeams.trim(),
         odds: newOdds.trim(),
         site: newSite,
+        author: newAuthor.trim(),
         balance: newBalance.trim(),
         balanceType: newBalanceType,
         status: 'pending',
@@ -110,6 +115,7 @@ export const useBetForm = (bettingSites: BettingSite[]): UseBetFormReturn => {
         balanceType: newBalanceType,
         totalOdds: calculateTotalOdds(validTips),
         site: newSite,
+        author: newAuthor.trim(),
         status: 'pending',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         type: 'multiple'
@@ -130,6 +136,8 @@ export const useBetForm = (bettingSites: BettingSite[]): UseBetFormReturn => {
     setNewOdds,
     newSite,
     setNewSite,
+    newAuthor,
+    setNewAuthor,
     newBalance,
     setNewBalance,
     newBalanceType,

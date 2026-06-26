@@ -18,6 +18,8 @@ export interface UseBetEditReturn {
   setEditOdds: (odds: string) => void;
   editSite: string;
   setEditSite: (site: string) => void;
+  editAuthor: string;
+  setEditAuthor: (author: string) => void;
   editBalance: string;
   setEditBalance: (balance: string) => void;
   editBalanceType: 'units' | 'money';
@@ -40,6 +42,7 @@ export const useBetEdit = (defaultSite: string): UseBetEditReturn => {
   const [editTeams, setEditTeams] = useState('');
   const [editOdds, setEditOdds] = useState('');
   const [editSite, setEditSite] = useState(defaultSite);
+  const [editAuthor, setEditAuthor] = useState('');
   const [editBalance, setEditBalance] = useState('');
   const [editBalanceType, setEditBalanceType] = useState<'units' | 'money'>('units');
   const [editingMultipleTips, setEditingMultipleTips] = useState<MultipleTip[]>([]);
@@ -51,11 +54,13 @@ export const useBetEdit = (defaultSite: string): UseBetEditReturn => {
       setEditTeams(bet.teams);
       setEditOdds(bet.odds);
       setEditSite(bet.site);
+      setEditAuthor(bet.author);
       setEditBalance(bet.balance);
       setEditBalanceType(bet.balanceType);
     } else {
       setEditingMultipleTips(bet.tips.map(tip => ({ ...tip })));
       setEditSite(bet.site);
+      setEditAuthor(bet.author);
       setEditBalance(bet.balance);
       setEditBalanceType(bet.balanceType);
     }
@@ -73,6 +78,7 @@ export const useBetEdit = (defaultSite: string): UseBetEditReturn => {
             teams: editTeams.trim(),
             odds: editOdds.trim(),
             site: editSite,
+            author: editAuthor.trim(),
             balance: editBalance.trim(),
             balanceType: editBalanceType
           } as SingleBet;
@@ -83,6 +89,7 @@ export const useBetEdit = (defaultSite: string): UseBetEditReturn => {
             ...bet,
             tips: validTips,
             site: editSite,
+            author: editAuthor.trim(),
             balance: editBalance.trim(),
             balanceType: editBalanceType,
             totalOdds: calculateTotalOdds(validTips)
@@ -101,6 +108,7 @@ export const useBetEdit = (defaultSite: string): UseBetEditReturn => {
     setEditText('');
     setEditTeams('');
     setEditOdds('');
+    setEditAuthor('');
     setEditBalance('');
     setEditBalanceType('units');
     setEditingMultipleTips([]);
@@ -142,6 +150,8 @@ export const useBetEdit = (defaultSite: string): UseBetEditReturn => {
     setEditOdds,
     editSite,
     setEditSite,
+    editAuthor,
+    setEditAuthor,
     editBalance,
     setEditBalance,
     editBalanceType,

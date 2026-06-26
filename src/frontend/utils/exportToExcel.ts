@@ -17,6 +17,7 @@ export const exportBetsToExcel = (bets: Bet[]): boolean => {
         'Odds': parseFloat(bet.odds) || bet.odds,
         'Balance': parseFloat(bet.balance) || bet.balance,
         'Balance Type': bet.balanceType === 'units' ? 'Units' : 'Money',
+        'Author': bet.author,
         'Betting Site': bet.site.toUpperCase(),
         'Status': bet.status.toUpperCase(),
         'Total Odds': parseFloat(bet.odds) || bet.odds,
@@ -31,6 +32,7 @@ export const exportBetsToExcel = (bets: Bet[]): boolean => {
         'Odds': parseFloat(tip.odds) || tip.odds,
         'Balance': index === 0 ? (parseFloat(bet.balance) || bet.balance) : '',
         'Balance Type': index === 0 ? (bet.balanceType === 'units' ? 'Units' : 'Money') : '',
+        'Author': index === 0 ? bet.author : '',
         'Betting Site': index === 0 ? bet.site.toUpperCase() : '',
         'Status': index === 0 ? bet.status.toUpperCase() : '',
         'Total Odds': index === 0 ? (parseFloat(bet.totalOdds) || bet.totalOdds) : '',
@@ -50,6 +52,7 @@ export const exportBetsToExcel = (bets: Bet[]): boolean => {
     { wch: 8 },   // Odds
     { wch: 10 },  // Balance
     { wch: 13 },  // Balance Type
+    { wch: 18 },  // Author
     { wch: 15 },  // Betting Site
     { wch: 10 },  // Status
     { wch: 12 },  // Total Odds
@@ -87,8 +90,8 @@ export const exportBetsToExcel = (bets: Bet[]): boolean => {
 
   // Apply styling to data rows
   for (let row = range.s.r + 1; row <= range.e.r; row++) {
-    // Get status from Status column (column H, index 8)
-    const statusCellAddress = XLSX.utils.encode_cell({ r: row, c: 8 });
+    // Get status from Status column (column J, index 9)
+    const statusCellAddress = XLSX.utils.encode_cell({ r: row, c: 9 });
     const status = worksheet[statusCellAddress]?.v?.toString().toLowerCase();
 
     for (let col = range.s.c; col <= range.e.c; col++) {
@@ -100,7 +103,7 @@ export const exportBetsToExcel = (bets: Bet[]): boolean => {
 
       // Apply status-based colors
       let fillColor = bgColor;
-      if (col === 8) { // Status column
+      if (col === 9) { // Status column
         if (status === 'green') {
           fillColor = "C6F6D5"; // Light green
         } else if (status === 'red') {
@@ -123,7 +126,7 @@ export const exportBetsToExcel = (bets: Bet[]): boolean => {
       };
 
       // Bold font for Type, Status, and Total Odds columns
-      if (col === 0 || col === 8 || col === 9) {
+      if (col === 0 || col === 9 || col === 10) {
         cellStyle.font.bold = true;
       }
 
